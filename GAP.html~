@@ -1,0 +1,66 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="ladda/dist/ladda-themeless.min.css">
+<link rel="stylesheet" type="text/css" href="ladda/css/prism.css">
+
+<style>
+.console:hover {
+    background-color: #f5f5f5;
+}
+</style>
+
+<script>
+
+/*
+  Check if there is and internet connection
+*/
+if (!navigator.onLine) {
+  alert("Cannot load jQuery! Please make sure you're connected the Internet and refresh the page!");
+  window.stop();
+}
+
+</script>
+
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<script type="text/javascript" src="ladda/dist/spin.min.js"></script>
+<script type="text/javascript" src="ladda/dist/ladda.min.js"></script>
+<script type="text/javascript" src="ladda/js/prism.js"></script>
+<!-- link to global variables -->
+<script type="text/javascript" src="js/globalVariables.js"></script>
+<script type="text/javascript" src="js/localSearches.js"></script>
+<script type="text/javascript" src="js/algorithms.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header" style="text-align: center;">
+      <h1>GAP Solver</h1>
+    </div>
+    <div class="panel panel-default" style="margin-top:30px;">
+      <div class="panel-body">
+        <label for="input">JSON file URL:</label>
+        <input class="form-control" id="input" value="http://astarte.csr.unibo.it/GAPdata/esempiettoGAP.json" type="text">
+        <button class="btn btn-lg btn-block btn-success ladda-button" onclick="process()" style="margin-top:5px;" data-style="zoom-in"><span class="ladda-label">Process</span><span class="ladda-spinner"></span></button>
+		  <div class="checkbox">
+  			<label><input type="checkbox" value="">Log</label>
+		  </div>      
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="output">Output:</label>
+      <div id="output"></div>
+    </div>
+  </div>
+
+
+
+</body>
+
+
+<html>
