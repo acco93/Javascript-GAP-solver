@@ -18,7 +18,13 @@ var instance;
 var KEY = 0;
 var VALUE = 1;
 var verboseLog = false;
+var URL = 0;
+var PASTED_CODE = 1;
+var whatIsToBeProcessed = URL;
 
+var input;
+var textArea;
+var processButton;
 
 /*
  variables

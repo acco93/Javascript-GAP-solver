@@ -5,12 +5,7 @@
 <link rel="stylesheet" type="text/css" href="ladda/dist/ladda-themeless.min.css">
 <link rel="stylesheet" type="text/css" href="ladda/css/prism.css">
 <link rel="stylesheet" type="text/css" href="pace/pace.css">
-
-<style>
-.console:hover {
-    background-color: #f5f5f5;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="css/style.css">
 
 <script>
 
@@ -41,13 +36,15 @@ if (!navigator.onLine) {
 </head>
 
 <body>
+  <div class="topnav"></div>
   <div class="container">
     <div class="page-header" style="text-align: center;">
       <h1>GAP Solver</h1>
-      <span><a href="">Repository</a> <a href="">GAP.zip</a></span>
+        <span><a href="https://bitbucket.org/acco93/gap-solver-js/">Repository</a> <a href="https://bitbucket.org/acco93/gap-solver-js/get/6fbc9f51450f.zip">GAP.zip</a></span>
     </div>
     <div class="panel panel-default" style="margin-top:30px;">
       <div class="panel-body">
+       <label for="comment">Json instance URL:</label>
         <div class="input-group">
          <input type="text" id="input" class="form-control" value="http://astarte.csr.unibo.it/GAPdata/esempiettoGAP.json" aria-label="...">
          <div class="input-group-btn">
@@ -65,9 +62,9 @@ if (!navigator.onLine) {
        </div><!-- /input-group -->
        <div class="form-group">
           <label for="comment">... or paste the json here:</label>
-          <textarea class="form-control" rows="5" id="comment"></textarea>
+          <textarea id="textarea" class="form-control" rows="5" id="comment" placeholder="Not yet implemented"></textarea>
         </div>
-         <button class="btn btn-lg btn-block btn-info ladda-button" onclick="process()" style="margin-top:5px;" data-style="zoom-in"><span class="ladda-label">Process</span><span class="ladda-spinner"></span></button>
+         <button id="processButton" class="btn btn-lg btn-block btn-info ladda-button" onclick="process()" style="margin-top:5px;" data-style="zoom-in"><span class="ladda-label">Process (the URL)</span><span class="ladda-spinner"></span></button>
          <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Verbose log</button>
       </div>
     </div>
@@ -78,7 +75,7 @@ if (!navigator.onLine) {
   </div>
 
 
-
+  <div class="bottomnav"></div>
 </body>
 
 

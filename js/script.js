@@ -1,3 +1,22 @@
+
+$(document).ready(function(){
+  textArea = $('#textarea');
+  processButton = $('#processButton');
+  input = $('#input');
+
+  $('#textarea').click(function() {
+    processButton.text("Process (the above text area)");
+    whatIsToBeProcessed = PASTED_CODE;
+  });
+
+  $('#input').click(function() {
+    processButton.text("Process (the URL)");
+    whatIsToBeProcessed = URL;
+  });
+
+
+});
+
 /*
   Download a json from the given url
 */
@@ -211,4 +230,6 @@ function toggleLog(){
 
 function changeUrl(url){
   $("#input").val(url);
+  processButton.text("Process (the URL)");
+  whatIsToBeProcessed = URL;
 }
