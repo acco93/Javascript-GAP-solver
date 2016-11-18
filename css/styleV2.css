@@ -1,0 +1,73 @@
+body{
+  background-color: #444444;
+  color: #8AE234;
+}
+
+hr {
+  color: #333333;
+  border-top: 1px solid #333333;
+}
+
+.topnav{
+	background: repeating-linear-gradient(
+	  to right,
+	  #0bf,
+	  #0bf 10px,
+	  #0cf 10px,
+	  #0cf 20px
+	);
+	width: 100%;
+	height: 10px;
+}
+
+.panel {
+  background-color: #444444;
+}
+
+.form-control {
+  background-color: #333333;
+  color: #EFEFA8;
+  border: 1px solid #222222;
+}
+
+.page-header {
+  border-bottom: 1px solid #333333;
+}
+
+.panel-default {
+  border-color: #333333;
+}
+
+.dropdown-menu {
+  background-color: #333333;
+
+}
+
+.dropdown-menu > li > a {
+  color: #EFEFA8;
+}
+
+.dropdown-menu > li > a:hover {
+  color: #8AE234;
+  background-color: transparent;
+}
+
+.btn-default {
+  background-color: #333333;
+  color: #EFEFA8;
+  border: 1px solid #222222;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+  background-color: #333333;
+  color: #8AE234;
+  border: 1px solid #222222;
+}
+
+.console {
+  color: #D3D3D3;
+}
+
+.console:hover {
+  background-color: #222222;
+}

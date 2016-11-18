@@ -1,0 +1,123 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="ladda/dist/ladda-themeless.min.css">
+<link rel="stylesheet" type="text/css" href="ladda/css/prism.css">
+<link rel="stylesheet" type="text/css" href="pace/pace.css">
+
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+
+
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="pace/pace.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="ladda/dist/spin.min.js"></script>
+<script type="text/javascript" src="ladda/dist/ladda.min.js"></script>
+<script type="text/javascript" src="ladda/js/prism.js"></script>
+
+<!-- my js -->
+<script type="text/javascript" src="js/globalVariables.js"></script>
+<script type="text/javascript" src="js/localSearches.js"></script>
+<script type="text/javascript" src="js/algorithms.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+
+</head>
+
+<body>
+  <div class="topnav"></div>
+  <div class="container">
+    <div class="page-header" style="text-align: center;">
+      <h2><strong>GAP Solver</strong></h2>
+        <span class="menubar"><a href="https://bitbucket.org/acco93/gap-solver-js/">Repository</a> <a href="https://bitbucket.org/acco93/gap-solver-js/get/6fbc9f51450f.zip">GAP.zip</a> Docs Json format Settings <a href="GAPV2.html" >Hacker mode</a></span>
+    </div>
+    <div class="panel panel-default" style="margin-top:30px;">
+      <div class="panel-body">
+       <label for="comment">Json instance URL:</label>
+        <div class="input-group">
+         <input type="text" id="input" class="form-control" value="http://astarte.csr.unibo.it/GAPdata/esempiettoGAP.json" aria-label="...">
+         <div class="input-group-btn">
+           <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&nbsp;<span class="caret"></span> <span class="sr-only">Toggle Dropdown</span> </button>
+           <ul class="dropdown-menu dropdown-menu-right">
+             <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/esempiettoGAP.json")'>EsempiettoGAP.json</a></li>
+             <li><a href="#" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/1.json")'>1.json</a></li>
+             <li><a href="#" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/2.json")'>2.json</a></li>
+             <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/3.json")'>3.json</a></li>
+             <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/d801600.json")'>d801600.json</a></li>
+             <!--<li role="separator" class="divider"></li>
+             <li><a href="#">Separated link</a></li>-->
+           </ul>
+         </div><!-- /btn-group -->
+       </div><!-- /input-group -->
+       <div class="form-group">
+          <label for="comment">... or paste the json here:</label>
+          <textarea id="textarea" class="form-control" rows="5" id="comment" placeholder="">
+{  "nome":"esempietto",
+   "clienti":6,
+   "magazzini":3,
+   "costi":[[11,12,13,14,15,16],
+            [21,22,23,24,25,26],
+            [31,32,33,34,35,36]],
+   "req":[[4,4,4,4,4,4],
+          [4,4,4,4,4,4],
+          [4,4,4,4,4,4]],
+   "cap":[10,10,10]
+}
+          </textarea>
+        </div>
+
+
+    <div class="col-lg-12">
+      <div class="form-group col-lg-3">
+            <label>Algorithm settings</label>
+        <div class="panel panel-default">
+          <div class="panel-body">
+          <button id="randomizeCustomers" class="btn btn-danger" onclick="randomizeCustomer()" style="margin-top:5px;" >Randomize customer order</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-lg-3">
+            <label>Local searches</label>
+        <div class="panel panel-default">
+          <div class="panel-body">
+          <button id="gap10" class="btn btn-success" onclick="toggleLocalSearch(0)" style="margin-top:5px;" >1-0 opt</button>
+          <button id="gap11" class="btn btn-danger" onclick="toggleLocalSearch(1)" style="margin-top:5px;" >1-1 opt</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-lg-3">
+            <label>Output settings</label>
+        <div class="panel panel-default">
+          <div class="panel-body">
+          <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Verbose log</button>
+          </div>
+        </div>
+    </div>
+
+
+         <button id="processButton" class="btn btn-lg btn-block btn-info ladda-button" onclick="process()" style="margin-top:5px; margin-bottom:5px;" data-style="zoom-in"><span class="ladda-label">Process (the URL)</span><span class="ladda-spinner"></span></button>
+
+		</div>
+
+
+		<!--Algorithms
+		Local searches-->
+      </div>
+    </div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+		<div id="output"></div>
+	  </div>
+	</div>
+
+  </div>
+
+
+</body>
+
+
+<html>

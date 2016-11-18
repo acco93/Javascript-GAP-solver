@@ -1,6 +1,4 @@
-function solveConstructive(){
-  //info("Solving using a constructive heuristic...")
-
+function solveConstructive(customersIndexes){
 
   x = new Array(nStores);
   for(var i=0;i<nStores;i++){
@@ -25,50 +23,39 @@ function solveConstructive(){
   */
 
   for(var j=0; j<nCustomers;j++){
+
+    /*
+      consider the customers in the order defined in
+      customersIndexes
+    */
+
+    customerIndex = customersIndexes[j];
+
     requestsCustomer = new Array(nStores);
     for(var i=0;i<nStores;i++){
       requestsCustomer[i] = new Array(2);
       requestsCustomer[i][KEY] = i;
-      requestsCustomer[i][VALUE] = requests[i][j];
+      requestsCustomer[i][VALUE] = requests[i][customerIndex];
     }
-    requestsCustomer.sort(compareKeyValue)
+    requestsCustomer.sort(ascendingCompareKeyValue)
     // ora ho le richieste del cliente ordinate per richiesta minore
     // le scorro e assegno al primo magazzino libero
 
     for(var i=0;i<nStores;i++){
       realIndexStore = requestsCustomer[i][KEY];
-      if(requestsSum[realIndexStore]+requests[realIndexStore][j] <= capacities[realIndexStore]){
-        x[realIndexStore][j] = 1;
-        requestsSum[realIndexStore]+=requests[realIndexStore][j];
-        //info("Customer "+j+" assigned to store "+realIndexStore);
+      if(requestsSum[realIndexStore]+requests[realIndexStore][customerIndex] <= capacities[realIndexStore]){
+
+        x[realIndexStore][customerIndex] = 1;
+        // array impl
+        solution[customerIndex] = realIndexStore;
+
+        requestsSum[realIndexStore]+=requests[realIndexStore][customerIndex];
+        //info("Customer "+customerIndex+" assigned to store "+realIndexStore);
         break;
       }
     }
 
   }
-
-
-  if(verboseLog){
-    for(var i=0;i<nStores;i++){
-      var reqSum = 0;
-      for(var j=0;j<nCustomers;j++){
-        reqSum += (x[i][j]*requests[i][j]);
-      }
-      log("Store "+i+" requests: "+reqSum+" < "+capacities[i]);
-    }
-
-    log("Solution:")
-    printMatrix(x, nStores, nCustomers)
-    log("Cost: "+z(x));
-    log("is feasible: "+ isFeasible(x));
-
-    gap10opt();
-
-    log("Solution:")
-    printMatrix(x, nStores, nCustomers)
-    log("Cost: "+z(x));
-    log("is feasible: "+ isFeasible(x));
-    }
 }
 
 
@@ -78,7 +65,7 @@ function solveConstructive(){
           =0 if valueA==valueB
 */
 
-function compareKeyValue(entryA, entryB){
+function ascendingCompareKeyValue(entryA, entryB){
   /*
     entryA[0] = key
     entryA[1] = value
@@ -90,9 +77,21 @@ function compareKeyValue(entryA, entryB){
     return entryA[VALUE] < entryB[VALUE]?-1:1;
   }
 
-
 }
 
+function descendingCompareKeyValue(entryA, entryB){
+  /*
+    entryA[0] = key
+    entryA[1] = value
+  */
+
+  if(entryA[VALUE]==entryB[VALUE]){
+    return 0;
+  } else {
+    return entryA[VALUE] > entryB[VALUE]?-1:1;
+  }
+
+}
 
 // Compute the solution cost.
 function z(x){
@@ -132,4 +131,39 @@ function isFeasible(x){
     }
   }
   return true;
+}
+
+
+function knuthShuffle(arr) {
+    var rand, temp, i;
+
+    for (i = arr.length - 1; i > 0; i -= 1) {
+        rand = Math.floor((i + 1) * Math.random());//get random between zero and i (inclusive)
+        temp = arr[rand];//swap i and the zero-indexed number
+        arr[rand] = arr[i];
+        arr[i] = temp;
+    }
+    return arr;
+}
+
+function descendingRequestsSumIndexes(){
+  var reqSum = [];
+  var arr = new Array(nCustomers);
+  for(var j=0;j<nCustomers;j++){
+    reqSum[j] = new Array(2);
+    reqSum[j][KEY] = j;
+    reqSum[j][VALUE] = 0;
+    for(var i=0;i<nStores;i++){
+      reqSum[j][VALUE]+= requests[i][j];
+    }
+  }
+
+  reqSum.sort(ascendingCompareKeyValue);
+
+  for(var j=0;j<nCustomers;j++){
+    arr[j] = reqSum[j][KEY];
+  }
+
+  return arr;
+
 }

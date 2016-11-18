@@ -34,7 +34,14 @@ function gap10opt (){
         Find the current store
       */
 
-      currentStore = findCurrentStore(j);
+      var currentStore = -1;
+
+      for(var i=0; i<nStores; i++){
+        if(x[i][j] == 1) {
+          currentStore = i;
+          break;
+        }
+      }
 
       for(var i=0;i<nStores; i++){
         /*
@@ -53,7 +60,6 @@ function gap10opt (){
         if(storeSum[i]+requests[i][j] <= capacities[i] && newCost < currentCost){
           x[currentStore][j] = 0;
           x[i][j] = 1;
-          solution[j] = i;
           improved = true;
           /*
             Update some variables
@@ -134,13 +140,10 @@ function gap11opt(){
               x[currentStoreK][k] = 0;
               x[ik][k] = 1;
 
-              solution[j] = ij;
-              solution[k] = ik;
-
               improved = true;
 
               currentCost = newCost;
-
+					console.log(newCost + " "+ j +" "+ k);
               storeSum[ij] += requests[ij][j];
               storeSum[ik] += requests[ik][j];
 
@@ -167,13 +170,12 @@ function gap11opt(){
 }
 
 function findCurrentStore(customerIndex){
-  /*var i;
+  var i;
   for(i=0; i<nStores; i++){
     if(x[i][customerIndex] == 1) {
       currentStore = i;
       break;
     }
   }
-  return i;*/
-  return solution[customerIndex];
+  return i;
 }
