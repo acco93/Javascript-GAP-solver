@@ -1,16 +1,11 @@
 function solveConstructive(customersIndexes){
 
-  x = new Array(nStores);
-  for(var i=0;i<nStores;i++){
-    x[i] = new Array(nCustomers);
-    for(var j=0;j<nCustomers;j++){
-      x[i][j] = 0;
-    }
-  }
+  // the solution that has to be created!
+  var solution = new Array(nCustomers);
 
   var requestsSum = [];
   for(var i=0;i<nStores;i++){
-    requestsSum[i] = 0 ;
+    requestsSum[i] = 0;
   }
 
   /*
@@ -45,8 +40,6 @@ function solveConstructive(customersIndexes){
       realIndexStore = requestsCustomer[i][KEY];
       if(requestsSum[realIndexStore]+requests[realIndexStore][customerIndex] <= capacities[realIndexStore]){
 
-        x[realIndexStore][customerIndex] = 1;
-        // array impl
         solution[customerIndex] = realIndexStore;
 
         requestsSum[realIndexStore]+=requests[realIndexStore][customerIndex];
@@ -56,6 +49,8 @@ function solveConstructive(customersIndexes){
     }
 
   }
+
+  return solution;
 }
 
 
@@ -94,42 +89,44 @@ function descendingCompareKeyValue(entryA, entryB){
 }
 
 // Compute the solution cost.
-function z(x){
-  cost = 0;
-  for(var i=0;i<nStores;i++){
-    for(var j=0;j<nCustomers;j++){
-      cost += (x[i][j]*costs[i][j]);
-    }
+function z(solution){
+  var cost = 0;
+
+  for(var j=0;j<nCustomers;j++){
+    cost += costs[solution[j]][j];
   }
+
   return cost;
 }
 
 // Returns true if the function is feasible, false otherwise.
-function isFeasible(x){
+function isFeasible(solution){
   // Check if all the customers are served, and from one store.
   for(var j=0;j<nCustomers;j++){
-    var correctlyServed = 0;
-    for(var i=0;i<nStores;i++){
-      correctlyServed += x[i][j];
-    }
-    if(correctlyServed!=1){
+    if(solution[j]==undefined){
       warning("Customer "+j+" is not correctly served! Served from "+correctlyServed+ " stores.");
       return false;
     }
   }
 
   // Check stores capacities
-  storeSum = [];
+  var storeSum = new Array(nStores);
+
   for(var i=0;i<nStores;i++){
     storeSum[i] = 0;
-    for(var j=0;j<nCustomers;j++){
-      storeSum[i] += (x[i][j]*requests[i][j]);
-    }
+  }
+
+  for(var j=0;j<nCustomers;j++){
+    storeSum[solution[j]] += requests[solution[j]][j];
+  }
+
+  for(var i=0;i<nStores;i++){
     if(storeSum[i]>capacities[i]){
       warning("Store "+i+ " capacity is exceeded! ("+storeSum[i]+">"+capacities[i]+")");
       return false;
     }
   }
+
   return true;
 }
 
@@ -144,26 +141,4 @@ function knuthShuffle(arr) {
         arr[i] = temp;
     }
     return arr;
-}
-
-function descendingRequestsSumIndexes(){
-  var reqSum = [];
-  var arr = new Array(nCustomers);
-  for(var j=0;j<nCustomers;j++){
-    reqSum[j] = new Array(2);
-    reqSum[j][KEY] = j;
-    reqSum[j][VALUE] = 0;
-    for(var i=0;i<nStores;i++){
-      reqSum[j][VALUE]+= requests[i][j];
-    }
-  }
-
-  reqSum.sort(ascendingCompareKeyValue);
-
-  for(var j=0;j<nCustomers;j++){
-    arr[j] = reqSum[j][KEY];
-  }
-
-  return arr;
-
 }

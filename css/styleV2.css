@@ -71,3 +71,24 @@ hr {
 .console:hover {
   background-color: #222222;
 }
+
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background:  #8AE234;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: #8AE234;
+}

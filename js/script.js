@@ -1,31 +1,57 @@
-
+/*
+  Document ready!
+*/
 $(document).ready(function(){
-  textArea = $('#textarea');
-  processButton = $('#processButton');
-  input = $('#input');
 
-  $('#textarea').click(function() {
-    processButton.text("Process (the above text area)");
-    whatIsToBeProcessed = PASTED_CODE;
-  });
+  // Bind all HTML elements to variables"
+  HTMLElements.textArea = $('#textarea');
+  HTMLElements.processButton = $('#processButton');
+  HTMLElements.input = $('#input');
+  HTMLElements.output = $("#output");
+  HTMLElements.l = Ladda.create(document.querySelector( '.ladda-button' ));
+  HTMLElements.verboseLogButton = $("#verboseLogButton");
+  HTMLElements.randomizeCustomersButton = $("#randomizeCustomersButton");
+  HTMLElements.gap10Button = $("#gap10Button");
+  HTMLElements.gap11Button = $("#gap11Button");
 
-  $('#input').click(function() {
-    processButton.text("Process (the URL)");
-    whatIsToBeProcessed = URL;
-  });
-
+  // Bind behaviors to actions
+  HTMLElements.textArea.click(onTextAreaClick);
+  HTMLElements.input.click(onInputClick);
 
 });
 
-function loadJSON(url){
+/*
+  Handle text area click
+*/
+function onTextAreaClick(){
+  HTMLElements.processButton.text("Process (the above text area)");
+  AppSettings.whatToProcess = PASTED_CODE;
+}
 
-  // create a promise and return it
+/*
+  Handle input field click
+*/
+function onInputClick(){
+  HTMLElements.processButton.text("Process (the URL)");
+  AppSettings.whatToProcess = URL;
+}
+
+/*
+  Load a json file from the appropriate place
+*/
+function loadJSON(){
+
+  // Since I may have to asynchronously download it,
+  // create a promise
   var deferred = new $.Deferred();
 
-  if(whatIsToBeProcessed == PASTED_CODE){
-    var text = $('#textarea').val();
+  if(AppSettings.whatToProcess == PASTED_CODE){
+
+    // read the text area
+    var text = HTMLElements.textArea.val();
     var json;
 
+    // try to parse the JSON
     try {
       json = $.parseJSON(text);
     }catch(e) {
@@ -33,13 +59,14 @@ function loadJSON(url){
     }
     deferred.resolve(json);
 
-
   } else {
-    // URL
-    var url = $("input").val();
+
+    // download the url from the specified url
+    var url = HTMLElements.input.val();
     return downloadJSON(url);
   }
 
+  // return the promise, so the user is able to wait for it or do whatever he wants
   return deferred.promise();
 }
 
@@ -50,7 +77,7 @@ function downloadJSON(url) {
 
     var startTime = new Date();
 
-    // create a promise and return it
+    // create a promise
     var deferred = new $.Deferred();
 
     $.getJSON( url, function( data ) {
@@ -74,10 +101,10 @@ function downloadJSON(url) {
 
     return deferred.promise();
 }
-/*
-  Set instance variables
-*/
 
+/*
+  Check if the instance is correct! And set global instance variables.
+*/
 function checkAndSetInstance(data){
 
   if(data.magazzini == undefined || data.magazzini <= 0 || !isNumber(data.magazzini) || !Number.isInteger(data.magazzini)){
@@ -135,6 +162,9 @@ function checkAndSetInstance(data){
   return true;
 }
 
+/*
+  Check if a given object is a number.
+*/
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -153,133 +183,148 @@ function printInstance() {
   info("Stores capacities: "+capacities);
 }
 
-function verbosePrint(){
+/*
+  Print loong and useless info
+*/
+function verbosePrint(solution){
+
+  var reqSum = new Array(nStores);
+
   for(var i=0;i<nStores;i++){
-    var reqSum = 0;
-    for(var j=0;j<nCustomers;j++){
-      reqSum += (x[i][j]*requests[i][j]);
-    }
+    reqSum[i] = 0;
+  }
+
+  for(var j=0;j<nCustomers;j++){
+    reqSum[solution[j]] += requests[solution[j]][j];
+  }
+
+  for(var i=0;i<nStores;i++){
     log("Store "+i+" requests: "+reqSum+" < "+capacities[i]);
   }
-  log("Solution:")
-  printMatrix(x, nStores, nCustomers)
+
+  log("Solution:" + solution);
 
 }
 
-function lockButtons() {
-  l = Ladda.create(document.querySelector( '.ladda-button' ));
-  l.start();
-
-}
-function unlockButtons(){
-  l.stop();
-
-}
-
-
+/*
+  App entry point
+*/
 function process() {
-  lockButtons();
 
-  output = $("#output");
-  startSessionDiv();
-  sessionDiv = $('div[session="'+session+'"]');
+  // lock buttons
+  HTMLElements.l.start();
+  // start session div
+  HTMLElements.output.append('<div session='+session+'>');
+  // and get it
+  HTMLElements.sessionDiv = $('div[session="'+session+'"]');
 
-
-
+  // load the json (download or read it according to the user needs)
   loadJSON().then(function(data){
-    if(data!=undefined){
 
-      if(!checkAndSetInstance(data)){
-        error("Malformed instace!");
-
-      } else {
-
-      if(verboseLog){
-        printInstance();
-      }
-
-      var customersIndexes = [];
-      for(var j=0;j<nCustomers;j++){
-        customersIndexes[j]=j;
-      }
-
-
-
-    if(randomizedCustomerOrder){
-      log("Shuffling customers ... ");
-      knuthShuffle(customersIndexes);
-    }
-
-      var startTime = new Date();
-
-      //customersIndexes = descendingRequestsSumIndexes();
-      solveConstructive(customersIndexes);
-      var endTime = new Date();
-      info("[Constructive heuristic] Processing time: "+(endTime-startTime)+" milliseconds.");
-      log("Solution cost: "+z(x));
-      log("is feasible: "+isFeasible(x));
-      if(verboseLog){
-        verbosePrint();
-      }
-
-        if(isFeasible(x)){
-
-
-        if(perform10opt) {
-          startTime = new Date();
-          gap10opt();
-          endTime = new Date();
-          info("[1-0 opt] Processing time: "+(endTime-startTime)+" milliseconds.");
-          log("Solution cost: "+z(x));
-          log("is feasible: "+isFeasible(x));
-          if(verboseLog){
-            verbosePrint();
-          }
-        }
-
-        if(perform11opt) {
-          startTime = new Date();
-          gap11opt();
-          endTime = new Date();
-          info("[1-1 opt] Processing time: "+(endTime-startTime)+" milliseconds.");
-          log("Solution cost: "+z(x));
-          log("is feasible: "+isFeasible(x));
-          if(verboseLog){
-            verbosePrint();
-          }
-        }
-
-
-
-      } else {
-
-      }
+    if(data == undefined){
+      error("Is it a valid json?");
+      terminateSession();
+      return ERROR;
     }
 
 
-  } else {
-    error("Is it a valid json?")
+    if(!checkAndSetInstance(data)){
+      error("Malformed instance!");
+      terminateSession();
+      return ERROR;
+    }
+
+    if(AppSettings.verboseLog){
+      printInstance();
+    }
+
+    // customers may be considered in a random order!
+    var customersIndexes = [];
+    for(var j=0;j<nCustomers;j++){
+      customersIndexes[j]=j;
+    }
+
+
+
+  if(AlgorithmSettings.randomizedCustomerOrder){
+    log("Shuffling customers ... ");
+    knuthShuffle(customersIndexes);
   }
 
-    clearSessionButton(session);
-    session++;
-    drawLine();
-    endSessionDiv();
-    $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+    var startTime = new Date();
+    var solution = solveConstructive(customersIndexes);
+    var endTime = new Date();
 
-    unlockButtons();
+    info("[Constructive heuristic] Processing time: "+(endTime-startTime)+" milliseconds.");
+    log("Solution cost: "+z(solution));
+
+    log("is feasible: "+isFeasible(solution));
+
+    if(AppSettings.verboseLog){
+      verbosePrint(solution);
+    }
+
+      if(isFeasible(solution)){
+
+      startTime = new Date();
+      solution = simulatedAnnealing(solution, gap11optSA);
+      endTime = new Date();
+      info("[Simulated annealing] Processing time: "+(endTime-startTime)+" milliseconds.");
+      log("Solution cost: "+z(solution));
+      log("is feasible: "+isFeasible(solution));
+
+      if(AlgorithmSettings.perform10opt) {
+        startTime = new Date();
+        solution = gap10opt(solution);
+        endTime = new Date();
+        info("[1-0 opt] Processing time: "+(endTime-startTime)+" milliseconds.");
+        log("Solution cost: "+z(solution));
+        log("is feasible: "+isFeasible(solution));
+        if(AppSettings.verboseLog){
+          verbosePrint();
+        }
+      }
+
+      if(AlgorithmSettings.perform11opt) {
+        startTime = new Date();
+        solution = gap11opt(solution);
+        endTime = new Date();
+        info("[1-1 opt] Processing time: "+(endTime-startTime)+" milliseconds.");
+        log("Solution cost: "+z(solution));
+        log("is feasible: "+isFeasible(solution));
+        if(AppSettings.verboseLog){
+          verbosePrint();
+        }
+      }
+
+
+
+      } else {
+        // constructive heuristic returned a not feasible solution
+      }
+
+  terminateSession();
+
   });
 
 
 }
 
-function startSessionDiv(){
-  output.append('<div session='+session+'>');
+function terminateSession(){
+  // add a clear session button
+  addClearSessionButton(session);
+  // increment the session count variable
+  session++;
+  // add a line to separate sessions
+  HTMLElements.sessionDiv.append('<hr>');
+  // end session div
+  HTMLElements.output.append('</div>');
+  // scroll to bottom
+  $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+  // unlock button
+  HTMLElements.l.stop();
 }
 
-function endSessionDiv(){
-  output.append('</div>');
-}
 
 /*
   Add an output line
@@ -292,10 +337,13 @@ function println(text, color){
           html+=(text);
       }
   html+=('</div>');
-  sessionDiv.append(html);
+  HTMLElements.sessionDiv.append(html);
   lineNum++;
 }
 
+/*
+  Print a matrix
+*/
 function printMatrix(matrix, rows, columns){
   html = '<div class="" style="color:#5cb85c;">';
   html +='<table class="table table-hover" style="font-size: 12px; margin-left:1em;">'
@@ -311,7 +359,7 @@ function printMatrix(matrix, rows, columns){
     html +='</tr>';
   }
   html+=('</table></div>');
-  sessionDiv.append(html);
+  HTMLElements.sessionDiv.append(html);
   lineNum++;
 }
 
@@ -331,11 +379,7 @@ function log(text){
   println(text, '');
 }
 
-function drawLine(){
-  sessionDiv.append('<hr>');
-}
-
-function clearSessionButton(session){
+function addClearSessionButton(session){
   println('<button type="button" class="btn btn-default" onclick="clearSession('+session+')">Clear Session</button>');
 }
 
@@ -343,93 +387,68 @@ function clearSession(session){
 
   var div = $('div[session="'+session+'"]');
 
-  lockButtons();
+  // lock buttons
+  HTMLElements.l.start();
   div.fadeOut("fast",function(){
     div.remove();
-    unlockButtons();
+    // unlock buttons
+    HTMLElements.l.stop();
   });
-  //$('div[session="'+session+'"]').remove();
+
 }
 
 function toggleLog(){
-  if(verboseLog){
-    verboseLog = false;
-    $("#verboseLogButton").addClass("btn-danger");
-    $("#verboseLogButton").removeClass("btn-success");
+  if(AppSettings.verboseLog){
+    AppSettings.verboseLog = false;
+    HTMLElements.verboseLogButton.addClass("btn-danger");
+    HTMLElements.verboseLogButton.removeClass("btn-success");
   } else {
-    verboseLog = true;
-    $("#verboseLogButton").removeClass("btn-danger");
-    $("#verboseLogButton").addClass("btn-success");
+    AppSettings.verboseLog = true;
+    HTMLElements.verboseLogButton.removeClass("btn-danger");
+    HTMLElements.verboseLogButton.addClass("btn-success");
   }
 }
 
 function randomizeCustomer(){
-  if(randomizedCustomerOrder){
-    randomizedCustomerOrder = false;
-    $("#randomizeCustomers").addClass("btn-danger");
-    $("#randomizeCustomers").removeClass("btn-success");
+  if(AppSettings.randomizedCustomerOrder){
+    AppSettings.randomizedCustomerOrder = false;
+    HTMLElements.randomizeCustomersButton.addClass("btn-danger");
+    HTMLElements.randomizeCustomersButton.removeClass("btn-success");
   } else {
-    randomizedCustomerOrder = true;
-    $("#randomizeCustomers").removeClass("btn-danger");
-    $("#randomizeCustomers").addClass("btn-success");
+    AppSettings.randomizedCustomerOrder = true;
+    HTMLElements.randomizeCustomersButton.removeClass("btn-danger");
+    HTMLElements.randomizeCustomersButton.addClass("btn-success");
   }
 }
 
 function changeUrl(url){
-  $("#input").val(url);
-  processButton.text("Process (the URL)");
-  whatIsToBeProcessed = URL;
+  HTMLElements.input.val(url);
+  onInputClick();
 }
 
 function toggleLocalSearch(index){
   switch(index){
     case GAP10OPT:
-      if(perform10opt) {
-        perform10opt = false;
-        $("#gap10").addClass("btn-danger");
-        $("#gap10").removeClass("btn-success");
+      if(AlgorithmSettings.perform10opt) {
+        AlgorithmSettings.perform10opt = false;
+        HTMLElements.gap10Button.addClass("btn-danger");
+        HTMLElements.gap10Button.removeClass("btn-success");
       } else {
-        perform10opt = true;
-        $("#gap10").removeClass("btn-danger");
-        $("#gap10").addClass("btn-success");
+        AlgorithmSettings.perform10opt = true;
+        HTMLElements.gap10Button.removeClass("btn-danger");
+        HTMLElements.gap10Button.addClass("btn-success");
       }
     break;
     case GAP11OPT:
-      if(perform11opt) {
-        perform11opt = false;
-        $("#gap11").addClass("btn-danger");
-        $("#gap11").removeClass("btn-success");
+      if(AlgorithmSettings.perform11opt) {
+        AlgorithmSettings.perform11opt = false;
+        HTMLElements.gap11Button.addClass("btn-danger");
+        HTMLElements.gap11Button.removeClass("btn-success");
       } else {
-        perform11opt = true;
-        $("#gap11").removeClass("btn-danger");
-        $("#gap11").addClass("btn-success");
+        AlgorithmSettings.perform11opt = true;
+        HTMLElements.gap11Button.removeClass("btn-danger");
+        HTMLElements.gap11Button.addClass("btn-success");
       }
     break;
-  }
-}
-
-function changeCSS(cssFile, cssLinkIndex) {
-
-    var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
-
-    var newlink = document.createElement("link");
-    newlink.setAttribute("rel", "stylesheet");
-    newlink.setAttribute("type", "text/css");
-    newlink.setAttribute("href", cssFile);
-
-    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
-}
-
-function toggleTheme(){
-  if(theme == LIGHT){
-    theme = DARK;
-    //document.getElementById('normalTheme').disabled  = true;
-    //document.getElementById('darkTheme').disabled = false;
-    changeCSS('styleV2.css', 4);
-  } else {
-    theme = LIGHT;
-    //document.getElementById('normalTheme').disabled  = false;
-    //document.getElementById('darkTheme').disabled = true;
-    changeCSS('style.css', 4);
   }
 }

@@ -3,19 +3,21 @@
  * Attempts to improve the cost of the solution by reassigning each customer to
  * a store that has space left
  */
-function gap10opt (){
+function gap10opt (solution){
 
   /*
     Compute the current solution cost and the stores occupation.
   */
-  var currentCost = z(x);
+  var currentCost = z(solution);
 
-  storeSum = [];
+  var storeSum = new Array(nStores);
+
   for(var i=0;i<nStores;i++){
     storeSum[i] = 0;
-    for(var j=0;j<nCustomers;j++){
-      storeSum[i] += (x[i][j]*requests[i][j]);
-    }
+  }
+
+  for(var j=0;j<nCustomers;j++){
+    storeSum[solution[j]] += requests[solution[j]][j];
   }
 
   /*
@@ -34,7 +36,7 @@ function gap10opt (){
         Find the current store
       */
 
-      currentStore = findCurrentStore(j);
+      currentStore = solution[j];
 
       for(var i=0;i<nStores; i++){
         /*
@@ -51,8 +53,7 @@ function gap10opt (){
         */
         newCost = currentCost - costs[currentStore][j] + costs[i][j]
         if(storeSum[i]+requests[i][j] <= capacities[i] && newCost < currentCost){
-          x[currentStore][j] = 0;
-          x[i][j] = 1;
+
           solution[j] = i;
           improved = true;
           /*
@@ -74,24 +75,29 @@ function gap10opt (){
 
   } while(improved);
 
+  return solution;
+
 }
 
 /*
   Rimuovi due clienti alla volte e vedi come riassegnarli
 */
-function gap11opt(){
+function gap11opt(solution){
   /*
     Compute the current solution cost and the stores occupation.
   */
-  var currentCost = z(x);
+  var currentCost = z(solution);
 
-  storeSum = [];
+  var storeSum = new Array(nStores);
+
   for(var i=0;i<nStores;i++){
     storeSum[i] = 0;
-    for(var j=0;j<nCustomers;j++){
-      storeSum[i] += (x[i][j]*requests[i][j]);
-    }
   }
+
+  for(var j=0;j<nCustomers;j++){
+    storeSum[solution[j]] += requests[solution[j]][j];
+  }
+
 
   /*
     Repeat untill there isn't an improvement
@@ -104,12 +110,12 @@ function gap11opt(){
     */
     for(var j=0; j<nCustomers-1; j++){
 
-      var currentStoreJ = findCurrentStore(j);
+      var currentStoreJ = solution[j];
 
       for(var k=j+1; k<nCustomers; k++){
 
 
-        var currentStoreK = findCurrentStore(k);
+        var currentStoreK = solution[k];
 
         for(var ij=0;ij<nStores;ij++){
           for(var ik=0;ik<nStores;ik++){
@@ -128,11 +134,6 @@ function gap11opt(){
             storeSum[ik] += requests[ik][k];
 
             if(storeSum[ij]<= capacities[ij] && storeSum[ik]<=capacities[ik] && newCost < currentCost){
-
-              x[currentStoreJ][j] = 0;
-              x[ij][j] = 1;
-              x[currentStoreK][k] = 0;
-              x[ik][k] = 1;
 
               solution[j] = ij;
               solution[k] = ik;
@@ -164,16 +165,7 @@ function gap11opt(){
     }
 
   } while(improved);
-}
 
-function findCurrentStore(customerIndex){
-  /*var i;
-  for(i=0; i<nStores; i++){
-    if(x[i][customerIndex] == 1) {
-      currentStore = i;
-      break;
-    }
-  }
-  return i;*/
-  return solution[customerIndex];
+  return solution;
+
 }

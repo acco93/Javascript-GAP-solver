@@ -23,6 +23,7 @@
 <script type="text/javascript" src="js/globalVariables.js"></script>
 <script type="text/javascript" src="js/localSearches.js"></script>
 <script type="text/javascript" src="js/algorithms.js"></script>
+<script type="text/javascript" src="js/simulatedAnnealing.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
 
 </head>
@@ -32,7 +33,7 @@
   <div class="container">
     <div class="page-header" style="text-align: center;">
       <h2><strong>GAP Solver</strong></h2>
-        <span class="menubar"><a href="https://bitbucket.org/acco93/gap-solver-js/">Repository</a> <a href="https://bitbucket.org/acco93/gap-solver-js/get/6fbc9f51450f.zip">GAP.zip</a> Docs Json format Settings <a href="GAPV2.html" >Hacker mode</a></span>
+        <span class="menubar"><a href="https://bitbucket.org/acco93/gap-solver-js/">Source</a> <a href="https://bitbucket.org/acco93/gap-solver-js/downloads">Download</a> Docs Json format Settings <a href="GAPV2.html" >Hacker mode</a></span>
     </div>
     <div class="panel panel-default" style="margin-top:30px;">
       <div class="panel-body">
@@ -83,8 +84,8 @@
             <label>Local searches</label>
         <div class="panel panel-default">
           <div class="panel-body">
-          <button id="gap10" class="btn btn-success" onclick="toggleLocalSearch(0)" style="margin-top:5px;" >1-0 opt</button>
-          <button id="gap11" class="btn btn-danger" onclick="toggleLocalSearch(1)" style="margin-top:5px;" >1-1 opt</button>
+          <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)" style="margin-top:5px;" >1-0 opt</button>
+          <button id="gap11Button" class="btn btn-danger" onclick="toggleLocalSearch(1)" style="margin-top:5px;" >1-1 opt</button>
           </div>
         </div>
       </div>
