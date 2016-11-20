@@ -1,4 +1,50 @@
 
+function tryT(solution, cost, neighbourFunction, k){
+
+  var t = Math.random() * cost;
+
+  info("random t: "+t);
+
+  var deltaT = t/100;
+  var times = 0;
+  do {
+      var accepted = 0;
+
+      for(var i=0;i<100;i++){
+
+        neighbour = neighbourFunction(solution, cost);
+        //console.log(cost);
+        //console.log(neighbour);
+        p = Math.exp(-(neighbour.z-cost)/(k*t));
+
+        r = Math.random();
+
+        //console.log(-(neighbour.z-cost)/(k*t)+" @@@ "+p+" --- "+r);
+
+        if(neighbour.z < cost || r < p){
+          accepted ++;
+        }
+
+      }
+
+      if(accepted < 40){
+        t+=deltaT;
+      } else if(accepted > 60) {
+        t-=deltaT;
+      }
+
+    console.log(accepted +" "+t);
+    times++;
+  }while(t>0 && (accepted < 40 || accepted >60) && times < 100);
+
+  if(t<=0){
+    t = 0.001;
+  }
+
+  return t;
+
+}
+
 
 function simulatedAnnealing(solution, neighbourFunction){
 
@@ -8,12 +54,14 @@ function simulatedAnnealing(solution, neighbourFunction){
   var currentSolution = solution.slice();
   var currentCost = bestCost;
 
-  var k = 1;
+  var k = 1.0;
   var i = 0;
-  var MAX_ITER = 1000000;
-  var MAX_T = 100;
+  var MAX_ITER = 10000;
+  var MAX_T = tryT(currentSolution, currentCost, neighbourFunction, k);
+  info("T: "+MAX_T);
   var t = MAX_T;
-  var deltaT = MAX_T / MAX_ITER;
+  //var deltaT = MAX_T / MAX_ITER;
+  var deltaT = 0.9;
 
   while(i<MAX_ITER){
 
@@ -49,11 +97,12 @@ function simulatedAnnealing(solution, neighbourFunction){
       }
     }
 
-    t-=deltaT;
+    t*=deltaT;
     i++;
 
   }
 
+    info("T: "+t);
   return bestSolution;
 
 }

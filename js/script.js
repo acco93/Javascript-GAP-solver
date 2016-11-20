@@ -266,13 +266,6 @@ function process() {
 
       if(isFeasible(solution)){
 
-      startTime = new Date();
-      solution = simulatedAnnealing(solution, gap11optSA);
-      endTime = new Date();
-      info("[Simulated annealing] Processing time: "+(endTime-startTime)+" milliseconds.");
-      log("Solution cost: "+z(solution));
-      log("is feasible: "+isFeasible(solution));
-
       if(AlgorithmSettings.perform10opt) {
         startTime = new Date();
         solution = gap10opt(solution);
@@ -297,6 +290,12 @@ function process() {
         }
       }
 
+      startTime = new Date();
+      solution = simulatedAnnealing(solution, gap11optSA);
+      endTime = new Date();
+      info("[Simulated annealing] Processing time: "+(endTime-startTime)+" milliseconds.");
+      log("Solution cost: "+z(solution));
+      log("is feasible: "+isFeasible(solution));
 
 
       } else {
@@ -409,13 +408,13 @@ function toggleLog(){
   }
 }
 
-function randomizeCustomer(){
-  if(AppSettings.randomizedCustomerOrder){
-    AppSettings.randomizedCustomerOrder = false;
+function randomizeCustomers(){
+  if(AlgorithmSettings.randomizedCustomerOrder){
+    AlgorithmSettings.randomizedCustomerOrder = false;
     HTMLElements.randomizeCustomersButton.addClass("btn-danger");
     HTMLElements.randomizeCustomersButton.removeClass("btn-success");
   } else {
-    AppSettings.randomizedCustomerOrder = true;
+    AlgorithmSettings.randomizedCustomerOrder = true;
     HTMLElements.randomizeCustomersButton.removeClass("btn-danger");
     HTMLElements.randomizeCustomersButton.addClass("btn-success");
   }
