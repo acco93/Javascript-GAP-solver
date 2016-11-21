@@ -267,35 +267,44 @@ function process() {
       if(isFeasible(solution)){
 
       if(AlgorithmSettings.perform10opt) {
+        var solutionCpy = solution.slice();
         startTime = new Date();
-        solution = gap10opt(solution);
+        solutionCpy = gap10opt(solutionCpy);
         endTime = new Date();
         info("[1-0 opt] Processing time: "+(endTime-startTime)+" milliseconds.");
-        log("Solution cost: "+z(solution));
-        log("is feasible: "+isFeasible(solution));
+        log("Solution cost: "+z(solutionCpy));
+        log("is feasible: "+isFeasible(solutionCpy));
         if(AppSettings.verboseLog){
-          verbosePrint();
+          verbosePrint(solutionCpy);
         }
       }
 
       if(AlgorithmSettings.perform11opt) {
+        var solutionCpy = solution.slice();
         startTime = new Date();
-        solution = gap11opt(solution);
+        solutionCpy = gap11opt(solutionCpy);
         endTime = new Date();
         info("[1-1 opt] Processing time: "+(endTime-startTime)+" milliseconds.");
-        log("Solution cost: "+z(solution));
-        log("is feasible: "+isFeasible(solution));
+        log("Solution cost: "+z(solutionCpy));
+        log("is feasible: "+isFeasible(solutionCpy));
         if(AppSettings.verboseLog){
-          verbosePrint();
+          verbosePrint(solutionCpy);
         }
       }
 
-      startTime = new Date();
-      solution = simulatedAnnealing(solution, gap11optSA);
-      endTime = new Date();
-      info("[Simulated annealing] Processing time: "+(endTime-startTime)+" milliseconds.");
-      log("Solution cost: "+z(solution));
-      log("is feasible: "+isFeasible(solution));
+      {
+        var solutionCpy = solution.slice();
+        startTime = new Date();
+        solutionCpy = simulatedAnnealing(solutionCpy, gap11optSA);
+        endTime = new Date();
+        info("[Simulated annealing] Processing time: "+(endTime-startTime)+" milliseconds.");
+        log("Solution cost: "+z(solutionCpy));
+        log("is feasible: "+isFeasible(solutionCpy));
+        if(AppSettings.verboseLog){
+          verbosePrint(solutionCpy);
+        }
+      }
+
 
 
       } else {

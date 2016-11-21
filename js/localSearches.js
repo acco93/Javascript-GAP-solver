@@ -142,9 +142,9 @@ function gap11opt(solution){
 
               currentCost = newCost;
 
-              storeSum[ij] += requests[ij][j];
+              /*storeSum[ij] += requests[ij][j];
               storeSum[ik] += requests[ik][j];
-
+              */
 
               break;
             } else {

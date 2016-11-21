@@ -17,6 +17,9 @@ function tryT(solution, cost, neighbourFunction, k){
         //console.log(neighbour);
         p = Math.exp(-(neighbour.z-cost)/(k*t));
 
+        alert(neighbour.z+" @ "+cost+" @ "+(neighbour.z-cost)+" @ "+((neighbour.z-cost)/(k*t)));
+      
+
         r = Math.random();
 
         //console.log(-(neighbour.z-cost)/(k*t)+" @@@ "+p+" --- "+r);
