@@ -121,7 +121,7 @@ function isFeasible(solution){
   }
 
   for(var i=0;i<nStores;i++){
-    if(storeSum[i]>capacities[i]){
+    if(storeSum[i] > capacities[i]){
       warning("Store "+i+ " capacity is exceeded! ("+storeSum[i]+">"+capacities[i]+")");
       return false;
     }

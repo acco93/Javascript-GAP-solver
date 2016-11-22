@@ -1,5 +1,5 @@
 
-function tryT(solution, cost, neighbourFunction, k){
+function tryT(solution, cost, storeSum, neighbourFunction, k){
 
   var t = Math.random() * cost;
 
@@ -12,13 +12,13 @@ function tryT(solution, cost, neighbourFunction, k){
 
       for(var i=0;i<100;i++){
 
-        neighbour = neighbourFunction(solution, cost);
+        neighbour = neighbourFunction(solution, cost, storeSum);
         //console.log(cost);
         //console.log(neighbour);
         p = Math.exp(-(neighbour.z-cost)/(k*t));
 
-        alert(neighbour.z+" @ "+cost+" @ "+(neighbour.z-cost)+" @ "+((neighbour.z-cost)/(k*t)));
-      
+      //  alert(neighbour.z+" @ "+cost+" @ "+(neighbour.z-cost)+" @ "+((neighbour.z-cost)/(k*t)));
+
 
         r = Math.random();
 
@@ -36,7 +36,7 @@ function tryT(solution, cost, neighbourFunction, k){
         t-=deltaT;
       }
 
-    console.log(accepted +" "+t);
+    //console.log(accepted +" "+t);
     times++;
   }while(t>0 && (accepted < 40 || accepted >60) && times < 100);
 
@@ -57,25 +57,44 @@ function simulatedAnnealing(solution, neighbourFunction){
   var currentSolution = solution.slice();
   var currentCost = bestCost;
 
+  var storeSum = new Array(nStores);
+
+  for(var i=0;i<nStores;i++){
+    storeSum[i] = 0;
+  }
+
+  for(var j=0;j<nCustomers;j++){
+    storeSum[solution[j]] += requests[solution[j]][j];
+  }
+
   var k = 1.0;
-  var i = 0;
+  var iter = 0;
   var MAX_ITER = 10000;
-  var MAX_T = tryT(currentSolution, currentCost, neighbourFunction, k);
+  var MAX_T = tryT(currentSolution, currentCost, storeSum, neighbourFunction, k);
   info("T: "+MAX_T);
   var t = MAX_T;
   //var deltaT = MAX_T / MAX_ITER;
   var deltaT = 0.9;
 
-  while(i<MAX_ITER){
+  while(iter<MAX_ITER){
 
-    result = neighbourFunction(currentSolution, currentCost);
+    var result = neighbourFunction(currentSolution, currentCost, storeSum);
 
     if(result.z < currentCost){
-      // perform the moves
+      // perform the moves ..
       for(var m=0; m<result.moves.length; m++){
+
         var j = result.moves[m].j;
         var i = result.moves[m].i;
+        // .. in the store sum values
+        // old store = currentSolution[j]
+        storeSum[currentSolution[j]] -= requests[currentSolution[j]][j];
+        // new store = i
+        storeSum[i] += requests[i][j];
+
+        // .. in the solution
         currentSolution[j] = i;
+
       }
       currentCost = result.z;
 
@@ -88,11 +107,21 @@ function simulatedAnnealing(solution, neighbourFunction){
     } else {
       p = Math.exp(-(result.z-currentCost)/(k*t));
 
-      if(Math.random()<p){
+      if(Math.random() < p){
         // perform the moves
         for(var m; m<result.moves.length; m++){
           var j = result.moves[m].j;
           var i = result.moves[m].i;
+          // .. in the store sum values
+          // old store = currentSolution[j]
+          storeSum[currentSolution[j]] -= requests[currentSolution[j]][j];
+          // new store = i
+          storeSum[i] += requests[i][j];
+          if(storeSum[i] > capacities[i]){
+            alert(storeSum[i]+" "+iter);
+          }
+
+          // .. in the solution
           currentSolution[j] = i;
         }
         currentCost = result.z;
@@ -101,7 +130,7 @@ function simulatedAnnealing(solution, neighbourFunction){
     }
 
     t*=deltaT;
-    i++;
+    iter++;
 
   }
 
@@ -110,22 +139,11 @@ function simulatedAnnealing(solution, neighbourFunction){
 
 }
 
-function gap10optSA (solution, cost){
+function gap10optSA (solution, cost, storeSum){
 
   // chose a customer and a store random index
   var customerIndex = Math.floor((Math.random() * nCustomers));
   var storeIndex = Math.floor((Math.random() * nStores));
-
-
-  var storeSum = new Array(nStores);
-
-  for(var i=0;i<nStores;i++){
-    storeSum[i] = 0;
-  }
-
-  for(var j=0;j<nCustomers;j++){
-    storeSum[solution[j]] += requests[solution[j]][j];
-  }
 
   /* current customer store */
   currentStore = solution[customerIndex];
@@ -148,9 +166,9 @@ function gap10optSA (solution, cost){
 
 }
 
-function gap11optSA(solution, cost){
+function gap11optSA(solution, cost, storeSum){
 
-  // chose a customer and a store random index
+  // chose a customer pair and a store random index
   var customerIndexJ = Math.floor((Math.random() * nCustomers));
   var storeIndexJ = Math.floor((Math.random() * nStores));
   var customerIndexK;
@@ -161,20 +179,9 @@ function gap11optSA(solution, cost){
 
   var storeIndexK = Math.floor((Math.random() * nStores));
 
-  var storeSum = new Array(nStores);
 
-  for(var i=0;i<nStores;i++){
-    storeSum[i] = 0;
-  }
-
-  for(var j=0;j<nCustomers;j++){
-    storeSum[solution[j]] += requests[solution[j]][j];
-  }
-
-  currentStoreJ = solution[customerIndexJ];
-  currentStoreK = solution[customerIndexK];
-
-
+  var currentStoreJ = solution[customerIndexJ];
+  var currentStoreK = solution[customerIndexK];
 
 
   /*
@@ -198,10 +205,16 @@ function gap11optSA(solution, cost){
     moves.push({j: customerIndexJ, i: storeIndexJ});
     moves.push({j: customerIndexK, i: storeIndexK});
 
-    newCost = cost - costs[currentStoreJ][customerIndexJ] + costs[storeIndexJ][customerIndexJ]
+    newCost = newCost - costs[currentStoreJ][customerIndexJ] + costs[storeIndexJ][customerIndexJ]
                           - costs[currentStoreK][customerIndexK] + costs[storeIndexK][customerIndexK];
 
   }
+
+  /* Re fix store sum variable! It will be possibly updated in the main procedure! */
+  storeSum[currentStoreJ] += requests[currentStoreJ][customerIndexJ];
+  storeSum[currentStoreK] += requests[currentStoreK][customerIndexK];
+  storeSum[storeIndexJ] -= requests[storeIndexJ][customerIndexJ];
+  storeSum[storeIndexK] -= requests[storeIndexK][customerIndexK];
 
   return {
     moves: moves,
