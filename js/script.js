@@ -13,6 +13,8 @@ $(document).ready(function(){
   HTMLElements.randomizeCustomersButton = $("#randomizeCustomersButton");
   HTMLElements.gap10Button = $("#gap10Button");
   HTMLElements.gap11Button = $("#gap11Button");
+  HTMLElements.changelogBody = $("#changelogBody");
+  HTMLElements.changelogModal = $("#changelogModal");
 
   // Bind behaviors to actions
   HTMLElements.textArea.click(onTextAreaClick);
@@ -473,4 +475,24 @@ function toggleLocalSearch(index){
       }
     break;
   }
+}
+
+function showChangelog(){
+  HTMLElements.changelogModal.modal("show");
+
+  if(Cache.changelog == undefined) {
+    $.getJSON( "https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/commits", function( data ) {
+      Cache.changelog = data;
+      console.log(data);
+      for(var i=0;i < data.values.length; i++){
+        date = new Date(data.values[i].date);
+        HTMLElements.changelogBody.append("<p><strong>"+date.toDateString()+"</strong> "+data.values[i].message+"</p>");
+      }
+    });
+  }
+
+
+
+
+
 }

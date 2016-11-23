@@ -58,9 +58,15 @@ var HTMLElements = {
     verboseLogButton: undefined,
     randomizeCustomersButton: undefined,
     gap10Button: undefined,
-    gap11Button: undefined
+    gap11Button: undefined,
+    changelogModal: undefined,
+    changelogBody: undefined
 };
 
+var Cache = {
+  instances: [],
+  changelog: undefined
+};
 
 var lineNum = 0;
 var session = 0;

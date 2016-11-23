@@ -69,7 +69,7 @@ function simulatedAnnealing(solution, neighbourFunction){
 
   var k = 1.0;
   var iter = 0;
-  var MAX_ITER = 10000;
+  var MAX_ITER = 100000;
   var MAX_T = tryT(currentSolution, currentCost, storeSum, neighbourFunction, k);
   info("T: "+MAX_T);
   var t = MAX_T;

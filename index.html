@@ -33,7 +33,11 @@
   <div class="container">
     <div class="page-header" style="text-align: center;">
       <h2><strong>GAP Solver</strong></h2>
-        <span class="menubar"><a href="https://bitbucket.org/acco93/gap-solver-js/">Source</a> <a href="https://bitbucket.org/acco93/gap-solver-js/downloads">Download</a> Docs Json format Settings <a href="GAPV2.html" >Hacker mode</a></span>
+        <span class="menubar">
+          <a href="https://bitbucket.org/acco93/gap-solver-js/">Source</a>
+          <a href="https://bitbucket.org/acco93/gap-solver-js/downloads">Download</a>
+          <a href="#" onclick="showChangelog()">Changelog</a>
+          Docs Json format Settings <a href="GAPV2.html" >Hacker mode</a></span>
     </div>
     <div class="panel panel-default" style="margin-top:30px;">
       <div class="panel-body">
@@ -117,6 +121,26 @@
 
   </div>
 
+
+  <!-- Changelog modal -->
+  <div id="changelogModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Changelog</h4>
+        </div>
+        <div id="changelogBody" class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 </body>
 
