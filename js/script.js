@@ -22,8 +22,15 @@ $(document).ready(function(){
 
 
   $.getJSON("https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/?callback=", function( data ) {
-    var lu = new Date(data.updated_on);
-    $("#lastUpInfo").html('<small style="color: green;">' +lu.toDateString()+'</small>');
+    var htmlLastModified = new Date(document.lastModified);
+    var repoLastUpdate = new Date(data.updated_on);
+
+    if(htmlLastModified.getTime() - repoLastUpdate.getTime() > 0){
+      $("#lastUpInfo").html('<small style="color: green;">UP TO DATE</small>');
+    } else {
+      $("#lastUpInfo").html('<small style="color: red;">Repo version is more updated!</small>');
+    }
+
   });
 
 
