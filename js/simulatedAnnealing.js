@@ -7,6 +7,11 @@ function tryT(solution, cost, storeSum, neighbourFunction, k){
 
   var deltaT = t/100;
   var times = 0;
+
+  /*
+  Trovate t analiticamente in modo che ...
+  */
+
   do {
       var accepted = 0;
 
@@ -82,7 +87,7 @@ function simulatedAnnealing(solution, neighbourFunction){
 
     if(result.z < currentCost){
       // perform the moves ..
-      for(var m=0; m<result.moves.length; m++){
+      for(var m=0; m < result.moves.length; m++){
 
         var j = result.moves[m].j;
         var i = result.moves[m].i;
@@ -137,6 +142,10 @@ function simulatedAnnealing(solution, neighbourFunction){
     info("T: "+t);
   return bestSolution;
 
+
+  /*
+    Plot z in i
+  */
 }
 
 function gap10optSA (solution, cost, storeSum){

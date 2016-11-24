@@ -312,9 +312,9 @@ function process() {
       {
         var solutionCpy = solution.slice();
         startTime = new Date();
-        solutionCpy = simulatedAnnealing(solutionCpy, gap10optSA);
+        solutionCpy = simulatedAnnealing(solutionCpy, gap10optTS);
         endTime = new Date();
-        info("[Simulated annealing (using 10opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
+        info("[Simulated annealing (using 1-0 opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
         log("Solution cost: "+z(solutionCpy));
         log("is feasible: "+isFeasible(solutionCpy));
         if(AppSettings.verboseLog){
@@ -328,7 +328,7 @@ function process() {
         startTime = new Date();
         solutionCpy = simulatedAnnealing(solutionCpy, gap11optSA);
         endTime = new Date();
-        info("[Simulated annealing (using 11opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
+        info("[Simulated annealing (using 1-1 opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
         log("Solution cost: "+z(solutionCpy));
         log("is feasible: "+isFeasible(solutionCpy));
         if(AppSettings.verboseLog){
@@ -336,7 +336,18 @@ function process() {
         }
       }
 
-
+      {
+        var solutionCpy = solution.slice();
+        startTime = new Date();
+        solutionCpy = tabuSearch(solutionCpy, gap10optSA);
+        endTime = new Date();
+        info("[Tabu search (using 1-0 opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
+        log("Solution cost: "+z(solutionCpy));
+        log("is feasible: "+isFeasible(solutionCpy));
+        if(AppSettings.verboseLog){
+          verbosePrint(solutionCpy);
+        }
+      }
 
       } else {
         // constructive heuristic returned a not feasible solution
