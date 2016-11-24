@@ -18,6 +18,7 @@
 <script type="text/javascript" src="ladda/dist/spin.min.js"></script>
 <script type="text/javascript" src="ladda/dist/ladda.min.js"></script>
 <script type="text/javascript" src="ladda/js/prism.js"></script>
+<script src="canvasjs/canvasjs.min.js"></script>
 
 <!-- my js -->
 <script type="text/javascript" src="js/globalVariables.js"></script>
@@ -97,11 +98,12 @@
           </div>
         </div>
       </div>
-      <div class="form-group col-lg-3">
+      <div class="form-group col-lg-4">
             <label>Output settings</label>
         <div class="panel panel-default">
           <div class="panel-body">
           <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Verbose log</button>
+          <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Draw graphs</button>
           </div>
         </div>
     </div>
@@ -150,6 +152,15 @@
     </div>
   </div>
 
+
+	<div id="myNav" class="overlay">
+	  <!-- Overlay content -->
+	  <div class="overlay-content">
+		<span>Processing ...</span>
+	  </div>
+
+	</div>
+  <a href="#" class="scrollToTop">Scroll To Top</a>
 </body>
 
 

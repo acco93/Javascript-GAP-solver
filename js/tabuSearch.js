@@ -1,7 +1,9 @@
-function tabuSearch (solution, neighbourFunction){
+function tabuSearch (solution){
 
-  var MAX_ITER = 500000;
-  var TABU_TENURE = 25;
+  var data = [];
+
+  var MAX_ITER = 5000;
+  var TABU_TENURE = 100;
   var iter = 0;
 
   // init the best solution
@@ -14,11 +16,9 @@ function tabuSearch (solution, neighbourFunction){
 
   // compute the store occupation
   var storeSum = new Array(nStores);
-
   for(var i=0;i<nStores;i++){
     storeSum[i] = 0;
   }
-
   for(var j=0;j<nCustomers;j++){
     storeSum[solution[j]] += requests[solution[j]][j];
   }
@@ -31,46 +31,52 @@ function tabuSearch (solution, neighbourFunction){
     }
   }
 
-  do{
+  for(iter = 0; iter < MAX_ITER; iter++){
+    var iBest = undefined;
+    var jBest = undefined;
+    var bestNeighbourCost = undefined;
 
-    var iBestNeighbour = -1;
-    var jBestNeighbour = -1;
-    var bestNeighbourCost = Number.MAX_VALUE;;
+    for(var j=0; j<nCustomers; j++){
+      var currentStore = currentSolution[j];
+      for(var i=0; i<nStores; i++){
 
-    for(var j=0;j<nCustomers; j++){
+        if(i==currentStore){ continue; }
 
-      currentStore = solution[j];
+        var newCost = currentCost - costs[currentStore][j] + costs[i][j];
 
-      for(var i=0;i<nStores; i++){
-
-        if(i == currentStore) {continue;}
-
-        newCost = currentCost - costs[currentStore][j] + costs[i][j]
-
-        if(storeSum[i]+requests[i][j] <= capacities[i] && newCost < bestNeighbourCost && iter >= tabuList[i][j]){
-          iBestNeighbour = i;
-          jBestNeighbour = j;
-          bestNeighbourCost = newCost;
+        if(storeSum[i]+requests[i][j] <= capacities[i] && iter >= tabuList[i][j]){
+          if(bestNeighbourCost == undefined || newCost < bestNeighbourCost){
+            iBest = i;
+            jBest = j;
+            bestNeighbourCost = newCost;
+          }
         }
 
       }
     }
 
+    if(iBest == undefined || jBest == undefined){
+      // can't find a feasible neighbour!
+      // ooooooow don't know what to do! D:
+      warning("All moves are tabu! Terminating at "+iter+"/"+MAX_ITER);
+      break;
+    }
 
     currentCost = bestNeighbourCost;
+
 
     // modify the solution and the storeSum!
     // .. in the store sum values
     // old store = currentSolution[j]
-    storeSum[currentSolution[jBestNeighbour]] -= requests[currentSolution[jBestNeighbour]][jBestNeighbour];
+    storeSum[currentSolution[jBest]] -= requests[currentSolution[jBest]][jBest];
     // new store = i
-    storeSum[iBestNeighbour] += requests[iBestNeighbour][jBestNeighbour];
+    storeSum[iBest] += requests[iBest][jBest];
 
 
-    currentSolution[jBestNeighbour] = iBestNeighbour;
+    currentSolution[jBest] = iBest;
 
     // add the moves to the tabu list
-    tabuList[iBestNeighbour][jBestNeighbour] = iter+TABU_TENURE;
+    tabuList[iBest][jBest] = iter+TABU_TENURE;
 
 
     // check if currentSolution is better than bestSolution
@@ -81,51 +87,18 @@ function tabuSearch (solution, neighbourFunction){
 
 
 
-    iter ++;
-  } while(iter < MAX_ITER);
-
-
-  return bestSolution;
-
-}
-
-function gap10optTS (solution, cost, storeSum, customerIndex, storeIndex){
-
-  /* current customer store */
-  currentStore = solution[customerIndex];
-
-  var newCost = cost;
-  var moves = [];
-
-  if(storeIndex != currentStore && storeSum[storeIndex]+requests[storeIndex][customerIndex] <= capacities[storeIndex]){
-
-    moves.push({j: customerIndex, i: storeIndex});
-
-    newCost = cost - costs[currentStore][customerIndex] + costs[storeIndex][customerIndex];
+    data[iter] = {
+      x: iter,
+      y: currentCost
+    }
 
   }
+
+
 
   return {
-    moves: moves,
-    z: newCost
-  };
+          solution: bestSolution,
+          data: data
+        };
 
 }
-
-function areMovesTabu(tabuList, moves, iter){
-
-  for(var m=0; m < moves.length; m++){
-    var i = moves[m].i;
-    var j = moves[m].j;
-    if(tabuList[i][j] > iter){
-      return true;
-    }
-  }
-
-  return false;
-}
-
-
-/*
-  Hashing indici per 11 opt
-*/

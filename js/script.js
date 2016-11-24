@@ -1,3 +1,12 @@
+function openNav() {
+    document.getElementById("myNav").style.width = "100%";
+}
+
+/* Close when someone clicks on the "x" symbol inside the overlay */
+function closeNav() {
+    document.getElementById("myNav").style.width = "0%";
+}
+
 /*
   Document ready!
 */
@@ -33,7 +42,19 @@ $(document).ready(function(){
 
   });
 
+  $(window).scroll(function(){
+  		if ($(this).scrollTop() > 100) {
+  			$('.scrollToTop').fadeIn();
+  		} else {
+  			$('.scrollToTop').fadeOut();
+  		}
+  	});
 
+  	//Click event to scroll to top
+  	$('.scrollToTop').click(function(){
+  		$('html, body').animate({scrollTop : 0},800);
+  		return false;
+  	});
 
 });
 
@@ -216,7 +237,7 @@ function verbosePrint(solution){
   }
 
   for(var i=0;i<nStores;i++){
-    log("Store "+i+" requests: "+reqSum+" < "+capacities[i]);
+    log("Store "+i+" requests: "+reqSum[i]+" < "+capacities[i]);
   }
 
   log("Solution:" + solution);
@@ -230,6 +251,7 @@ function process() {
 
   // lock buttons
   HTMLElements.l.start();
+  openNav();
   // start session div
   HTMLElements.output.append('<div session='+session+'>');
   // and get it
@@ -312,41 +334,47 @@ function process() {
       {
         var solutionCpy = solution.slice();
         startTime = new Date();
-        solutionCpy = simulatedAnnealing(solutionCpy, gap10optTS);
+        result = simulatedAnnealing(solutionCpy, gap10optSA);
         endTime = new Date();
         info("[Simulated annealing (using 1-0 opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
-        log("Solution cost: "+z(solutionCpy));
-        log("is feasible: "+isFeasible(solutionCpy));
+        log("Solution cost: "+z(result.solution));
+        log("is feasible: "+isFeasible(result.solution));
         if(AppSettings.verboseLog){
-          verbosePrint(solutionCpy);
+          verbosePrint(result.solution);
         }
+        drawGraph("Simulated Annealing (1-0 opt move)","SA10_s"+session,result.data);
       }
 
 
       {
         var solutionCpy = solution.slice();
         startTime = new Date();
-        solutionCpy = simulatedAnnealing(solutionCpy, gap11optSA);
+        result = simulatedAnnealing(solutionCpy, gap11optSA);
         endTime = new Date();
         info("[Simulated annealing (using 1-1 opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
-        log("Solution cost: "+z(solutionCpy));
-        log("is feasible: "+isFeasible(solutionCpy));
+        log("Solution cost: "+z(result.solution));
+        log("is feasible: "+isFeasible(result.solution));
         if(AppSettings.verboseLog){
-          verbosePrint(solutionCpy);
+          verbosePrint(result.solution);
         }
+        drawGraph("Simulated Annealing (1-1 opt move)","SA11_s"+session,result.data);
       }
 
       {
         var solutionCpy = solution.slice();
         startTime = new Date();
-        solutionCpy = tabuSearch(solutionCpy, gap10optSA);
+        result = tabuSearch(solutionCpy);
         endTime = new Date();
         info("[Tabu search (using 1-0 opt move)] Processing time: "+(endTime-startTime)+" milliseconds.");
-        log("Solution cost: "+z(solutionCpy));
-        log("is feasible: "+isFeasible(solutionCpy));
+        log("Solution cost: "+z(result.solution));
+        log("is feasible: "+isFeasible(result.solution));
         if(AppSettings.verboseLog){
-          verbosePrint(solutionCpy);
+          verbosePrint(result.solution);
         }
+        if(result.data.length > 0){
+            drawGraph("Tabu Search (1-0 opt move)","TS10_s"+session,result.data);
+        }
+
       }
 
       } else {
@@ -358,6 +386,24 @@ function process() {
   });
 
 
+}
+
+function drawGraph(title, uniqueName, datap){
+  println('<div id="chart'+uniqueName+'" style="height: 400px; width: 100%;"></div>');
+
+  var chart = new CanvasJS.Chart("chart"+uniqueName, {
+    title: {
+      text: title
+    },
+    axisX: {
+      interval: 1000
+    },
+    data: [{
+      type: "line",
+      dataPoints: datap
+    }]
+  });
+  chart.render();
 }
 
 function terminateSession(){
@@ -373,6 +419,7 @@ function terminateSession(){
   $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
   // unlock button
   HTMLElements.l.stop();
+  closeNav();
 }
 
 
