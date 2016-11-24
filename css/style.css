@@ -38,3 +38,20 @@
 	background-color: #444;
 
 }
+
+#changelogBody{
+ 	height: 200px;
+	overflow-y: scroll;
+}
+
+.idle {
+
+}
+
+.done {
+
+}
+
+.processing {
+
+}

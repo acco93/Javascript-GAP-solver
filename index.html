@@ -36,8 +36,10 @@
         <span class="menubar">
           <a href="https://bitbucket.org/acco93/gap-solver-js/">Source</a>
           <a href="https://bitbucket.org/acco93/gap-solver-js/downloads">Download</a>
+          <!--Docs Json format Settings-->
+          <a href="GAPV2.html" >Hacker mode</a></span>
           <a href="#" onclick="showChangelog()">Changelog</a>
-          Docs Json format Settings <a href="GAPV2.html" >Hacker mode</a></span>
+          <span id="lastUpInfo" title="Last update date"> ... </span>
     </div>
     <div class="panel panel-default" style="margin-top:30px;">
       <div class="panel-body">
@@ -51,6 +53,7 @@
              <li><a href="#" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/1.json")'>1.json</a></li>
              <li><a href="#" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/2.json")'>2.json</a></li>
              <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/3.json")'>3.json</a></li>
+            <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json")'>forliCesenaGAP.json</a></li>
              <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/d801600.json")'>d801600.json</a></li>
              <!--<li role="separator" class="divider"></li>
              <li><a href="#">Separated link</a></li>-->
@@ -58,7 +61,7 @@
          </div><!-- /btn-group -->
        </div><!-- /input-group -->
        <div class="form-group">
-          <label for="comment">... or paste the json here:</label>
+          <label for="comment">... or paste your json here:</label>
           <textarea id="textarea" class="form-control" rows="5" id="comment" placeholder="">
 {  "nome":"esempietto",
    "clienti":6,
@@ -104,7 +107,11 @@
 
 
          <button id="processButton" class="btn btn-lg btn-block btn-info ladda-button" onclick="process()" style="margin-top:5px; margin-bottom:5px;" data-style="zoom-in"><span class="ladda-label">Process (the URL)</span><span class="ladda-spinner"></span></button>
-
+         <ol>
+            <li class="processing">Build a solution S using a constructive heuristic</li>
+            <li class="done">Apply simulated annealing to S using a 1-0 opt to chose a neighbour</li>
+            <li class="idle">Apply simulated annealing to S using a 1-1 opt to chose a neighbour</li>
+         </ol>
 		</div>
 
 

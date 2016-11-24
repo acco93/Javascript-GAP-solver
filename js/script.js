@@ -20,6 +20,14 @@ $(document).ready(function(){
   HTMLElements.textArea.click(onTextAreaClick);
   HTMLElements.input.click(onInputClick);
 
+
+  $.getJSON("https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/?callback=", function( data ) {
+    var lu = new Date(data.updated_on);
+    $("#lastUpInfo").html('<small style="color: green;">' +lu.toDateString()+'</small>');
+  });
+
+
+
 });
 
 /*
@@ -479,14 +487,18 @@ function toggleLocalSearch(index){
 
 function showChangelog(){
   HTMLElements.changelogModal.modal("show");
+  HTMLElements.changelogBody.append('<h1 style="text-align=center">Loading ...</h1>');
 
   if(Cache.changelog == undefined) {
     $.getJSON( "https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/commits", function( data ) {
+      HTMLElements.changelogBody.empty();
       Cache.changelog = data;
-      console.log(data);
-      for(var i=0;i < data.values.length; i++){
+
+      var date = new Date(data.values[0].date);
+      HTMLElements.changelogBody.append("<p><strong>"+date.toDateString()+"</strong> "+data.values[0].message+"</p>");
+      for(var i=1;i < data.values.length; i++){
         date = new Date(data.values[i].date);
-        HTMLElements.changelogBody.append("<p><strong>"+date.toDateString()+"</strong> "+data.values[i].message+"</p>");
+        HTMLElements.changelogBody.append("<p><small><strong>"+date.toDateString()+"</strong> "+data.values[i].message+"</small></p>");
       }
     });
   }
