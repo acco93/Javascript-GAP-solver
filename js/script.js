@@ -17,7 +17,6 @@ $(document).ready(function(){
   HTMLElements.processButton = $('#processButton');
   HTMLElements.input = $('#input');
   HTMLElements.output = $("#output");
-  HTMLElements.l = Ladda.create(document.querySelector( '.ladda-button' ));
   HTMLElements.verboseLogButton = $("#verboseLogButton");
   HTMLElements.randomizeCustomersButton = $("#randomizeCustomersButton");
   HTMLElements.gap10Button = $("#gap10Button");
@@ -250,7 +249,6 @@ function verbosePrint(solution){
 function process() {
 
   // lock buttons
-  HTMLElements.l.start();
   openNav();
   // start session div
   HTMLElements.output.append('<div session='+session+'>');
@@ -418,7 +416,6 @@ function terminateSession(){
   // scroll to bottom
   $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
   // unlock button
-  HTMLElements.l.stop();
   closeNav();
 }
 
@@ -484,12 +481,9 @@ function clearSession(session){
 
   var div = $('div[session="'+session+'"]');
 
-  // lock buttons
-  HTMLElements.l.start();
+
   div.fadeOut("fast",function(){
     div.remove();
-    // unlock buttons
-    HTMLElements.l.stop();
   });
 
 }

@@ -53,7 +53,6 @@ var HTMLElements = {
     textArea: undefined,
     processButton: undefined,
     output: undefined,  // output div
-    l: undefined, // ladda buttons
     sessionDiv: undefined, // current session div
     verboseLogButton: undefined,
     randomizeCustomersButton: undefined,

@@ -3,8 +3,6 @@
 
 <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 
-<link rel="stylesheet" type="text/css" href="ladda/dist/ladda-themeless.min.css">
-<link rel="stylesheet" type="text/css" href="ladda/css/prism.css">
 <link rel="stylesheet" type="text/css" href="pace/pace.css">
 
 <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -16,7 +14,6 @@
 <script type="text/javascript" src="pace/pace.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="ladda/dist/spin.min.js"></script>
-<script type="text/javascript" src="ladda/dist/ladda.min.js"></script>
 <script type="text/javascript" src="ladda/js/prism.js"></script>
 <script src="canvasjs/canvasjs.min.js"></script>
 
@@ -45,9 +42,9 @@
     </div>
     <div class="panel panel-default" style="margin-top:30px;">
       <div class="panel-body">
-       <label for="comment">Json instance URL:</label>
+       <label for="comment">0a) Select (or write) a json instance URL:</label>
         <div class="input-group">
-         <input type="text" id="input" class="form-control" value="http://astarte.csr.unibo.it/GAPdata/esempiettoGAP.json" aria-label="...">
+         <input type="text" id="input" class="form-control" value="http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json" aria-label="...">
          <div class="input-group-btn">
            <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&nbsp;<span class="caret"></span> <span class="sr-only">Toggle Dropdown</span> </button>
            <ul class="dropdown-menu dropdown-menu-right">
@@ -63,7 +60,7 @@
          </div><!-- /btn-group -->
        </div><!-- /input-group -->
        <div class="form-group">
-          <label for="comment">... or paste your json here:</label>
+          <label for="comment">0b) ... or paste your json here:</label>
           <textarea id="textarea" class="form-control" rows="5" id="comment" placeholder="">
 {  "nome":"esempietto",
    "clienti":6,
@@ -80,54 +77,74 @@
         </div>
 
 
-    <div class="col-lg-12">
-      <div class="form-group col-lg-3">
-            <label>Algorithm settings</label>
-        <div class="panel panel-default">
-          <div class="panel-body">
-          <button id="randomizeCustomersButton" class="btn btn-danger" onclick="randomizeCustomers()" style="margin-top:5px;" >Randomize customer order</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-group col-lg-3">
-            <label>Local searches</label>
-        <div class="panel panel-default">
-          <div class="panel-body">
+    <div class="form-group">
+       <label for="comment">1) Build a solution <span style="color: red">S</span> using ... </label>
+       <div class="">
+         <button class="btn btn-success" disabled="true">Constructive heuristic</button>
+       </div>
+    </div>
+
+    <div class="form-group">
+       <label for="comment">2) Decide some general config ... </label>
+       <div class="">
+         <button id="randomizeCustomersButton" class="btn btn-danger" onclick="randomizeCustomers()" style="margin-top:5px;" >Randomize customer order</button>
+       </div>
+   </div>
+
+     <div class="form-group">
+        <label for="comment">2) Try to improve <span style="color: red">S</span> using some local searches ... </label>
+        <div class="">
           <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)" style="margin-top:5px;" >1-0 opt</button>
           <button id="gap11Button" class="btn btn-danger" onclick="toggleLocalSearch(1)" style="margin-top:5px;" >1-1 opt</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-group col-lg-4">
-            <label>Output settings</label>
-        <div class="panel panel-default">
-          <div class="panel-body">
-          <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Verbose log</button>
-          <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Draw graphs</button>
-          </div>
         </div>
     </div>
 
+    <div class="form-group">
+       <label for="comment">3) Try to improve <span style="color: red">S</span> using some metaheuristics ... </label>
+       <div class="">
+       </div>
+   </div>
 
-         <button id="processButton" class="btn btn-lg btn-block btn-info ladda-button" onclick="process()" style="margin-top:5px; margin-bottom:5px;" data-style="zoom-in"><span class="ladda-label">Process (the URL)</span><span class="ladda-spinner"></span></button>
-         <ol>
-            <li class="processing">Build a solution S using a constructive heuristic</li>
-            <li class="done">Apply simulated annealing to S using a 1-0 opt to chose a neighbour</li>
-            <li class="idle">Apply simulated annealing to S using a 1-1 opt to chose a neighbour</li>
-         </ol>
-		</div>
-
-
-		<!--Algorithms
-		Local searches-->
+   <div class="form-group">
+      <label for="comment">4) Chose some output settings ... </label>
+      <div class="">
+        <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Verbose log</button>
       </div>
-    </div>
+  </div>
 
-	<div class="panel panel-default">
-	  <div class="panel-body">
-		<div id="output"></div>
-	  </div>
-	</div>
+  <div class="form-group">
+     <label for="comment">5) Run it! </label>
+     <div class="row">
+       <div class="col-md-4">
+         <button id="processButton" class="btn btn-lg btn-block btn-info" onclick="process()">Process (the URL)</button>
+       </div>
+       <div class="col-md-4">
+         <button class="btn btn-lg btn-block btn-warning" onclick="">Reset config</button>
+       </div>
+       <div class="col-md-4">
+         <button class="btn btn-lg btn-block btn-danger">Clear all</button>
+       </div>
+     </div>
+ </div>
+
+
+
+
+		</div> <!-- panel body -->
+
+
+  </div> <!-- panel -->
+
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+    <div id="output"></div>
+    </div>
+  </div>
+
+</div> ><!-- page -->
+
+
 
   </div>
 

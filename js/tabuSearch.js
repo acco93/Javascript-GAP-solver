@@ -2,7 +2,7 @@ function tabuSearch (solution){
 
   var data = [];
 
-  var MAX_ITER = 5000;
+  var MAX_ITER = 10000;
   var TABU_TENURE = 100;
   var iter = 0;
 
@@ -34,7 +34,7 @@ function tabuSearch (solution){
   for(iter = 0; iter < MAX_ITER; iter++){
     var iBest = undefined;
     var jBest = undefined;
-    var bestNeighbourCost = undefined;
+    var bestNeighbourCost = Number.MAX_VALUE;
 
     for(var j=0; j<nCustomers; j++){
       var currentStore = currentSolution[j];
@@ -44,12 +44,12 @@ function tabuSearch (solution){
 
         var newCost = currentCost - costs[currentStore][j] + costs[i][j];
 
-        if(storeSum[i]+requests[i][j] <= capacities[i] && iter >= tabuList[i][j]){
-          if(bestNeighbourCost == undefined || newCost < bestNeighbourCost){
+        if(storeSum[i]+requests[i][j] <= capacities[i] && iter >= tabuList[i][j] && newCost < bestNeighbourCost){
+          //if(bestNeighbourCost == undefined || newCost < bestNeighbourCost){
             iBest = i;
             jBest = j;
             bestNeighbourCost = newCost;
-          }
+          //}
         }
 
       }
