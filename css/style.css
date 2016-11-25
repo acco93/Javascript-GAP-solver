@@ -82,7 +82,7 @@
 }
 
 /* The navigation links inside the overlay */
-.overlay span {
+.overlay p {
     padding: 8px;
     text-decoration: none;
     font-size: 36px;
@@ -92,7 +92,7 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.overlay span:hover, .overlay span:focus {
+.overlay p:hover, .overlay span:focus {
     color: #f1f1f1;
 }
 
@@ -126,4 +126,16 @@
 	text-decoration:none;
 	color:white;
 	background-color: #39b3d7;
+}
+
+.green {
+	color: #5cb85c;
+}
+
+.red {
+	color: #d2322d;
+}
+
+.yellow{
+	color: #ed9c28;
 }

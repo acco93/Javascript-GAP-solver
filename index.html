@@ -13,8 +13,6 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="pace/pace.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="ladda/dist/spin.min.js"></script>
-<script type="text/javascript" src="ladda/js/prism.js"></script>
 <script src="canvasjs/canvasjs.min.js"></script>
 
 <!-- my js -->
@@ -23,6 +21,7 @@
 <script type="text/javascript" src="js/algorithms.js"></script>
 <script type="text/javascript" src="js/simulatedAnnealing.js"></script>
 <script type="text/javascript" src="js/tabuSearch.js"></script>
+<script type="text/javascript" src="js/userInterface.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
 
 </head>
@@ -102,6 +101,9 @@
     <div class="form-group">
        <label for="comment">3) Try to improve <span style="color: red">S</span> using some metaheuristics ... </label>
        <div class="">
+         <button class="btn btn-success">Simulated annealing (1-0 move)</button>
+         <button class="btn btn-success">Simulated annealing (1-1 move)</button>
+         <button class="btn btn-success">Tabu search (1-0 move)</button>
        </div>
    </div>
 
@@ -122,7 +124,7 @@
          <button class="btn btn-lg btn-block btn-warning" onclick="">Reset config</button>
        </div>
        <div class="col-md-4">
-         <button class="btn btn-lg btn-block btn-danger">Clear all</button>
+         <button class="btn btn-lg btn-block btn-danger" onclick="clearAllSessions()">Clear all</button>
        </div>
      </div>
  </div>
@@ -136,11 +138,8 @@
   </div> <!-- panel -->
 
 
-  <div class="panel panel-default">
-    <div class="panel-body">
-    <div id="output"></div>
-    </div>
-  </div>
+  <div id="output"></div>
+
 
 </div> <!-- page -->
 
@@ -173,7 +172,7 @@
 	<div id="myNav" class="overlay">
 	  <!-- Overlay content -->
 	  <div class="overlay-content">
-		<span>Processing ...</span>
+		<p><span class="green">P</span> <span class="yellow">r</span> <span class="red">o</span> <span class="green">c</span> <span class="yellow">e</span> <span class="red">s</span> <span class="green">s</span> <span class="yellow">i</span> <span class="red">n</span> <span class="green">g</span> <span class="yellow">.</span> <span class="red">.</span> <span class="green">.</span></p>
 	  </div>
 
 	</div>
