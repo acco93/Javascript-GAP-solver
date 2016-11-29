@@ -51,7 +51,7 @@ function simulatedAnnealing(solution, instance, neighbourFunction) {
     // Simulated annealing parameters ...
     var k = 1.0;
     var iter = 0;
-    var MAX_ITER = 10000;
+    var MAX_ITER = AlgorithmSettings.MAX_ITER;
     var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
     info("T: "+MAX_T);
     var t = MAX_T;
@@ -73,8 +73,9 @@ function simulatedAnnealing(solution, instance, neighbourFunction) {
 
     var m,j,i;
 
+    var startTime = new Date();
     // simulated annealing core
-    while(iter<MAX_ITER){
+    do{
 
         // result is an object {z: Number, moves:Array} that specifies the solution cost
         // if the returned moves are applied to the current solution
@@ -150,9 +151,10 @@ function simulatedAnnealing(solution, instance, neighbourFunction) {
             y: currentCost
         };
 
+        var loopTime = new Date();
         iter++;
 
-    } // end while
+    } while (iter < MAX_ITER && (new Date() - startTime) < AlgorithmSettings.MAX_PROCESSING_MILLISECONDS);
 
 
     var bestSolutionStoreSum = new Array(nStores);

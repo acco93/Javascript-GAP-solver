@@ -24,7 +24,7 @@ function tabuSearch(solution, instance){
     var graphData = [];
 
     // Some tabu search parameters
-    var MAX_ITER = 10000;
+    var MAX_ITER = AlgorithmSettings.MAX_ITER;
     var TABU_TENURE = 2*nStores; // tabu "time"
     var iter = 0;
 
@@ -49,8 +49,9 @@ function tabuSearch(solution, instance){
 
     var storeSum = solution.storeSum.slice();
 
+    var startTime = new Date();
     // tabu search core
-    for(iter = 0; iter < MAX_ITER; iter++){
+    do{
         var iBest = undefined;
         var jBest = undefined;
         var bestNeighbourCost = Number.MAX_VALUE;
@@ -108,9 +109,11 @@ function tabuSearch(solution, instance){
         graphData[iter] = {
             x: iter,
             y: currentCost
-        }
+        };
 
-    }
+
+        iter++;
+    } while (iter < MAX_ITER && (new Date() - startTime) < AlgorithmSettings.MAX_PROCESSING_MILLISECONDS);
 
     var bestSolutionStoreSum = new Array(nStores);
     for(j=0;j<nCustomers;j++){

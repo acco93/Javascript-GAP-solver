@@ -1,68 +1,76 @@
 <html>
 <head>
 
-<link rel="stylesheet" type="text/css" href="plugins/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="plugins/bootstrap/bootstrap.css">
 
-<link rel="stylesheet" type="text/css" href="plugins/pace/pace.css">
+    <link rel="stylesheet" type="text/css" href="plugins/pace/pace.css">
 
-<link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="plugins/pace/pace.js"></script>
-<script type="text/javascript" src="plugins/bootstrap/bootstrap.min.js"></script>
-<script src="plugins/canvasjs/canvasjs.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="plugins/pace/pace.js"></script>
+    <script type="text/javascript" src="plugins/bootstrap/bootstrap.min.js"></script>
+    <script src="plugins/canvasjs/canvasjs.min.js"></script>
 
-<!-- my js -->
-<script type="text/javascript" src="js/io/input.js"></script>
-<script type="text/javascript" src="js/io/output.js"></script>
-<script type="text/javascript" src="js/localSearches/10opt.js"></script>
-<script type="text/javascript" src="js/localSearches/11opt.js"></script>
-<script type="text/javascript" src="js/metaheuristics/iteratedLocalSearch.js"></script>
-<script type="text/javascript" src="js/metaheuristics/simulatedAnnealing.js"></script>
-<script type="text/javascript" src="js/metaheuristics/tabuSearch.js"></script>
-<script type="text/javascript" src="js/solutionBuilders/constructiveHeuristic.js"></script>
-<script type="text/javascript" src="js/userInterface/handlers.js"></script>
-<script type="text/javascript" src="js/utilities/algorithmUtilities.js"></script>
-<script type="text/javascript" src="js/globalVariables.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
+    <!-- my js -->
+    <script type="text/javascript" src="js/io/input.js"></script>
+    <script type="text/javascript" src="js/io/output.js"></script>
+    <script type="text/javascript" src="js/localSearches/10opt.js"></script>
+    <script type="text/javascript" src="js/localSearches/11opt.js"></script>
+    <script type="text/javascript" src="js/metaheuristics/iteratedLocalSearch.js"></script>
+    <script type="text/javascript" src="js/metaheuristics/simulatedAnnealing.js"></script>
+    <script type="text/javascript" src="js/metaheuristics/tabuSearch.js"></script>
+    <script type="text/javascript" src="js/solutionBuilders/constructiveHeuristic.js"></script>
+    <script type="text/javascript" src="js/userInterface/handlers.js"></script>
+    <script type="text/javascript" src="js/userInterface/timeHandler.js"></script>
+    <script type="text/javascript" src="js/utilities/algorithmUtilities.js"></script>
+    <script type="text/javascript" src="js/globalVariables.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
 
 </head>
 
 <body>
-  <div class="topnav"></div>
-  <div class="container">
+<div class="topnav"></div>
+<div class="container">
     <div class="page-header" style="text-align: center;">
-      <h2><strong>GAP Solver</strong></h2>
+        <h2><strong>GAP Solver</strong></h2>
         <span class="menubar">
           <a href="https://bitbucket.org/acco93/gap-solver-js/">Source</a>
           <a href="https://bitbucket.org/acco93/gap-solver-js/downloads">Download</a>
-          <!--Docs Json format Settings-->
+            <!--Docs Json format Settings-->
           <a href="#" onclick="showChangelog()">Changelog</a>
           <span id="lastUpInfo" style="color: red;"> Waiting for connection ... </span>
         </span>
     </div>
     <div class="panel panel-default" style="margin-top:30px;">
-      <div class="panel-body">
-       <label for="comment">0a) Select (or write) a json instance URL:</label>
-        <div class="input-group">
-         <input type="text" id="input" class="form-control" value="http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json" aria-label="...">
-         <div class="input-group-btn">
-           <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&nbsp;<span class="caret"></span> <span class="sr-only">Toggle Dropdown</span> </button>
-           <ul class="dropdown-menu dropdown-menu-right">
-             <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/toy.json")'>toy.json</a></li>
-             <li><a href="#" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/1.json")'>1.json</a></li>
-             <li><a href="#" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/2.json")'>2.json</a></li>
-             <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/3.json")'>3.json</a></li>
-            <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json")'>forliCesenaGAP.json</a></li>
-             <li><a href="#"  onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/d801600.json")'>d801600.json</a></li>
-             <!--<li role="separator" class="divider"></li>
-             <li><a href="#">Separated link</a></li>-->
-           </ul>
-         </div><!-- /btn-group -->
-       </div><!-- /input-group -->
-       <div class="form-group">
-          <label for="comment">0b) ... or paste your json here:</label>
-          <textarea id="textarea" class="form-control" rows="15" id="comment" placeholder="">
+        <div class="panel-body">
+            <label>0a) Select (or write) a json instance URL:</label>
+            <div class="input-group">
+                <input type="text" id="input" class="form-control"
+                       value="http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json" aria-label="...">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">&nbsp;<span class="caret"></span> <span
+                            class="sr-only">Toggle Dropdown</span></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/toy.json")'>toy.json</a>
+                        </li>
+                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/1.json")'>1.json</a>
+                        </li>
+                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/2.json")'>2.json</a>
+                        </li>
+                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/3.json")'>3.json</a>
+                        </li>
+                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json")'>forliCesenaGAP.json</a>
+                        </li>
+                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/d801600.json")'>d801600.json</a>
+                        </li>
+                    </ul>
+                </div><!-- /btn-group -->
+            </div><!-- /input-group -->
+            <div class="form-group">
+                <label for="textarea">0b) ... or paste your json here:</label>
+                <textarea id="textarea" class="form-control" rows="15" placeholder="Write your json here!">
 {  "name":"esempietto",
    "numcustomers":6,
    "numfacilities":3,
@@ -75,134 +83,178 @@
    "cap":[10,10,10]
 }
           </textarea>
-        </div>
+            </div>
 
 
-      <div class="form-group">
-          <label>Hint: Customize your run <span class="green">enabling</span> or <span class="red">disabling</span> the buttons below!</label>
+            <div class="form-group">
+                <label>Hint: Customize your run <span class="green">enabling</span> or <span
+                        class="red">disabling</span> the buttons below!</label>
 
-      </div>
+            </div>
 
-    <div class="form-group">
-       <label>1) Build a solution <span style="color: blue">S</span> using ... </label>
-       <div class="">
-         <button class="btn btn-success" disabled="true">Constructive heuristic</button>
-       </div>
-    </div>
+            <div class="form-group">
+                <label>1) Build a solution <span style="color: blue">S</span> using ... </label>
+                <div class="">
+                    <button class="btn btn-success" disabled="true">Constructive heuristic</button>
+                    <small>info</small>
+                </div>
+            </div>
 
-    <div class="form-group">
-       <label>2) Decide some algorithm config ... </label>
-       <div class="">
-         <button id="randomizeCustomersButton" class="btn btn-danger" onclick="randomizeCustomers()" style="margin-top:5px;" >Randomize customer order</button>
-       </div>
-       <!--
-        input tempo, input n iter
-       -->
-   </div>
+            <!-- algorithm settings -->
+            <div class="form-group">
+                <label>2) Decide some algorithm config ... </label>
+                <div class="">
+                    <button id="randomizeCustomersButton" class="btn btn-danger" onclick="randomizeCustomers()">
+                        Randomize customer order
+                    </button>
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Max iterations</span>
+                    <input id="iterInput" class="form-control" placeholder="" type="number" min="1" step="1"
+                           value="5000">
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Max processing time</span>
+                    <input id="timeInput" class="form-control" placeholder="" type="number" min="1" step="1"
+                           value="3">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="timeInputSpan">seconds</span> <span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="javascript:void(0)" onclick="handleTime(DAYS)">days</a></li>
+                            <li><a href="javascript:void(0)" onclick="handleTime(HOURS)">hours</a></li>
+                            <li><a href="javascript:void(0)" onclick="handleTime(MINUTES)">minutes</a></li>
+                            <li><a href="javascript:void(0)" onclick="handleTime(SECONDS)">seconds</a></li>
+                            <li><a href="javascript:void(0)" onclick="handleTime(MILLISECONDS)">milliseconds</a></li>
+                        </ul>
+                    </div><!-- /btn-group -->
+                </div>
 
-     <div class="form-group">
-        <label>2) Try to improve <span style="color: blue">S</span> using some local searches ... </label>
-        <div class="">
-          <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)" style="margin-top:5px;" >1-0 opt</button>
-          <button id="gap11Button" class="btn btn-danger" onclick="toggleLocalSearch(1)" style="margin-top:5px;" >1-1 opt</button>
-        </div>
-    </div>
-
-    <div class="form-group">
-       <label>3) Try to improve <span style="color: blue">S</span> using some metaheuristics ... </label>
-       <div class="">
-         <button id="sa10Button" class="btn btn-success" onclick="toggleSA10()">Simulated annealing (1-0 move)</button>
-         <button id="sa11Button" class="btn btn-success" onclick="toggleSA11()">Simulated annealing (1-1 move)</button>
-         <button id="ts10Button" class="btn btn-success" onclick="toggleTS10()">Tabu search (1-0 move)</button>
-       <button id="ils10Button" class="btn btn-success" onclick="toggleILS10()">Iterated local search (1-0 opt)</button>
-       <button id="ils11Button" class="btn btn-danger" onclick="toggleILS11()">Iterated local search (1-1 move)</button>
-       </div>
-   </div>
-
-   <div class="form-group">
-      <label>4) Chose some output settings ... </label>
-      <div class="">
-        <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;" >Verbose log</button>
-      </div>
-  </div>
-
-  <div class="form-group">
-     <label>5) Run it! </label>
-     <div class="row">
-       <div class="col-md-4">
-         <button id="processButton" class="btn btn-lg btn-block btn-info" onclick="process()">Process (the URL)</button>
-       </div>
-       <div class="col-md-4">
-         <button class="btn btn-lg btn-block btn-warning" onclick="">Reset config</button>
-       </div>
-       <div class="col-md-4">
-         <button class="btn btn-lg btn-block btn-danger" onclick="clearAllSessions()">Clear all</button>
-       </div>
-     </div>
- </div>
-
-
-
-
-		</div> <!-- panel body -->
-
-
-  </div> <!-- panel -->
-
-
-  <div id="output"></div>
-
-
-</div> <!-- page -->
+            </div>
 
 
 
 
 
+            <!-- local searches -->
+            <div class="form-group">
+                <label>3) Try to improve <span style="color: blue">S</span> using some local searches ... </label>
+                <div class="">
+                    <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)">1-0 opt
+                    </button>
+                    <button id="gap11Button" class="btn btn-danger" onclick="toggleLocalSearch(1)">1-1 opt
+                    </button>
+                </div>
+            </div>
 
-  <!-- Changelog modal -->
-  <div id="changelogModal" class="modal fade" role="dialog">
+            <!-- metaheuristics -->
+            <div class="form-group">
+                <label>4) Try to improve <span style="color: blue">S</span> using some metaheuristics ... </label>
+                <div class="">
+                    <button id="sa10Button" class="btn btn-success" onclick="toggleSA10()">Simulated annealing (1-0
+                        move)
+                    </button>
+                    <button id="sa11Button" class="btn btn-success" onclick="toggleSA11()">Simulated annealing (1-1
+                        move)
+                    </button>
+                    <button id="ts10Button" class="btn btn-success" onclick="toggleTS10()">Tabu search (1-0 move)
+                    </button>
+                    <button id="ils10Button" class="btn btn-success" onclick="toggleILS10()">Iterated local search (1-0
+                        opt)
+                    </button>
+                    <button id="ils11Button" class="btn btn-danger" onclick="toggleILS11()">Iterated local search (1-1
+                        move)
+                    </button>
+                </div>
+            </div>
+
+            <!-- output settings -->
+            <div class="form-group">
+                <label>5) Chose some output settings ... </label>
+                <div class="">
+                    <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;">
+                        Verbose log
+                    </button>
+                </div>
+            </div>
+
+            <!-- buttons -->
+            <div class="form-group">
+                <label>6) Run it! </label>
+                <div class="row">
+                    <div class="col-md-4">
+                        <button id="processButton" class="btn btn-lg btn-block btn-info" onclick="process()">Process
+                            (the URL)
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-lg btn-block btn-warning" onclick="">Reset config</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-lg btn-block btn-danger" onclick="clearAllSessions()">Clear all</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div> <!-- panel body -->
+
+
+    </div> <!-- panel -->
+
+
+    <div id="output"></div>
+
+
+</div> <!-- container -->
+
+
+<!-- Changelog modal -->
+<div id="changelogModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Changelog</h4>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Changelog</h4>
+            </div>
+            <div id="changelogBody" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div id="changelogBody" class="modal-body">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
 
     </div>
-  </div>
+</div>
 
 
-	<div id="myNav" class="overlay">
-	  <!-- Overlay content -->
-	  <div class="overlay-content">
-		<p>
-      <span class="green">P</span>
-      <span class="yellow">r</span>
-      <span class="red">o</span>
-      <span class="green">c</span>
-      <span class="yellow">e</span>
-      <span class="red">s</span>
-      <span class="green">s</span>
-      <span class="yellow">i</span>
-      <span class="red">n</span>
-      <span class="green">g</span>
-      <span class="yellow">.</span>
-      <span class="red">.</span>
-      <span class="green">.</span>
-    </p>
-	  </div>
+<div id="myNav" class="overlay">
+    <!-- Overlay content -->
+    <div class="overlay-content">
+        <p>
+            <span class="green">P</span>
+            <span class="yellow">r</span>
+            <span class="red">o</span>
+            <span class="green">c</span>
+            <span class="yellow">e</span>
+            <span class="red">s</span>
+            <span class="green">s</span>
+            <span class="yellow">i</span>
+            <span class="red">n</span>
+            <span class="green">g</span>
+            <span class="yellow">.</span>
+            <span class="red">.</span>
+            <span class="green">.</span>
+        </p>
+    </div>
 
-	</div>
-  <a href="#" class="scrollToTop">Scroll To Top</a>
+</div>
+
+
+<a href="#" class="scrollToTop">Scroll To Top</a>
 </body>
 
 

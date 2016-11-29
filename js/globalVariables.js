@@ -21,7 +21,9 @@ var AlgorithmSettings = {
     performSA11: true,
     performTS10: true,  // tabuSearch 10 move
     performILS10: true,
-    performILS11: false
+    performILS11: false,
+    MAX_ITER: 5000,
+    MAX_PROCESSING_MILLISECONDS: 3000
 };
 
 var HTMLElements = {

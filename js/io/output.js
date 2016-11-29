@@ -22,9 +22,27 @@ function verbosePrint(solution, instance) {
         log("Store " + i + " requests: " + solution.storeSum[i] + " < " + instance.capacities[i]);
     }
 
-    log("Solution:" + solution.array);
+	var extSolution = new Array(instance.nStores);
+
+    log("Solution:");
+	for(var i=0;i<instance.nStores;i++){
+		extSolution[i] = "[Store "+i+"] ";
+	}	
+
+	for(var j=0;j<instance.nCustomers; j++){
+		extSolution[solution.array[j]] += ""+j+" ";	
+	}
+
+	for(var i=0;i<instance.nStores;i++){	
+		log(extSolution[i]);
+	}
+
+	console.log(solution);
+
     log("z: " +solution.z);
 }
+
+
 
 
 function drawGraph(title, uniqueName, datap) {

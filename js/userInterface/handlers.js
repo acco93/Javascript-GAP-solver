@@ -219,6 +219,9 @@ function process(){
             printInstance(instance);
         }
 
+        // setup max processing time and iterations
+        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS = getProcessingTime();
+        AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
         var startTime = new Date();
         var solution = constructiveHeuristic(instance);
@@ -329,7 +332,7 @@ function performGenericFunction(flag, fun, solution, instance, name, uniqueName)
     log("Is feasible: " + isFeasible(result.solution.array, instance));
 
     if (AppSettings.verboseLog) {
-        verbosePrint(result.solution.array, instance);
+        verbosePrint(result.solution, instance);
     }
 
     if(result.graphData != undefined){

@@ -26,6 +26,9 @@ $(document).ready(function(){
     HTMLElements.lastUpInfo = $("#lastUpInfo");
     HTMLElements.ils10Button = $("#ils10Button");
     HTMLElements.ils11Button = $("#ils11Button");
+    HTMLElements.iterInput = $("#iterInput");
+    HTMLElements.timeInput = $("#timeInput");
+
 
     // Bind behaviors to actions
     HTMLElements.textArea.click(onTextAreaClick);

@@ -10,7 +10,7 @@
  *                          graphData: {x,y} Array
  *                      }
  */
-function iteratedLocalSearch10opt(solution, instance){
+function iteratedLocalSearch10opt(solution, instance) {
     return iteratedLocalSearch(solution, instance, gap10opt);
 }
 
@@ -26,7 +26,7 @@ function iteratedLocalSearch10opt(solution, instance){
  *                          graphData: {x,y} Array
  *                      }
  */
-function iteratedLocalSearch11opt(solution, instance){
+function iteratedLocalSearch11opt(solution, instance) {
     return iteratedLocalSearch(solution, instance, gap11opt);
 }
 
@@ -43,7 +43,7 @@ function iteratedLocalSearch11opt(solution, instance){
  *                          graphData: {x,y} Array
  *                      }
  */
-function iteratedLocalSearch(solution, instance, localSearch){
+function iteratedLocalSearch(solution, instance, localSearch) {
 
     var graphData = [];
 
@@ -59,22 +59,23 @@ function iteratedLocalSearch(solution, instance, localSearch){
 
     // copy the costs matrix (and perturbed it!)
     var perturbedCosts = new Array(nStores);
-    for(var i=0; i<nStores; i++){
+    for (var i = 0; i < nStores; i++) {
         perturbedCosts[i] = new Array(nCustomers);
-        for(var j=0;j<nCustomers; j++){
-            var perc = (Math.random() * DISTURB_FACTOR_PERC*0.2);
-            if(Math.random() <= 0.5) {
+        for (var j = 0; j < nCustomers; j++) {
+            var perc = (Math.random() * DISTURB_FACTOR_PERC * 0.2);
+            if (Math.random() <= 0.5) {
                 perc *= -1;
             }
-            perturbedCosts[i][j] = (costs[i][j]+costs[i][j]*perc);
+            perturbedCosts[i][j] = (costs[i][j] + costs[i][j] * perc);
         }
     }
 
     // some algorithm variables
 
-    var MAX_ITER = 10000;
+    var MAX_ITER = AlgorithmSettings.MAX_ITER;
     var iter = 0;
 
+    var startTime = new Date();
     do {
 
         // store the original costs matrix
@@ -99,9 +100,9 @@ function iteratedLocalSearch(solution, instance, localSearch){
         // acceptance criterion
 
         // compute the real cost!
-        perturbedSolution.z = z(perturbedSolution.array,instance);
+        perturbedSolution.z = z(perturbedSolution.array, instance);
 
-        if(perturbedSolution.z < solution.z){
+        if (perturbedSolution.z < solution.z) {
             solution = perturbedSolution;
         }
 
@@ -110,8 +111,9 @@ function iteratedLocalSearch(solution, instance, localSearch){
             y: solution.z
         };
 
+
         iter++;
-    } while(iter < MAX_ITER);
+    } while (iter < MAX_ITER && (new Date() - startTime) < AlgorithmSettings.MAX_PROCESSING_MILLISECONDS);
 
     return {
         solution: solution,
@@ -119,16 +121,16 @@ function iteratedLocalSearch(solution, instance, localSearch){
     };
 }
 
-function perturbMatrix(matrix,rows, columns, factor){
+function perturbMatrix(matrix, rows, columns, factor) {
 
 
-    for(var i=0; i<rows; i++){
-        for(var j=0;j<columns; j++){
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < columns; j++) {
             var perc = (Math.random() * factor * 0.2);
-            if(Math.random() <= 0.5) {
+            if (Math.random() <= 0.5) {
                 perc *= -1;
             }
-            matrix[i][j]+=(matrix[i][j]*perc);
+            matrix[i][j] += (matrix[i][j] * perc);
         }
     }
 }
