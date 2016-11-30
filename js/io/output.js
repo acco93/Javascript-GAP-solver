@@ -83,6 +83,7 @@ function terminateSession() {
     HTMLElements.output.append('</div>');
     // scroll to bottom
     $('html,body').animate({scrollTop: document.body.scrollHeight}, "slow");
+    resetProgressBar();
     // unlock button
     unlockScreen();
 }
@@ -145,3 +146,30 @@ function addClearSessionButton(session) {
     println('<button type="button" class="btn btn-default" onclick="clearSession(' + session + ')">Clear Session</button>');
 }
 
+function showResult(data){
+
+    info("["+data.functionName+"] Processing time: " + data.processingTime + " milliseconds.");
+    log("Solution cost: " + data.solution.z);
+    log("Is feasible: " + isFeasible(data.solution.array, data.instance));
+
+    if (AppSettings.verboseLog) {
+        verbosePrint(data.solution, data.instance);
+    }
+
+    if(data.graph != undefined){
+        drawGraph(data.functionName, data.graph.name+""+session, data.graph.data);
+    }
+}
+
+function incrementProgressBar(delta) {
+
+    var progress = $('#progressBar');
+    var currentValue = parseInt(progress.attr('aria-valuenow'));
+    progress.attr('aria-valuenow', currentValue+delta).css('width',(currentValue+delta)+"%");
+
+}
+
+function resetProgressBar() {
+    var progress = $('#progressBar');
+    progress.attr('aria-valuenow', 0).css('width', 0);
+}

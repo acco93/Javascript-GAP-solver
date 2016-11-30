@@ -8,73 +8,94 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap10opt(solution, instance){
+function gap10opt() {
 
-    var nStores = instance.nStores;
-    var nCustomers = instance.nCustomers;
-    var costs = instance.costs;
-    var requests = instance.requests;
-    var capacities = instance.capacities;
+    self.addEventListener("message", function (parameters) {
 
-    /*
-     Repeat until there isn't an improvement
-     */
-    do{
+        var startTime = new Date();
 
-        var improved = false;
+        var instance = parameters.data.instance;
+        var solution = parameters.data.solution;
+
+
+        var nStores = instance.nStores;
+        var nCustomers = instance.nCustomers;
+        var costs = instance.costs;
+        var requests = instance.requests;
+        var capacities = instance.capacities;
 
         /*
-         For each customer ... (column)
+         Repeat until there isn't an improvement
          */
-        for(var j=0; j<nCustomers; j++){
+        do {
+
+            var improved = false;
 
             /*
-             Find the current store
+             For each customer ... (column)
              */
-
-            var currentStore = solution.array[j];
-
-            for(var i=0;i<nStores; i++){
-                /*
-                 Consider each store different from the current
-                 */
-                if(i == currentStore){ continue; }
+            for (var j = 0; j < nCustomers; j++) {
 
                 /*
-                 Build another solution where ...
+                 Find the current store
                  */
 
-                /*
-                 Check for capacities
-                 */
-                var newCost = solution.z - costs[currentStore][j] + costs[i][j];
+                var currentStore = solution.array[j];
 
-                if(solution.storeSum[i]+requests[i][j] <= capacities[i] && newCost < solution.z){
-
-                    solution.array[j] = i;
-                    improved = true;
+                for (var i = 0; i < nStores; i++) {
                     /*
-                     Update some variables
+                     Consider each store different from the current
                      */
-                    solution.storeSum[currentStore] -= requests[currentStore][j];
-                    solution.z = newCost;
-                    solution.storeSum[i] += requests[i][j];
+                    if (i == currentStore) {
+                        continue;
+                    }
+
+                    /*
+                     Build another solution where ...
+                     */
+
+                    /*
+                     Check for capacities
+                     */
+                    var newCost = solution.z - costs[currentStore][j] + costs[i][j];
+
+                    if (solution.storeSum[i] + requests[i][j] <= capacities[i] && newCost < solution.z) {
+
+                        solution.array[j] = i;
+                        improved = true;
+                        /*
+                         Update some variables
+                         */
+                        solution.storeSum[currentStore] -= requests[currentStore][j];
+                        solution.z = newCost;
+                        solution.storeSum[i] += requests[i][j];
+                        break;
+                    }
+
+                }
+
+                if (improved) {
                     break;
                 }
 
             }
 
-            if(improved){
-                break;
-            }
+        } while (improved);
 
-        }
+        var endTime = new Date();
 
-    } while(improved);
+        postMessage({
+            functionName: "1-0 opt",
+            instance: instance,
+            solution: solution,
+            processingTime: (endTime-startTime),
+            graph: undefined
+        });
 
-    return {
-        solution: solution,
-        graphData: undefined
-    };
+
+    }, false);
+
 
 }
+
+gap10opt();

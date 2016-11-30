@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/executor/singleWorkerExecutor.js"></script>
+    <title>Executors test</title>
+</head>
+<body>
+
+<button onclick="add()">Add task</button>
+<button onclick="start()">Start</button>
+<button onclick="stop()">Stop</button>
+
+</body>
+<script>
+
+    var tasks = [];
+    var processing = false;
+
+    function stop(){
+        shutdown();
+        tasks.length = 0;
+        processing = false;
+    }
+
+    function add(){
+        tasks.push(addTask({
+            jsFile: "js/executor/taskExample.js",
+            parameters: {
+                p1: Math.random(),
+                p2: Math.random()
+            }
+        }));
+    }
+
+    function start() {
+
+        if(processing){
+            console.log("Please wait I'm processing!!");
+            return;
+        }
+        processing = true;
+
+        registerHandlers();
+
+        processTasks().then(function (value) {
+            console.log("All tasks are finished!");
+            tasks.length = 0;
+            processing = false;
+        });
+    }
+
+    function registerHandlers(){
+        for(var i=0;i<tasks.length;i++){
+            tasks[i].then(function(result){
+                console.log("Task result: "+result);
+            });
+        }
+    }
+
+
+</script>
+</html>

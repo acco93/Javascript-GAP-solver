@@ -1,9 +1,4 @@
 /*
- Used in constructive heuristic to sort the stores given a customer
- */
-var KEY = 0;
-var VALUE = 1;
-/*
  What to process values
  */
 var URL = 0;
@@ -29,7 +24,7 @@ function unlockScreen() {
 /*
  Handle text area click
  */
-function onTextAreaClick(){
+function onTextAreaClick() {
     HTMLElements.processButton.text("Process (the above text area)");
     AppSettings.whatToProcess = PASTED_CODE;
 }
@@ -37,29 +32,29 @@ function onTextAreaClick(){
 /*
  Handle input field click
  */
-function onInputClick(){
+function onInputClick() {
     HTMLElements.processButton.text("Process (the URL)");
     AppSettings.whatToProcess = URL;
 }
 
-function clearAllSessions(){
+function clearAllSessions() {
     HTMLElements.output.empty();
 }
 
 
-function clearSession(session){
+function clearSession(session) {
 
-    var div = $('div[session="'+session+'"]');
+    var div = $('div[session="' + session + '"]');
 
 
-    div.fadeOut("fast",function(){
+    div.fadeOut("fast", function () {
         div.remove();
     });
 
 }
 
-function toggleLog(){
-    if(AppSettings.verboseLog){
+function toggleLog() {
+    if (AppSettings.verboseLog) {
         AppSettings.verboseLog = false;
         HTMLElements.verboseLogButton.addClass("btn-danger");
         HTMLElements.verboseLogButton.removeClass("btn-success");
@@ -70,8 +65,8 @@ function toggleLog(){
     }
 }
 
-function randomizeCustomers(){
-    if(AlgorithmSettings.randomizeCustomers){
+function randomizeCustomers() {
+    if (AlgorithmSettings.randomizeCustomers) {
         AlgorithmSettings.randomizeCustomers = false;
         HTMLElements.randomizeCustomersButton.addClass("btn-danger");
         HTMLElements.randomizeCustomersButton.removeClass("btn-success");
@@ -82,15 +77,15 @@ function randomizeCustomers(){
     }
 }
 
-function changeUrl(url){
+function changeUrl(url) {
     HTMLElements.input.val(url);
     onInputClick();
 }
 
-function toggleLocalSearch(index){
-    switch(index){
+function toggleLocalSearch(index) {
+    switch (index) {
         case GAP10OPT:
-            if(AlgorithmSettings.perform10opt) {
+            if (AlgorithmSettings.perform10opt) {
                 AlgorithmSettings.perform10opt = false;
                 HTMLElements.gap10Button.addClass("btn-danger");
                 HTMLElements.gap10Button.removeClass("btn-success");
@@ -101,7 +96,7 @@ function toggleLocalSearch(index){
             }
             break;
         case GAP11OPT:
-            if(AlgorithmSettings.perform11opt) {
+            if (AlgorithmSettings.perform11opt) {
                 AlgorithmSettings.perform11opt = false;
                 HTMLElements.gap11Button.addClass("btn-danger");
                 HTMLElements.gap11Button.removeClass("btn-success");
@@ -114,29 +109,29 @@ function toggleLocalSearch(index){
     }
 }
 
-function showChangelog(){
+function showChangelog() {
     HTMLElements.changelogModal.modal("show");
     HTMLElements.changelogBody.append('<h1 style="text-align=center">Loading ...</h1>');
 
-    if(Cache.changelog == undefined) {
-        $.getJSON( "https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/commits", function( data ) {
+    if (Cache.changelog == undefined) {
+        $.getJSON("https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/commits", function (data) {
             HTMLElements.changelogBody.empty();
             Cache.changelog = data;
 
             var date = new Date(data.values[0].date);
-            HTMLElements.changelogBody.append("<p><strong>"+date.toDateString()+"</strong> "+data.values[0].message+"</p>");
-            for(var i=1;i < data.values.length; i++){
+            HTMLElements.changelogBody.append("<p><strong>" + date.toDateString() + "</strong> " + data.values[0].message + "</p>");
+            for (var i = 1; i < data.values.length; i++) {
                 date = new Date(data.values[i].date);
-                HTMLElements.changelogBody.append("<p><small><strong>"+date.toDateString()+"</strong> "+data.values[i].message+"</small></p>");
+                HTMLElements.changelogBody.append("<p><small><strong>" + date.toDateString() + "</strong> " + data.values[i].message + "</small></p>");
             }
         });
     }
 
 }
 
-function toggleSA10(){
-    if(AlgorithmSettings.performSA10){
-        AlgorithmSettings.performSA10 =  false;
+function toggleSA10() {
+    if (AlgorithmSettings.performSA10) {
+        AlgorithmSettings.performSA10 = false;
         HTMLElements.sa10Button.addClass("btn-danger");
         HTMLElements.sa10Button.removeClass("btn-success");
     } else {
@@ -146,9 +141,9 @@ function toggleSA10(){
     }
 }
 
-function toggleSA11(){
-    if(AlgorithmSettings.performSA11){
-        AlgorithmSettings.performSA11 =  false;
+function toggleSA11() {
+    if (AlgorithmSettings.performSA11) {
+        AlgorithmSettings.performSA11 = false;
         HTMLElements.sa11Button.addClass("btn-danger");
         HTMLElements.sa11Button.removeClass("btn-success");
     } else {
@@ -158,9 +153,9 @@ function toggleSA11(){
     }
 }
 
-function toggleTS10(){
-    if(AlgorithmSettings.performTS10){
-        AlgorithmSettings.performTS10 =  false;
+function toggleTS10() {
+    if (AlgorithmSettings.performTS10) {
+        AlgorithmSettings.performTS10 = false;
         HTMLElements.ts10Button.addClass("btn-danger");
         HTMLElements.ts10Button.removeClass("btn-success");
     } else {
@@ -170,9 +165,9 @@ function toggleTS10(){
     }
 }
 
-function toggleILS10(){
-    if(AlgorithmSettings.performILS10){
-        AlgorithmSettings.performILS10 =  false;
+function toggleILS10() {
+    if (AlgorithmSettings.performILS10) {
+        AlgorithmSettings.performILS10 = false;
         HTMLElements.ils10Button.addClass("btn-danger");
         HTMLElements.ils10Button.removeClass("btn-success");
     } else {
@@ -182,9 +177,9 @@ function toggleILS10(){
     }
 }
 
-function toggleILS11(){
-    if(AlgorithmSettings.performILS11){
-        AlgorithmSettings.performILS11 =  false;
+function toggleILS11() {
+    if (AlgorithmSettings.performILS11) {
+        AlgorithmSettings.performILS11 = false;
         HTMLElements.ils11Button.addClass("btn-danger");
         HTMLElements.ils11Button.removeClass("btn-success");
     } else {
@@ -194,10 +189,12 @@ function toggleILS11(){
     }
 }
 
-function process(){
+
+var processing;
+function process() {
 
     initSession();
-
+    processing = true;
     // load the json (download or read it according to the user needs)
     loadJSON().then(function (data) {
 
@@ -223,122 +220,140 @@ function process(){
         AlgorithmSettings.MAX_PROCESSING_MILLISECONDS = getProcessingTime();
         AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
-        var startTime = new Date();
-        var solution = constructiveHeuristic(instance);
-        var endTime = new Date();
 
-        info("[Constructive heuristic] Processing time: " + (endTime - startTime) + " milliseconds.");
-        log("Solution cost: " + solution.z);
+        var solutionConstructionTask = addTask({
+            jsFile: "js/solutionBuilders/constructiveHeuristic.js",
+            parameters: {instance: instance, randomizeCustomers: AppSettings.randomizeCustomers}
+        });
 
-        var feasible = isFeasible(solution.array, instance);
+        solutionConstructionTask.then(function (result) {
+            showResult(result);
 
-        log("is feasible: " + feasible);
+            if (!isFeasible(result.solution.array, instance)) {
+                warning("Constructive heuristic returned a not feasible solution");
+            }
 
-        if (AppSettings.verboseLog) {
-            verbosePrint(solution, instance);
-        }
+            var solution = result.solution;
 
-        if(feasible){
-            perform10opt(solution, instance);
-            perform11opt(solution, instance);
-            performSA10move(solution, instance);
-            performSA11move(solution, instance);
-            performTS10move(solution, instance);
-            performILS10opt(solution, instance);
-            performILS11opt(solution, instance);
-        } else {
-            warning("Constructive heuristic returned a not feasible solution");
-        }
+            var tasks = [];
 
-        terminateSession();
+            if (AlgorithmSettings.perform10opt) {
+                tasks.push(addTask({
+                    jsFile: "js/localSearches/10opt.js",
+                    parameters: {instance: instance, solution: Object.assign({}, solution)}
+                }));
+            }
+
+            if (AlgorithmSettings.perform11opt) {
+                tasks.push(addTask({
+                    jsFile: "js/localSearches/11opt.js",
+                    parameters: {instance: instance, solution: Object.assign({}, solution)}
+                }));
+            }
+
+            if (AlgorithmSettings.performSA10) {
+                tasks.push(addTask({
+                    jsFile: "js/metaheuristics/simulatedAnnealing.js",
+                    parameters: {
+                        instance: instance,
+                        solution: Object.assign({}, solution),
+                        neighbourFunctionName: "10opt",
+                        MAX_ITER: AlgorithmSettings.MAX_ITER,
+                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    }
+                }));
+            }
+
+            if (AlgorithmSettings.performSA11) {
+                tasks.push(addTask({
+                    jsFile: "js/metaheuristics/simulatedAnnealing.js",
+                    parameters: {
+                        instance: instance,
+                        solution: Object.assign({}, solution),
+                        neighbourFunctionName: "11opt",
+                        MAX_ITER: AlgorithmSettings.MAX_ITER,
+                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    }
+                }));
+            }
+
+
+            if (AlgorithmSettings.performTS10) {
+                tasks.push(addTask({
+                    jsFile: "js/metaheuristics/tabuSearch.js",
+                    parameters: {
+                        instance: instance,
+                        solution: Object.assign({}, solution),
+                        MAX_ITER: AlgorithmSettings.MAX_ITER,
+                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    }
+                }));
+
+            }
+
+            if (AlgorithmSettings.performILS10) {
+                tasks.push(addTask({
+                    jsFile: "js/metaheuristics/iteratedLocalSearch.js",
+                    parameters: {
+                        instance: instance,
+                        solution: Object.assign({}, solution),
+                        localSearch: "10opt",
+                        MAX_ITER: AlgorithmSettings.MAX_ITER,
+                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    }
+                }));
+            }
+
+            if (AlgorithmSettings.performILS11) {
+                tasks.push(addTask({
+                    jsFile: "js/metaheuristics/iteratedLocalSearch.js",
+                    parameters: {
+                        instance: instance,
+                        solution: Object.assign({}, solution),
+                        localSearch: "11opt",
+                        MAX_ITER: AlgorithmSettings.MAX_ITER,
+                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    }
+                }));
+            }
+
+
+            var delta = 100 / tasks.length;
+
+            for (var i = 0; i < tasks.length; i++) {
+                tasks[i].then(function (result) {
+                    showResult(result);
+                    incrementProgressBar(delta);
+                });
+            }
+
+
+            processTasks().then(function (value) {
+                processing = false;
+                console.log("All tasks are finished!");
+                setTimeout(function () {
+                    terminateSession();
+                    unlockScreen();
+                }, 800);
+
+            });
+
+        });
+
+        processTasks();
+
 
     });
 
 }
 
-function perform10opt(solution, instance){
-    return performGenericFunction(AlgorithmSettings.perform10opt, gap10opt, solution, instance, "1-0 opt", "10opt"+session);
-}
 
-function perform11opt(solution, instance){
-    return performGenericFunction(AlgorithmSettings.perform11opt, gap11opt, solution, instance, "1-1 opt","11opt"+session);
-}
-
-function performSA10move(solution, instance){
-    return performGenericFunction(AlgorithmSettings.performSA10,
-                                    simulatedAnnealing10Move,
-                                    solution,
-                                    instance,
-                                    "Simulated Annealing (1-0 move)",
-                                    "SA10"+session);
-}
-
-function performSA11move(solution, instance){
-    return performGenericFunction(AlgorithmSettings.performSA11,
-        simulatedAnnealing11Move,
-        solution,
-        instance,
-        "Simulated Annealing (1-1 move)",
-        "SA11"+session);
-}
-
-function performTS10move(solution, instance){
-    return performGenericFunction(AlgorithmSettings.performTS10,
-        tabuSearch,
-        solution,
-        instance,
-        "Tabu search (1-0 move)",
-        "TS11"+session);
-}
-
-function performILS10opt(solution, instance){
-    return performGenericFunction(AlgorithmSettings.performILS10,
-        iteratedLocalSearch10opt,
-        solution,
-        instance,
-        "Iterated local search (1-0 opt)",
-        "ILS10"+session);
-}
-
-function performILS11opt(solution, instance){
-    return performGenericFunction(AlgorithmSettings.performILS11,
-        iteratedLocalSearch11opt,
-        solution,
-        instance,
-        "Iterated local search (1-1 opt)",
-        "ILS11"+session);
-}
-
-function performGenericFunction(flag, fun, solution, instance, name, uniqueName){
-
-    if(!flag){
-        return solution;
+function abortComputation() {
+    if(!processing){
+        return;
     }
-
-    // copy the solution
-    var solutionCopy = {
-        array: solution.array.slice(),
-        z: solution.z,
-        storeSum: solution.storeSum.slice()
-    };
-
-
-
-    var startTime = new Date();
-    var result = fun(solutionCopy, instance);
-    var endTime = new Date();
-    info("["+name+"] Processing time: " + (endTime - startTime) + " milliseconds.");
-    log("Solution cost: " + result.solution.z);
-    log("Is feasible: " + isFeasible(result.solution.array, instance));
-
-    if (AppSettings.verboseLog) {
-        verbosePrint(result.solution, instance);
-    }
-
-    if(result.graphData != undefined){
-        drawGraph(name, uniqueName, result.graphData);
-    }
-
-    return result.solution;
-
+    shutdown();
+    warning("/!\\ Computation aborted /!\\");
+    resetProgressBar();
+    terminateSession();
 }

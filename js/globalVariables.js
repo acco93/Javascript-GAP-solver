@@ -8,6 +8,8 @@ var ERROR = 1;
  Utility objects
 */
 
+var worker = undefined;
+
 var AppSettings = {
   verboseLog: false,
   whatToProcess: URL,

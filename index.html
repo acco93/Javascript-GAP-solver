@@ -1,6 +1,8 @@
 <html>
 <head>
 
+    <meta charset="UTF-8">
+
     <link rel="stylesheet" type="text/css" href="plugins/bootstrap/bootstrap.css">
 
     <link rel="stylesheet" type="text/css" href="plugins/pace/pace.css">
@@ -15,6 +17,7 @@
     <!-- my js -->
     <script type="text/javascript" src="js/io/input.js"></script>
     <script type="text/javascript" src="js/io/output.js"></script>
+    <script type="text/javascript" src="js/executor/singleWorkerExecutor.js"></script>
     <script type="text/javascript" src="js/localSearches/10opt.js"></script>
     <script type="text/javascript" src="js/localSearches/11opt.js"></script>
     <script type="text/javascript" src="js/metaheuristics/iteratedLocalSearch.js"></script>
@@ -53,17 +56,23 @@
                             aria-haspopup="true" aria-expanded="false">&nbsp;<span class="caret"></span> <span
                             class="sr-only">Toggle Dropdown</span></button>
                     <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/toy.json")'>toy.json</a>
+                        <li><a href="javascript:void(0)"
+                               onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/toy.json")'>toy.json</a>
                         </li>
-                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/1.json")'>1.json</a>
+                        <li><a href="javascript:void(0)"
+                               onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/1.json")'>1.json</a>
                         </li>
-                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/2.json")'>2.json</a>
+                        <li><a href="javascript:void(0)"
+                               onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/2.json")'>2.json</a>
                         </li>
-                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/3.json")'>3.json</a>
+                        <li><a href="javascript:void(0)"
+                               onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/3.json")'>3.json</a>
                         </li>
-                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json")'>forliCesenaGAP.json</a>
+                        <li><a href="javascript:void(0)"
+                               onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/forlicesenagap.json")'>forliCesenaGAP.json</a>
                         </li>
-                        <li><a href="javascript:void(0)" onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/d801600.json")'>d801600.json</a>
+                        <li><a href="javascript:void(0)"
+                               onclick='changeUrl("http://astarte.csr.unibo.it/GAPdata/d801600.json")'>d801600.json</a>
                         </li>
                     </ul>
                 </div><!-- /btn-group -->
@@ -120,7 +129,9 @@
                     <input id="timeInput" class="form-control" placeholder="" type="number" min="1" step="1"
                            value="3">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="timeInputSpan">seconds</span> <span class="caret"></span></button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"><span id="timeInputSpan">seconds</span> <span
+                                class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li><a href="javascript:void(0)" onclick="handleTime(DAYS)">days</a></li>
                             <li><a href="javascript:void(0)" onclick="handleTime(HOURS)">hours</a></li>
@@ -132,9 +143,6 @@
                 </div>
 
             </div>
-
-
-
 
 
             <!-- local searches -->
@@ -249,6 +257,19 @@
             <span class="red">.</span>
             <span class="green">.</span>
         </p>
+
+        <div class="panel panel-default" style="margin-top:30px; background: transparent; border: none;">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="progress" style="background: transparent">
+                        <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0"
+                             aria-valuemin="0" aria-valuemax="100" style="width: 0">
+                        </div>
+                    </div>
+                    <button class="btn btn-lg btn-danger" onclick="abortComputation()">Terminate</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

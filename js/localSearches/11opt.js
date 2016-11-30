@@ -8,81 +8,105 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap11opt(solution, instance){
+function gap11opt() {
 
-    var nStores = instance.nStores;
-    var nCustomers = instance.nCustomers;
-    var costs = instance.costs;
-    var requests = instance.requests;
-    var capacities = instance.capacities;
 
-    /*
-     Repeat untill there isn't an improvement
-     */
-    do {
-        var improved = false;
+    self.addEventListener("message", function (parameters) {
+
+        var startTime = new Date();
+
+        var instance = parameters.data.instance;
+        var solution = parameters.data.solution;
+
+        var nStores = instance.nStores;
+        var nCustomers = instance.nCustomers;
+        var costs = instance.costs;
+        var requests = instance.requests;
+        var capacities = instance.capacities;
 
         /*
-         For each customer pair...
+         Repeat untill there isn't an improvement
          */
-        for(var j=0; j<nCustomers-1; j++){
+        do {
+            var improved = false;
 
-            var currentStoreJ = solution.array[j];
+            /*
+             For each customer pair...
+             */
+            for (var j = 0; j < nCustomers - 1; j++) {
 
-            for(var k=j+1; k<nCustomers; k++){
+                var currentStoreJ = solution.array[j];
 
-
-                var currentStoreK = solution.array[k];
-
-                for(var ij=0;ij<nStores;ij++){
-                    for(var ik=0;ik<nStores;ik++){
-                        var newCost = solution.z - costs[currentStoreJ][j] + costs[ij][j] - costs[currentStoreK][k] + costs[ik][k];
-
-                        /*
-                         Remove customers
-                         */
-                        solution.storeSum[currentStoreJ] -= requests[currentStoreJ][j];
-                        solution.storeSum[currentStoreK] -= requests[currentStoreK][k];
-                        /*
-                         Add to the new store, this is needed since both customers may be added to the same store
-                         and using the if I can't check both the same time!
-                         */
-                        solution.storeSum[ij] += requests[ij][j];
-                        solution.storeSum[ik] += requests[ik][k];
-
-                        if(solution.storeSum[ij]<= capacities[ij] && solution.storeSum[ik]<=capacities[ik] && newCost < solution.z){
-
-                            solution.array[j] = ij;
-                            solution.array[k] = ik;
-
-                            improved = true;
-
-                            solution.z = newCost;
+                for (var k = j + 1; k < nCustomers; k++) {
 
 
-                            break;
-                        } else {
+                    var currentStoreK = solution.array[k];
+
+                    for (var ij = 0; ij < nStores; ij++) {
+                        for (var ik = 0; ik < nStores; ik++) {
+                            var newCost = solution.z - costs[currentStoreJ][j] + costs[ij][j] - costs[currentStoreK][k] + costs[ik][k];
+
                             /*
-                             Re-fix variables
+                             Remove customers
                              */
-                            solution.storeSum[currentStoreJ] += requests[currentStoreJ][j];
-                            solution.storeSum[currentStoreK] += requests[currentStoreK][k];
-                            solution.storeSum[ij] -= requests[ij][j];
-                            solution.storeSum[ik] -= requests[ik][k];
+                            solution.storeSum[currentStoreJ] -= requests[currentStoreJ][j];
+                            solution.storeSum[currentStoreK] -= requests[currentStoreK][k];
+                            /*
+                             Add to the new store, this is needed since both customers may be added to the same store
+                             and using the if I can't check both the same time!
+                             */
+                            solution.storeSum[ij] += requests[ij][j];
+                            solution.storeSum[ik] += requests[ik][k];
+
+                            if (solution.storeSum[ij] <= capacities[ij] && solution.storeSum[ik] <= capacities[ik] && newCost < solution.z) {
+
+                                solution.array[j] = ij;
+                                solution.array[k] = ik;
+
+                                improved = true;
+
+                                solution.z = newCost;
+
+
+                                break;
+                            } else {
+                                /*
+                                 Re-fix variables
+                                 */
+                                solution.storeSum[currentStoreJ] += requests[currentStoreJ][j];
+                                solution.storeSum[currentStoreK] += requests[currentStoreK][k];
+                                solution.storeSum[ij] -= requests[ij][j];
+                                solution.storeSum[ik] -= requests[ik][k];
+                            }
+                        }
+                        if (improved) {
+                            break;
                         }
                     }
-                    if(improved){break;}
+                    if (improved) {
+                        break;
+                    }
                 }
-                if(improved){break;}
+                if (improved) {
+                    break;
+                }
             }
-            if(improved){break;}
-        }
 
-    } while(improved);
+        } while (improved);
 
-    return {
-        solution: solution,
-        graphData: undefined
-    };
+        var endTime = new Date();
+
+        postMessage({
+            functionName: "1-1 opt",
+            instance: instance,
+            solution: solution,
+            processingTime: (endTime - startTime),
+            graph: undefined
+        });
+
+
+    }, false);
 
 }
+
+gap11opt();
