@@ -324,6 +324,8 @@ function process() {
 
             for (var i = 0; i < tasks.length; i++) {
                 tasks[i].then(function (result) {
+
+
                     showResult(result);
                     incrementProgressBar(delta);
                 });
@@ -425,7 +427,7 @@ function resetJsonExample(){
 function randomJsonExample(){
 
     var name = "random example";
-    var nCustomers = Math.floor(Math.random()*60)+1;
+    var nCustomers = Math.floor(Math.random()*100)+1;
     var nStores = Math.floor(Math.random()*10)+1;
 
     var costs = new Array(nStores);
@@ -439,7 +441,7 @@ function randomJsonExample(){
             costs[i][j] = Math.floor(Math.random()*100);
             req[i][j] =  Math.floor(Math.random()*50);
         }
-        cap[i]=Math.floor(Math.random()*50);
+        cap[i]=Math.floor(Math.random()*500);
     }
 
     var randomExample ={

@@ -162,6 +162,10 @@ function showResult(data){
         drawGraph(data.functionName, data.graph.name+""+session, data.graph.data);
     }
 
+
+    HTMLElements.sessionDiv.append('<div class="separator"></div>');
+
+
 }
 
 function incrementProgressBar(delta) {

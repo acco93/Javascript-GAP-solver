@@ -97,6 +97,7 @@ function gap11opt() {
         var endTime = new Date();
 
         postMessage({
+            tag: "result",
             functionName: "1-1 opt",
             instance: instance,
             solution: solution,

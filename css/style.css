@@ -1,32 +1,32 @@
 
-.topnav{
-	background: repeating-linear-gradient(
-	  to right,
-	  #0bf,
-	  #0bf 10px,
-	  #0cf 10px,
-	  #0cf 20px
-	);
-	width: 100%;
-	height: 10px;
+.topnav {
+    background: repeating-linear-gradient(
+            to right,
+            #0bf,
+            #0bf 10px,
+            #0cf 10px,
+            #0cf 20px
+    );
+    width: 100%;
+    height: 10px;
 }
 
 .menubar {
 
 }
 
-.bottomnav{
-	background: repeating-linear-gradient(
-	  to right,
-		#0bf,
-		#0bf 10px,
-		#0cf 10px,
-		#0cf 20px
-	);
-	width: 100%;
-	height: 10px;
+.bottomnav {
+    background: repeating-linear-gradient(
+            to right,
+            #0bf,
+            #0bf 10px,
+            #0cf 10px,
+            #0cf 20px
+    );
+    width: 100%;
+    height: 10px;
 
-	bottom: 0;
+    bottom: 0;
 }
 
 .console:hover {
@@ -35,13 +35,13 @@
 
 .terminal {
 
-	background-color: #444;
+    background-color: #444;
 
 }
 
-#changelogBody{
- 	height: 200px;
-	overflow-y: scroll;
+#changelogBody {
+    height: 200px;
+    overflow-y: scroll;
 }
 
 .idle {
@@ -56,7 +56,6 @@
 
 }
 
-
 /* The Overlay (background) */
 .overlay {
     /* Height & width depends on how you want to reveal the overlay (see JS below) */
@@ -66,8 +65,8 @@
     z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
-    background-color: rgb(0,0,0); /* Black fallback color */
-    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+    background-color: rgb(0, 0, 0); /* Black fallback color */
+    background-color: rgba(0, 0, 0, 0.9); /* Black w/opacity */
     overflow-x: hidden; /* Disable horizontal scroll */
     /*transition: 0.5s;  0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
 }
@@ -98,10 +97,12 @@
 
 /* Position the close button (top right corner) */
 
-
 /* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
 @media screen and (max-height: 450px) {
-    .overlay a {font-size: 20px}
+    .overlay a {
+        font-size: 20px
+    }
+
     .overlay .closebtn {
         font-size: 40px;
         top: 15px;
@@ -109,33 +110,41 @@
     }
 }
 
-.scrollToTop{
+.scrollToTop {
 
-	padding:10px;
-	text-align:center;
-	font-weight: bold;
-	color: white;
-	background-color: #39b3d7;
-	text-decoration: none;
-	position:fixed;
-	bottom:10px;
-	right:20px;
-	display:none;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    background-color: #39b3d7;
+    text-decoration: none;
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    display: none;
 }
-.scrollToTop:hover{
-	text-decoration:none;
-	color:white;
-	background-color: #39b3d7;
+
+.scrollToTop:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #39b3d7;
 }
 
 .green {
-	color: #5cb85c;
+    color: #5cb85c;
 }
 
 .red {
-	color: #d2322d;
+    color: #d2322d;
 }
 
-.yellow{
-	color: #ed9c28;
+.yellow {
+    color: #ed9c28;
+}
+
+.separator {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 5px dashed #ffe6d5;
 }

@@ -96,6 +96,7 @@ function iteratedLocalSearch() {
 
 
         postMessage({
+            tag: "result",
             functionName: "Iterated local search (" + parameters.data.localSearch + ")",
             instance: instance,
             solution: solution,

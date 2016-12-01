@@ -44,8 +44,23 @@ function processRecursively(execDeferred){
     worker.postMessage(task.parameters);
 
     worker.onmessage = function (event) {
-        deferred.resolve(event.data);
-        processRecursively(execDeferred);
+
+        switch(event.data.tag) {
+            case "result":
+                deferred.resolve(event.data);
+                processRecursively(execDeferred);
+                break;
+            case "warning":
+                warning(event.data.msg);
+                break;
+            case "error":
+                error(event.data.msg);
+                break;
+            case "info":
+                info(event.data.msg);
+                break;
+        }
+
     };
 }
 

@@ -95,6 +95,7 @@ function constructiveHeuristic() {
         var endTime = new Date();
 
         postMessage({
+            tag: "result",
             functionName: "Constructive heuristic",
             instance: instance,
             solution: {

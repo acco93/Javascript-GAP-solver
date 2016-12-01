@@ -86,7 +86,12 @@ function tabuSearch() {
             if (iBest == undefined || jBest == undefined) {
                 // can't find a feasible neighbour!
                 // ooooooow don't know what to do! D:
-                // warning("All moves are tabu! Terminating at " + iter + "/" + MAX_ITER);
+
+                postMessage({
+                    tag: "warning",
+                    msg: "All moves are tabu! Terminating at " + iter + "/" + MAX_ITER
+                });
+
                 break;
             }
 
@@ -132,8 +137,8 @@ function tabuSearch() {
             bestSolutionStoreSum[bestSolution[j]] += requests[bestSolution[j]][j];
         }
 
-
         postMessage({
+            tag: "result",
             functionName: "Tabu search (10opt)",
             instance: instance,
             solution: {

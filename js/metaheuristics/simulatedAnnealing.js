@@ -42,7 +42,12 @@ function simulatedAnnealing() {
         var iter = 0;
         var MAX_ITER = parameters.data.MAX_ITER;
         var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
-        //info("T: " + MAX_T);
+
+        postMessage({
+            tag: "info",
+            msg: "T: " + MAX_T
+        });
+
         var t = MAX_T;
         var deltaT = 0.9;
 
@@ -155,9 +160,10 @@ function simulatedAnnealing() {
         }
 
 
-
+        console.log("qua");
 
         postMessage({
+            tag: "result",
             functionName: "Simulated annealing ("+parameters.data.neighbourFunctionName+")",
             instance: instance,
             solution: {
