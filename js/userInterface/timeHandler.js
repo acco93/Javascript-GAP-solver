@@ -54,3 +54,9 @@ function getProcessingTime() {
     }
     return time;
 }
+
+function resetProcessingTime(){
+    CURRENT_TIME_UNIT = SECONDS;
+    $("#timeInputSpan").html("seconds");
+    HTMLElements.timeInput.val("3");
+}

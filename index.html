@@ -3,6 +3,17 @@
 
     <meta charset="UTF-8">
 
+    <title>GAP Solver</title>
+
+    <script>
+        if (typeof(Worker) == "undefined") {
+            // Sorry! No Web Worker support..
+            alert("Sorry! No Web Worker support...");
+            window.stop();
+        }
+    </script>
+
+
     <link rel="stylesheet" type="text/css" href="plugins/bootstrap/bootstrap.css">
 
     <link rel="stylesheet" type="text/css" href="plugins/pace/pace.css">
@@ -171,7 +182,7 @@
                     <button id="ils10Button" class="btn btn-success" onclick="toggleILS10()">Iterated local search (1-0
                         opt)
                     </button>
-                    <button id="ils11Button" class="btn btn-danger" onclick="toggleILS11()">Iterated local search (1-1
+                    <button id="ils11Button" class="btn btn-success" onclick="toggleILS11()">Iterated local search (1-1
                         move)
                     </button>
                 </div>
@@ -197,7 +208,7 @@
                         </button>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn btn-lg btn-block btn-warning" onclick="">Reset config</button>
+                        <button class="btn btn-lg btn-block btn-warning" onclick="resetConfig()">Reset config</button>
                     </div>
                     <div class="col-md-4">
                         <button class="btn btn-lg btn-block btn-danger" onclick="clearAllSessions()">Clear all</button>

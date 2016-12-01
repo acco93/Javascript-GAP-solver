@@ -53,7 +53,9 @@ function drawGraph(title, uniqueName, datap) {
             text: title
         },
         axisX: {
-            interval: 1000
+            lineThickness:0,
+            tickThickness:0,
+            valueFormatString:" "//space
         },
         data: [{
             type: "line",
@@ -159,6 +161,7 @@ function showResult(data){
     if(data.graph != undefined){
         drawGraph(data.functionName, data.graph.name+""+session, data.graph.data);
     }
+
 }
 
 function incrementProgressBar(delta) {

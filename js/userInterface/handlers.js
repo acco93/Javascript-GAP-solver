@@ -240,14 +240,14 @@ function process() {
             if (AlgorithmSettings.perform10opt) {
                 tasks.push(addTask({
                     jsFile: "js/localSearches/10opt.js",
-                    parameters: {instance: instance, solution: Object.assign({}, solution)}
+                    parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
                 }));
             }
 
             if (AlgorithmSettings.perform11opt) {
                 tasks.push(addTask({
                     jsFile: "js/localSearches/11opt.js",
-                    parameters: {instance: instance, solution: Object.assign({}, solution)}
+                    parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
                 }));
             }
 
@@ -256,7 +256,7 @@ function process() {
                     jsFile: "js/metaheuristics/simulatedAnnealing.js",
                     parameters: {
                         instance: instance,
-                        solution: Object.assign({}, solution),
+                        solution: jQuery.extend(true, {}, solution),
                         neighbourFunctionName: "10opt",
                         MAX_ITER: AlgorithmSettings.MAX_ITER,
                         MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
@@ -269,7 +269,7 @@ function process() {
                     jsFile: "js/metaheuristics/simulatedAnnealing.js",
                     parameters: {
                         instance: instance,
-                        solution: Object.assign({}, solution),
+                        solution: jQuery.extend(true, {}, solution),
                         neighbourFunctionName: "11opt",
                         MAX_ITER: AlgorithmSettings.MAX_ITER,
                         MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
@@ -283,7 +283,7 @@ function process() {
                     jsFile: "js/metaheuristics/tabuSearch.js",
                     parameters: {
                         instance: instance,
-                        solution: Object.assign({}, solution),
+                        solution: jQuery.extend(true, {}, solution),
                         MAX_ITER: AlgorithmSettings.MAX_ITER,
                         MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
                     }
@@ -296,7 +296,7 @@ function process() {
                     jsFile: "js/metaheuristics/iteratedLocalSearch.js",
                     parameters: {
                         instance: instance,
-                        solution: Object.assign({}, solution),
+                        solution: jQuery.extend(true, {}, solution),
                         localSearch: "10opt",
                         MAX_ITER: AlgorithmSettings.MAX_ITER,
                         MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
@@ -309,7 +309,7 @@ function process() {
                     jsFile: "js/metaheuristics/iteratedLocalSearch.js",
                     parameters: {
                         instance: instance,
-                        solution: Object.assign({}, solution),
+                        solution: jQuery.extend(true, {}, solution),
                         localSearch: "11opt",
                         MAX_ITER: AlgorithmSettings.MAX_ITER,
                         MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
@@ -349,11 +349,57 @@ function process() {
 
 
 function abortComputation() {
-    if(!processing){
+    if (!processing) {
         return;
     }
     shutdown();
     warning("/!\\ Computation aborted /!\\");
     resetProgressBar();
     terminateSession();
+}
+
+function resetConfig() {
+
+    if (AlgorithmSettings.randomizeCustomers) {
+        randomizeCustomers();
+    }
+
+    if (AppSettings.verboseLog) {
+        toggleLog();
+    }
+
+    HTMLElements.iterInput.val("5000");
+    resetProcessingTime();
+
+
+    if (!AlgorithmSettings.perform10opt) {
+        toggleLocalSearch(GAP10OPT);
+    }
+
+    if (AlgorithmSettings.perform11opt) {
+        toggleLocalSearch(GAP11OPT);
+    }
+
+    if (!AlgorithmSettings.performSA10) {
+        toggleSA10();
+    }
+
+    if (!AlgorithmSettings.performSA11) {
+        toggleSA11();
+    }
+
+
+    if (!AlgorithmSettings.performTS10) {
+        toggleTS10();
+    }
+
+    if(!AlgorithmSettings.performILS10){
+        toggleILS10();
+    }
+
+    if(!AlgorithmSettings.performILS11){
+        toggleILS11();
+    }
+
+
 }
