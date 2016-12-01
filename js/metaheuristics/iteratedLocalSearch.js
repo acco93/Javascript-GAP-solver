@@ -38,19 +38,12 @@ function iteratedLocalSearch() {
         var capacities = instance.capacities;
 
         // Some ils parameters
-        var DISTURB_FACTOR_PERC = 50;
+        var DISTURB_FACTOR_PERC = 0.5;
 
         // copy the costs matrix (and perturbed it!)
         var perturbedCosts = new Array(nStores);
         for (var i = 0; i < nStores; i++) {
             perturbedCosts[i] = new Array(nCustomers);
-            for (var j = 0; j < nCustomers; j++) {
-                var perc = (Math.random() * DISTURB_FACTOR_PERC * 0.2);
-                if (Math.random() <= 0.5) {
-                    perc *= -1;
-                }
-                perturbedCosts[i][j] = (costs[i][j] + costs[i][j] * perc);
-            }
         }
 
         // some algorithm variables
@@ -73,12 +66,13 @@ function iteratedLocalSearch() {
                 storeSum: solution.storeSum.slice()
             };
 
-            perturbMatrix(perturbedCosts, nStores, nCustomers, DISTURB_FACTOR_PERC);
-            instance.costs = perturbedCosts;
+            instance.costs = perturbMatrix(originalCosts, perturbedCosts, nStores, nCustomers, DISTURB_FACTOR_PERC);
             var perturbedSolution = localSearch(perturbedSolution, instance).solution;
+
 
             // restore the instance
             instance.costs = originalCosts;
+
 
             // acceptance criterion
 
@@ -116,18 +110,19 @@ function iteratedLocalSearch() {
     }, false);
 }
 
-function perturbMatrix(matrix, rows, columns, factor) {
-
+function perturbMatrix(originalMatrix, newMatrix, rows, columns, factor) {
 
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < columns; j++) {
-            var perc = (Math.random() * factor * 0.2);
+            var perc = (Math.random() * (factor/2));
             if (Math.random() <= 0.5) {
                 perc *= -1;
             }
-            matrix[i][j] += (matrix[i][j] * perc);
+            newMatrix[i][j] = originalMatrix[i][j] + (originalMatrix[i][j] * perc);
         }
     }
+
+    return newMatrix;
 }
 
 // Compute the solution cost.
