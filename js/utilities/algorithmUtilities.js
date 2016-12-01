@@ -10,14 +10,18 @@ function z(solutionArray, instance){
 }
 
 // Returns true if the function is feasible, false otherwise.
-function isFeasible(solutionArray, instance){
+function isFeasible(solutionArray, instance, print){
 
     var i,j;
+
+    if(print===undefined){
+        print = true;
+    }
 
     // Check if all the customers are served, and from one store.
     for(j=0;j<instance.nCustomers;j++){
         if(solutionArray[j]==undefined){
-            warning("Customer "+j+" is not correctly served!");
+            if(print) warning("Customer "+j+" is not correctly served!");
             return false;
         }
     }
@@ -35,7 +39,7 @@ function isFeasible(solutionArray, instance){
 
     for(i=0;i<instance.nStores;i++){
         if(storeSum[i] > instance.capacities[i]){
-            warning("Store "+i+ " capacity is exceeded! ("+storeSum[i]+">"+instance.capacities[i]+")");
+            if(print) warning("Store "+i+ " capacity is exceeded! ("+storeSum[i]+">"+instance.capacities[i]+")");
             return false;
         }
     }

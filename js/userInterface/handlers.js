@@ -229,8 +229,10 @@ function process() {
         solutionConstructionTask.then(function (result) {
             showResult(result);
 
-            if (!isFeasible(result.solution.array, instance)) {
-                warning("Constructive heuristic returned a not feasible solution");
+            if (!isFeasible(result.solution.array, instance, false)) {
+                warning("Sorry I'm not able to build feasible solution!");
+                terminateSession();
+                return;
             }
 
             var solution = result.solution;
@@ -402,4 +404,61 @@ function resetConfig() {
     }
 
 
+}
+
+function resetJsonExample(){
+    var example = {  "name":"esempietto",
+        "numcustomers":6,
+        "numfacilities":3,
+        "cost":[[11,12,13,14,15,16],
+            [21,22,23,24,25,26],
+            [31,32,33,34,35,36]],
+        "req":[[4,4,4,4,4,4],
+            [4,4,4,4,4,4],
+            [4,4,4,4,4,4]],
+        "cap":[10,10,10]
+    };
+    HTMLElements.textArea.val(JSON.stringify(example, undefined, 4));
+    onTextAreaClick();
+}
+
+function randomJsonExample(){
+
+    var name = "random example";
+    var nCustomers = Math.floor(Math.random()*60)+1;
+    var nStores = Math.floor(Math.random()*10)+1;
+
+    var costs = new Array(nStores);
+    var req = new Array(nStores);
+    var cap = new Array(nStores);
+
+    for(var i=0;i<nStores;i++){
+        costs[i] = new Array(nCustomers);
+        req[i] = new Array(nCustomers);
+        for(var j=0;j<nCustomers;j++){
+            costs[i][j] = Math.floor(Math.random()*100);
+            req[i][j] =  Math.floor(Math.random()*50);
+        }
+        cap[i]=Math.floor(Math.random()*50);
+    }
+
+    var randomExample ={
+        "name": name,
+        "numcustomers":nCustomers,
+        "numfacilities":nStores,
+        "cost":costs,
+        "req":req,
+        "cap":cap
+    };
+
+    HTMLElements.textArea.val(JSON.stringify(randomExample, undefined, 4));
+    onTextAreaClick();
+}
+
+function prettyPrint(){
+    var ugly = document.getElementById('textarea').value;
+    var obj = JSON.parse(ugly);
+    var pretty = JSON.stringify(obj, undefined, 4);
+    document.getElementById('textarea').value = pretty;
+    onTextAreaClick();
 }

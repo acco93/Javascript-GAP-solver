@@ -86,7 +86,7 @@ function tabuSearch() {
             if (iBest == undefined || jBest == undefined) {
                 // can't find a feasible neighbour!
                 // ooooooow don't know what to do! D:
-                warning("All moves are tabu! Terminating at " + iter + "/" + MAX_ITER);
+                // warning("All moves are tabu! Terminating at " + iter + "/" + MAX_ITER);
                 break;
             }
 
