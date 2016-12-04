@@ -13,101 +13,95 @@
  */
 var KEY = 0;
 var VALUE = 1;
-function constructiveHeuristic() {
+function constructiveHeuristic(instance, randomizeCustomers) {
 
-    self.addEventListener("message", function (parameters) {
+    var startTime = new Date();
 
-        var startTime = new Date();
+    var nStores = instance.nStores;
+    var nCustomers = instance.nCustomers;
+    var costs = instance.costs;
+    var requests = instance.requests;
+    var capacities = instance.capacities;
 
-        var instance = parameters.data.instance;
+    var customersIndexes = new Array(nCustomers);
 
-        var nStores = instance.nStores;
-        var nCustomers = instance.nCustomers;
-        var costs = instance.costs;
-        var requests = instance.requests;
-        var capacities = instance.capacities;
+    var i, j;
 
-        var customersIndexes = new Array(nCustomers);
+    for (j = 0; j < nCustomers; j++) {
+        customersIndexes[j] = j;
+    }
 
-        var i, j;
+    if (randomizeCustomers) {
+        customersIndexes = knuthShuffle(customersIndexes);
+    }
 
-        for (j = 0; j < nCustomers; j++) {
-            customersIndexes[j] = j;
-        }
+    // the solution that has to be created!
+    var solution = new Array(nCustomers);
 
-        if (parameters.data.randomizeCustomers) {
-            customersIndexes = knuthShuffle(customersIndexes);
-        }
+    var requestsSum = [];
+    for (i = 0; i < nStores; i++) {
+        requestsSum[i] = 0;
+    }
 
-        // the solution that has to be created!
-        var solution = new Array(nCustomers);
+    var z = 0;
 
-        var requestsSum = [];
-        for (i = 0; i < nStores; i++) {
-            requestsSum[i] = 0;
-        }
+    /*
+     Per ogni cliente vado a scegliere il magazzino a cui richiedo meno
+     in posizione i, j ho la richiesta del cliente j al magazzino i
+     per ogni cliente ordino per richiesta crescente tenendo conto dell'indice del magazzino
+     - fissato il cliente j
+     - creo un vettore di magazzini, tenendo traccia dell'indice originale
+     - ordino per richiesta crescente
+     */
 
-        var z = 0;
+    for (j = 0; j < nCustomers; j++) {
 
         /*
-         Per ogni cliente vado a scegliere il magazzino a cui richiedo meno
-         in posizione i, j ho la richiesta del cliente j al magazzino i
-         per ogni cliente ordino per richiesta crescente tenendo conto dell'indice del magazzino
-         - fissato il cliente j
-         - creo un vettore di magazzini, tenendo traccia dell'indice originale
-         - ordino per richiesta crescente
+         consider the customers in the order defined in
+         customersIndexes
          */
 
-        for (j = 0; j < nCustomers; j++) {
+        var customerIndex = customersIndexes[j];
 
-            /*
-             consider the customers in the order defined in
-             customersIndexes
-             */
+        var requestsCustomer = new Array(nStores);
+        for (i = 0; i < nStores; i++) {
+            requestsCustomer[i] = new Array(2);
+            requestsCustomer[i][KEY] = i;
+            requestsCustomer[i][VALUE] = requests[i][customerIndex];
+        }
+        requestsCustomer.sort(ascendingCompareKeyValue)
+        // ora ho le richieste del cliente ordinate per richiesta minore
+        // le scorro e assegno al primo magazzino libero
 
-            var customerIndex = customersIndexes[j];
+        for (i = 0; i < nStores; i++) {
+            var realIndexStore = requestsCustomer[i][KEY];
+            if (requestsSum[realIndexStore] + requests[realIndexStore][customerIndex] <= capacities[realIndexStore]) {
 
-            var requestsCustomer = new Array(nStores);
-            for (i = 0; i < nStores; i++) {
-                requestsCustomer[i] = new Array(2);
-                requestsCustomer[i][KEY] = i;
-                requestsCustomer[i][VALUE] = requests[i][customerIndex];
+                solution[customerIndex] = realIndexStore;
+
+                requestsSum[realIndexStore] += requests[realIndexStore][customerIndex];
+                z += costs[realIndexStore][customerIndex];
+                //info("Customer "+customerIndex+" assigned to store "+realIndexStore);
+                break;
             }
-            requestsCustomer.sort(ascendingCompareKeyValue)
-            // ora ho le richieste del cliente ordinate per richiesta minore
-            // le scorro e assegno al primo magazzino libero
-
-            for (i = 0; i < nStores; i++) {
-                var realIndexStore = requestsCustomer[i][KEY];
-                if (requestsSum[realIndexStore] + requests[realIndexStore][customerIndex] <= capacities[realIndexStore]) {
-
-                    solution[customerIndex] = realIndexStore;
-
-                    requestsSum[realIndexStore] += requests[realIndexStore][customerIndex];
-                    z += costs[realIndexStore][customerIndex];
-                    //info("Customer "+customerIndex+" assigned to store "+realIndexStore);
-                    break;
-                }
-            }
-
         }
 
-        var endTime = new Date();
+    }
 
-        postMessage({
-            tag: "result",
-            functionName: "Constructive heuristic",
-            instance: instance,
-            solution: {
-                array: solution,
-                z: z,
-                storeSum: requestsSum
-            },
-            processingTime: (endTime-startTime),
-            graph: undefined
-        });
+    var endTime = new Date();
 
-    }, false);
+    return {
+        tag: "result",
+        functionName: "Constructive heuristic",
+        instance: instance,
+        solution: {
+            array: solution,
+            z: z,
+            storeSum: requestsSum
+        },
+        processingTime: (endTime - startTime),
+        graph: undefined
+    };
 
 
 }
@@ -145,6 +139,3 @@ function knuthShuffle(arr) {
     }
     return arr;
 }
-
-// run it!
-constructiveHeuristic();

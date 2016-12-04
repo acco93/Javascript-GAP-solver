@@ -1,7 +1,18 @@
+/**
+ * Single worker executor.
+ * Add some tasks to the queue and process them sequentially.
+ *
+ */
+
 var queue = [];
 var worker = undefined;
 
-
+/**
+ * Add a task to the queue.
+ *
+ * @param task
+ * @returns {$.Deferred} a promise solved when the task completes.
+ */
 function addTask(task){
 
     var deferred = new $.Deferred();
@@ -11,11 +22,29 @@ function addTask(task){
         task: task
     });
 
-    console.log("Added a new task ... ("+queue.length+" in queue)");
+    //console.log("Added a new task ... ("+queue.length+" in queue)");
 
     return deferred;
 }
 
+/**
+ * Shortcut to add a task where the worker file is genericWorker.js
+ * @param task
+ * @returns {$.Deferred}
+ */
+function addWorkerTask(task) {
+
+    return addTask({
+        workerFile: "js/executor/genericWorker.js",
+        parameters: task
+    });
+
+}
+
+/**
+ * Start the computation.
+ * @returns {$.Deferred} a promise resolved when all tasks have been processed.
+ */
 function processTasks(){
 
     var execDeferred = new $.Deferred();
@@ -26,6 +55,10 @@ function processTasks(){
 
 }
 
+/**
+ * (Private function) Recursively process the tasks in the queue.
+ * @param execDeferred
+ */
 function processRecursively(execDeferred){
 
     if(queue.length==0){
@@ -39,7 +72,7 @@ function processRecursively(execDeferred){
     var task = queueElem.task;
     var deferred = queueElem.deferred;
 
-    worker = new Worker(task.jsFile);
+    worker = new Worker(task.workerFile);
 
     worker.postMessage(task.parameters);
 
@@ -64,6 +97,9 @@ function processRecursively(execDeferred){
     };
 }
 
+/**
+ * Stop the executor.
+ */
 function shutdown(){
 
     if(worker == undefined){
@@ -103,7 +139,7 @@ function processTasks(){
     var task = queueElem.task;
     var deferred = queueElem.deferred;
 
-    worker = new Worker(task.jsFile);
+    worker = new Worker(task.workerFile);
 
     worker.postMessage(task.parameters);
 

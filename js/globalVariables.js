@@ -25,6 +25,7 @@ var AlgorithmSettings = {
     performTS10: true,  // tabuSearch 10 move
     performILS10: true,
     performILS11: true,
+    performVNS: true,
     MAX_ITER: 5000,
     MAX_PROCESSING_MILLISECONDS: 3000
 };

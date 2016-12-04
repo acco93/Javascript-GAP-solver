@@ -8,14 +8,10 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap10opt() {
+function gap10opt(solution, instance) {
 
-    self.addEventListener("message", function (parameters) {
 
         var startTime = new Date();
-
-        var instance = parameters.data.instance;
-        var solution = parameters.data.solution;
 
 
         var nStores = instance.nStores;
@@ -84,19 +80,14 @@ function gap10opt() {
 
         var endTime = new Date();
 
-        postMessage({
+        return{
             tag: "result",
             functionName: "1-0 opt",
             instance: instance,
             solution: solution,
             processingTime: (endTime-startTime),
             graph: undefined
-        });
-
-
-    }, false);
+        };
 
 
 }
-
-gap10opt();

@@ -60,3 +60,7 @@ function resetProcessingTime(){
     $("#timeInputSpan").html("seconds");
     HTMLElements.timeInput.val("3");
 }
+
+
+
+

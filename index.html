@@ -31,6 +31,8 @@
     <script type="text/javascript" src="js/executor/singleWorkerExecutor.js"></script>
     <script type="text/javascript" src="js/localSearches/10opt.js"></script>
     <script type="text/javascript" src="js/localSearches/11opt.js"></script>
+    <script type="text/javascript" src="js/localSearches/11moves.js"></script>
+    <script type="text/javascript" src="js/localSearches/21moves.js"></script>
     <script type="text/javascript" src="js/metaheuristics/iteratedLocalSearch.js"></script>
     <script type="text/javascript" src="js/metaheuristics/simulatedAnnealing.js"></script>
     <script type="text/javascript" src="js/metaheuristics/tabuSearch.js"></script>
@@ -190,6 +192,8 @@
                     <button id="ils11Button" class="btn btn-success" onclick="toggleILS11()">Iterated local search (1-1
                         move)
                     </button>
+                    <button id="vnsButton" class="btn btn-success" onclick="toggleVNS()">VNS
+                    </button>
                 </div>
             </div>
 
@@ -277,11 +281,16 @@
             <span class="green">.</span>
         </p>
 
+        <p>
+            <span id="timeSpan"></span>
+        </p>
+
         <div class="panel panel-default" style="margin-top:30px; background: transparent; border: none;">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="progress" style="background: transparent">
-                        <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0"
+                        <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar"
+                             aria-valuenow="0"
                              aria-valuemin="0" aria-valuemax="100" style="width: 0">
                         </div>
                     </div>

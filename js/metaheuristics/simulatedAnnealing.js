@@ -1,4 +1,30 @@
 /**
+ * Perform a simulated annealing metaheuristic on solution using an 1-0 opt
+ * as neighbour function. (Facade function)
+ *
+ * @param solution: an object = {array: Array, z: Number, storeSum: Array}
+ * @param instance: an object = {nStores: Number, nCustomers: Number, costs: Matrix, requests: Matrix, capacities: Array}
+ *
+ * @returns a solution = {array: Array, z:Number, storeSum: Array}
+ */
+function simulatedAnnealing10Move(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
+    return simulatedAnnealing(solution, instance, gap10optSA, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "10move");
+}
+
+/**
+ * Perform a simulated annealing metaheuristic on solution using an 1-1 opt
+ * as neighbour function. (Facade function)
+ *
+ * @param solution: an object = {array: Array, z: Number, storeSum: Array}
+ * @param instance: an object = {nStores: Number, nCustomers: Number, costs: Matrix, requests: Matrix, capacities: Array}
+ *
+ * @returns a solution = {array: Array, z:Number, storeSum: Array}
+ */
+function simulatedAnnealing11Move(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
+    return simulatedAnnealing(solution, instance, gap11optSA, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "11move");
+}
+
+/**
  * Perform a simulated annealing metaheuristic on solution using the given function
  * as neighbour function.
  *
@@ -13,178 +39,160 @@
  *                          graphData: {x,y} Array
  *                      }
  */
-function simulatedAnnealing() {
+function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX_PROCESSING_MILLISECONDS, neighbourFunctionName) {
 
 
-    self.addEventListener("message", function (parameters) {
+    // Some instance vars ...
+    var nStores = instance.nStores;
+    var nCustomers = instance.nCustomers;
+    var costs = instance.costs;
+    var requests = instance.requests;
+    var capacities = instance.capacities;
 
+    // Simulated annealing parameters ...
+    var k = 1.0;
+    var beta = 0.001;
+    var iter = 0;
 
-        var instance = parameters.data.instance;
-        var solution = parameters.data.solution;
+    var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
 
-        var neighbourFunction;
+    postMessage({
+        tag: "info",
+        msg: "T: " + MAX_T
+    });
 
-        if(parameters.data.neighbourFunctionName == "10opt"){
-            neighbourFunction = gap10optSA;
-        } else {
-            neighbourFunction = gap11optSA;
-        }
+    var t = MAX_T;
+    var deltaT = 0.9;
 
-        // Some instance vars ...
-        var nStores = instance.nStores;
-        var nCustomers = instance.nCustomers;
-        var costs = instance.costs;
-        var requests = instance.requests;
-        var capacities = instance.capacities;
+    // graph data
+    var graphData = [];
 
-        // Simulated annealing parameters ...
-        var k = 1.0;
-        var iter = 0;
-        var MAX_ITER = parameters.data.MAX_ITER;
-        var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
+    // Some algorithm variables ...
+    // best solution array found till now
+    var bestSolution = solution.array.slice();
+    var bestCost = solution.z;
 
-        postMessage({
-            tag: "info",
-            msg: "T: " + MAX_T
-        });
+    // current point in the solutions space
+    var currentSolution = bestSolution.slice();
+    var currentCost = bestCost;
 
-        var t = MAX_T;
-        var deltaT = 0.9;
+    var storeSum = solution.storeSum.slice();
 
-        // graph data
-        var graphData = [];
+    var m, j, i;
 
-        // Some algorithm variables ...
-        // best solution array found till now
-        var bestSolution = solution.array.slice();
-        var bestCost = solution.z;
+    var startTime = new Date();
+    // simulated annealing core
+    do {
 
-        // current point in the solutions space
-        var currentSolution = bestSolution.slice();
-        var currentCost = bestCost;
+        // result is an object {z: Number, moves:Array} that specifies the solution cost
+        // if the returned moves are applied to the current solution
+        var result = neighbourFunction(currentSolution, currentCost, storeSum, instance);
 
-        var storeSum = solution.storeSum.slice();
+        // the neighbour is better ...
+        if (result.z < currentCost) {
 
-        var m, j, i;
+            // thus perform the moves, there may be more than one move (i.e. gap11opt)
+            for (m = 0; m < result.moves.length; m++) {
 
-        var startTime = new Date();
-        // simulated annealing core
-        do {
+                // moves[index] = {i: Number, j: Number}, it specifies the new store i for the customer j
+                // that is, solution[j] = i
+                j = result.moves[m].j;
+                i = result.moves[m].i;
 
-            // result is an object {z: Number, moves:Array} that specifies the solution cost
-            // if the returned moves are applied to the current solution
-            var result = neighbourFunction(currentSolution, currentCost, storeSum, instance);
+                // update the storeSum, since it will be used the next iteration!
+                // old store = currentSolution[j]
+                storeSum[currentSolution[j]] -= requests[currentSolution[j]][j];
+                // new store = i
+                storeSum[i] += requests[i][j];
 
-            // the neighbour is better ...
-            if (result.z < currentCost) {
+                // .. and the solution array
+                currentSolution[j] = i;
+            } // end moves
 
-                // thus perform the moves, there may be more than one move (i.e. gap11opt)
+            // update the current cost
+            currentCost = result.z;
+
+            if (currentCost < bestCost) {
+                // edit the best solution
+                // TODO: instead of copying the solution I could store the moves sequence and compute the best solution
+                // TODO: once the iterations are finished
+                bestSolution = currentSolution.slice();
+                bestCost = currentCost;
+                // NB: I don't need the storeSum array because no computation will be performed over bestSolution
+                // I'll compute it as soon as the simulated annealing is finished
+            }
+
+        } else if (result.z > currentCost) {
+            // if the neighbour is worse ...
+
+            // compute a probability to chose it despite of this ...
+            var p = Math.exp(-(result.z - currentCost) / (k * t));
+
+            if (Math.random() < p) {
+
+                // ok switch to the worse solution ... perform the moves
                 for (m = 0; m < result.moves.length; m++) {
-
-                    // moves[index] = {i: Number, j: Number}, it specifies the new store i for the customer j
-                    // that is, solution[j] = i
                     j = result.moves[m].j;
                     i = result.moves[m].i;
-
-                    // update the storeSum, since it will be used the next iteration!
+                    // .. in the store sum values
                     // old store = currentSolution[j]
                     storeSum[currentSolution[j]] -= requests[currentSolution[j]][j];
                     // new store = i
                     storeSum[i] += requests[i][j];
 
-                    // .. and the solution array
+                    // .. in the solution
                     currentSolution[j] = i;
-                } // end moves
-
-                // update the current cost
+                }
                 currentCost = result.z;
 
-                if (currentCost < bestCost) {
-                    // edit the best solution
-                    // TODO: instead of copying the solution I could store the moves sequence and compute the best solution
-                    // TODO: once the iterations are finished
-                    bestSolution = currentSolution.slice();
-                    bestCost = currentCost;
-                    // NB: I don't need the storeSum array because no computation will be performed over bestSolution
-                    // I'll compute it as soon as the simulated annealing is finished
-                }
-
-            } else if (result.z > currentCost) {
-                // if the neighbour is worse ...
-
-                // compute a probability to chose it despite of this ...
-                var p = Math.exp(-(result.z - currentCost) / (k * t));
-
-                if (Math.random() < p) {
-
-                    // ok switch to the worse solution ... perform the moves
-                    for (m = 0; m < result.moves.length; m++) {
-                        j = result.moves[m].j;
-                        i = result.moves[m].i;
-                        // .. in the store sum values
-                        // old store = currentSolution[j]
-                        storeSum[currentSolution[j]] -= requests[currentSolution[j]][j];
-                        // new store = i
-                        storeSum[i] += requests[i][j];
-
-                        // .. in the solution
-                        currentSolution[j] = i;
-                    }
-                    currentCost = result.z;
-
-                }
             }
-
-
-            // update the temperature
-            t *= deltaT;
-
-            // store some graphdata
-            graphData[iter] = {
-                x: iter,
-                y: currentCost
-            };
-
-            iter++;
-
-        } while (iter < MAX_ITER && (new Date() - startTime) < parameters.data.MAX_PROCESSING_MILLISECONDS);
-
-        var endTime = new Date();
-
-        var bestSolutionStoreSum = new Array(nStores);
-        for (j = 0; j < nCustomers; j++) {
-            bestSolutionStoreSum[j] = 0;
-        }
-        for (j = 0; j < nCustomers; j++) {
-            bestSolutionStoreSum[bestSolution[j]] += requests[bestSolution[j]][j];
         }
 
 
-        console.log("qua");
+        // update the temperature
+        t = t / (1 + beta * t);
 
-        postMessage({
-            tag: "result",
-            functionName: "Simulated annealing ("+parameters.data.neighbourFunctionName+")",
-            instance: instance,
-            solution: {
-                array: bestSolution,
-                z: bestCost,
-                storeSum: bestSolutionStoreSum
-            },
-            processingTime: (endTime - startTime),
-            graph: {
-                name: "SA" + parameters.data.neighbourFunctionName,
-                data: graphData
-            }
-        });
+        // store some graphdata
+        graphData[iter] = {
+            x: iter,
+            y: currentCost
+        };
+
+        iter++;
+
+    } while (iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
+
+    var endTime = new Date();
+
+    var bestSolutionStoreSum = new Array(nStores);
+    for (j = 0; j < nCustomers; j++) {
+        bestSolutionStoreSum[j] = 0;
+    }
+    for (j = 0; j < nCustomers; j++) {
+        bestSolutionStoreSum[bestSolution[j]] += requests[bestSolution[j]][j];
+    }
 
 
-    }, false);
+    return {
+        tag: "result",
+        functionName: "Simulated annealing (" + neighbourFunctionName + ")",
+        instance: instance,
+        solution: {
+            array: bestSolution,
+            z: bestCost,
+            storeSum: bestSolutionStoreSum
+        },
+        processingTime: (endTime - startTime),
+        graph: {
+            name: "SA" + neighbourFunctionName,
+            data: graphData
+        }
+    };
 
 }
 
 function defineInitialTemperature(solution, instance, neighbourFunction, k) {
-    var N_TESTS = 100;
+    var N_TESTS = 1000;
     var avgZ = 0;
     var badMoves = 0;
 
@@ -206,10 +214,10 @@ function defineInitialTemperature(solution, instance, neighbourFunction, k) {
         avgZ /= badMoves;
     } else {
         // if there aren't bad neighbours, estimates avgZ as the current cost + 20%
-        avgZ = solution.z + solution.z * 0.2;
+        avgZ = solution.z + (solution.z * 0.2);
     }
 
-    var p = 0.6;
+    var p = 0.2;
 
     var t = -(avgZ - solution.z) / (k * Math.log(p));
 
@@ -300,6 +308,3 @@ function gap11optSA(solutionArray, cost, storeSum, instance) {
     };
 
 }
-
-
-simulatedAnnealing();

@@ -189,8 +189,21 @@ function toggleILS11() {
     }
 }
 
+function toggleVNS() {
+    if (AlgorithmSettings.performVNS) {
+        AlgorithmSettings.performVNS = false;
+        HTMLElements.vnsButton.addClass("btn-danger");
+        HTMLElements.vnsButton.removeClass("btn-success");
+    } else {
+        AlgorithmSettings.performVNS = true;
+        HTMLElements.vnsButton.removeClass("btn-danger");
+        HTMLElements.vnsButton.addClass("btn-success");
+    }
+}
 
 var processing;
+var interval;
+
 function process() {
 
     initSession();
@@ -221,12 +234,19 @@ function process() {
         AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
 
-        var solutionConstructionTask = addTask({
-            jsFile: "js/solutionBuilders/constructiveHeuristic.js",
-            parameters: {instance: instance, randomizeCustomers: AppSettings.randomizeCustomers}
+        var solutionConstructionTask = addWorkerTask({
+            parameters: [
+                instance,
+                AlgorithmSettings.randomizeCustomers
+            ],
+            filesToLoad: [
+                "../../js/solutionBuilders/constructiveHeuristic.js"
+            ],
+            functionToCall: "constructiveHeuristic"
         });
 
         solutionConstructionTask.then(function (result) {
+
             showResult(result);
 
             if (!isFeasible(result.solution.array, instance, false)) {
@@ -235,112 +255,291 @@ function process() {
                 return;
             }
 
+            /*addWorkerTask({
+                parameters: [
+                    result.solution,
+                    instance
+                ],
+                filesToLoad: [
+                    "../../js/localSearches/21moves.js"
+                ],
+                functionToCall: "gap21moves"
+            });*/
+
+           /*
+            tasks.push(addWorkerTask({
+                parameters:[
+
+                ],
+                filesToLoad: [
+
+                ],
+                functionToCall:
+            }));
+
+*/
+
             var solution = result.solution;
 
             var tasks = [];
 
             if (AlgorithmSettings.perform10opt) {
-                tasks.push(addTask({
-                    jsFile: "js/localSearches/10opt.js",
-                    parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance
+                    ],
+                    filesToLoad: [
+                        "../../js/localSearches/10opt.js"
+                    ],
+                    functionToCall: "gap10opt"
                 }));
             }
+
 
             if (AlgorithmSettings.perform11opt) {
-                tasks.push(addTask({
-                    jsFile: "js/localSearches/11opt.js",
-                    parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance
+                    ],
+                    filesToLoad: [
+                        "../../js/localSearches/10opt.js",
+                        "../../js/localSearches/11moves.js",
+                        "../../js/localSearches/11opt.js"
+                    ],
+                    functionToCall: "gap11opt"
                 }));
             }
 
+
             if (AlgorithmSettings.performSA10) {
-                tasks.push(addTask({
-                    jsFile: "js/metaheuristics/simulatedAnnealing.js",
-                    parameters: {
-                        instance: instance,
-                        solution: jQuery.extend(true, {}, solution),
-                        neighbourFunctionName: "10opt",
-                        MAX_ITER: AlgorithmSettings.MAX_ITER,
-                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-                    }
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/metaheuristics/simulatedAnnealing.js"
+                    ],
+                    functionToCall: "simulatedAnnealing10Move"
                 }));
             }
 
             if (AlgorithmSettings.performSA11) {
-                tasks.push(addTask({
-                    jsFile: "js/metaheuristics/simulatedAnnealing.js",
-                    parameters: {
-                        instance: instance,
-                        solution: jQuery.extend(true, {}, solution),
-                        neighbourFunctionName: "11opt",
-                        MAX_ITER: AlgorithmSettings.MAX_ITER,
-                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-                    }
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/metaheuristics/simulatedAnnealing.js"
+                    ],
+                    functionToCall: "simulatedAnnealing11Move"
                 }));
             }
 
-
             if (AlgorithmSettings.performTS10) {
-                tasks.push(addTask({
-                    jsFile: "js/metaheuristics/tabuSearch.js",
-                    parameters: {
-                        instance: instance,
-                        solution: jQuery.extend(true, {}, solution),
-                        MAX_ITER: AlgorithmSettings.MAX_ITER,
-                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-                    }
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/metaheuristics/tabuSearch.js"
+                    ],
+                    functionToCall: "tabuSearch"
                 }));
-
             }
 
             if (AlgorithmSettings.performILS10) {
-                tasks.push(addTask({
-                    jsFile: "js/metaheuristics/iteratedLocalSearch.js",
-                    parameters: {
-                        instance: instance,
-                        solution: jQuery.extend(true, {}, solution),
-                        localSearch: "10opt",
-                        MAX_ITER: AlgorithmSettings.MAX_ITER,
-                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-                    }
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/metaheuristics/iteratedLocalSearch.js",
+                        "../../js/utilities/algorithmUtilities.js",
+                        "../../js/localSearches/10opt.js"
+                    ],
+                    functionToCall: "iteratedLocalSearch10opt"
                 }));
             }
 
             if (AlgorithmSettings.performILS11) {
-                tasks.push(addTask({
-                    jsFile: "js/metaheuristics/iteratedLocalSearch.js",
-                    parameters: {
-                        instance: instance,
-                        solution: jQuery.extend(true, {}, solution),
-                        localSearch: "11opt",
-                        MAX_ITER: AlgorithmSettings.MAX_ITER,
-                        MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-                    }
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/metaheuristics/iteratedLocalSearch.js",
+                        "../../js/utilities/algorithmUtilities.js",
+                        "../../js/localSearches/10opt.js",
+                        "../../js/localSearches/11moves.js",
+                        "../../js/localSearches/11opt.js"
+                    ],
+                    functionToCall: "iteratedLocalSearch11opt"
                 }));
             }
 
-
-            var delta = 100 / tasks.length;
-
-            for (var i = 0; i < tasks.length; i++) {
-                tasks[i].then(function (result) {
-
-
-                    showResult(result);
-                    incrementProgressBar(delta);
-                });
+            if (AlgorithmSettings.performVNS) {
+                tasks.push(addWorkerTask({
+                    parameters:[
+                        jQuery.extend(true, {}, solution),
+                        instance,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/metaheuristics/vns.js",
+                        "../../js/localSearches/vnd.js",
+                        "../../js/localSearches/10opt.js",
+                        "../../js/localSearches/11moves.js",
+                        "../../js/localSearches/21moves.js",
+                        "../../js/localSearches/111moves.js",
+                        "../../js/localSearches/211move.js",
+                    ],
+                    functionToCall: "vns"
+                }));
             }
 
+            /*
 
-            processTasks().then(function (value) {
-                processing = false;
-                console.log("All tasks are finished!");
-                setTimeout(function () {
-                    terminateSession();
-                    unlockScreen();
-                }, 800);
+             if (AlgorithmSettings.perform10opt) {
+             tasks.push(addTask({
+             workerFile: "js/localSearches/10opt.js",
+             parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
+             }));
+             }
 
-            });
+             if (AlgorithmSettings.perform11opt) {
+             tasks.push(addTask({
+             workerFile: "js/localSearches/11opt.js",
+             parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
+             }));
+             }
+
+             if (AlgorithmSettings.performSA10) {
+             tasks.push(addTask({
+             workerFile: "js/metaheuristics/simulatedAnnealing.js",
+             parameters: {
+             instance: instance,
+             solution: jQuery.extend(true, {}, solution),
+             neighbourFunctionName: "10opt",
+             MAX_ITER: AlgorithmSettings.MAX_ITER,
+             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+             }
+             }));
+             }
+
+             if (AlgorithmSettings.performSA11) {
+             tasks.push(addTask({
+             workerFile: "js/metaheuristics/simulatedAnnealing.js",
+             parameters: {
+             instance: instance,
+             solution: jQuery.extend(true, {}, solution),
+             neighbourFunctionName: "11opt",
+             MAX_ITER: AlgorithmSettings.MAX_ITER,
+             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+             }
+             }));
+             }
+
+
+             if (AlgorithmSettings.performTS10) {
+             tasks.push(addTask({
+             workerFile: "js/metaheuristics/tabuSearch.js",
+             parameters: {
+             instance: instance,
+             solution: jQuery.extend(true, {}, solution),
+             MAX_ITER: AlgorithmSettings.MAX_ITER,
+             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+             }
+             }));
+
+             }
+
+             if (AlgorithmSettings.performILS10) {
+             tasks.push(addTask({
+             workerFile: "js/metaheuristics/iteratedLocalSearch.js",
+             parameters: {
+             instance: instance,
+             solution: jQuery.extend(true, {}, solution),
+             localSearch: "10opt",
+             MAX_ITER: AlgorithmSettings.MAX_ITER,
+             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+             }
+             }));
+             }
+
+             if (AlgorithmSettings.performILS11) {
+             tasks.push(addTask({
+             workerFile: "js/metaheuristics/iteratedLocalSearch.js",
+             parameters: {
+             instance: instance,
+             solution: jQuery.extend(true, {}, solution),
+             localSearch: "11opt",
+             MAX_ITER: AlgorithmSettings.MAX_ITER,
+             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+             }
+             }));
+             }
+                */
+
+             var remainingTime = getProcessingTime()*tasks.length;
+             var timeSpan=$("#timeSpan");
+
+             var delta = 100 / tasks.length;
+
+             for (var i = 0; i < tasks.length; i++) {
+             tasks[i].then(function (result) {
+
+             remainingTime=getProcessingTime();
+             showResult(result);
+             incrementProgressBar(delta);
+             });
+             }
+
+
+
+
+             processTasks().then(function (value) {
+             processing = false;
+             clearInterval(interval);
+             timeSpan.removeClass("red");
+
+             setTimeout(function () {
+             terminateSession();
+             unlockScreen();
+             }, 800);
+
+             });
+
+
+             timeSpan.text(remainingTime+" milliseconds");
+             interval = setInterval(function(){
+             if(remainingTime>0){
+             remainingTime-=25;
+             timeSpan.html("Timeout &asymp; "+remainingTime+" milliseconds");
+             } else {
+             timeSpan.addClass("red");
+             timeSpan.text("Run out of time!");
+             }
+
+
+             },25);
 
         });
 
@@ -357,6 +556,7 @@ function abortComputation() {
         return;
     }
     shutdown();
+    clearInterval(interval);
     warning("/!\\ Computation aborted /!\\");
     resetProgressBar();
     terminateSession();
@@ -397,67 +597,68 @@ function resetConfig() {
         toggleTS10();
     }
 
-    if(!AlgorithmSettings.performILS10){
+    if (!AlgorithmSettings.performILS10) {
         toggleILS10();
     }
 
-    if(!AlgorithmSettings.performILS11){
+    if (!AlgorithmSettings.performILS11) {
         toggleILS11();
     }
 
 
 }
 
-function resetJsonExample(){
-    var example = {  "name":"esempietto",
-        "numcustomers":6,
-        "numfacilities":3,
-        "cost":[[11,12,13,14,15,16],
-            [21,22,23,24,25,26],
-            [31,32,33,34,35,36]],
-        "req":[[4,4,4,4,4,4],
-            [4,4,4,4,4,4],
-            [4,4,4,4,4,4]],
-        "cap":[10,10,10]
+function resetJsonExample() {
+    var example = {
+        "name": "esempietto",
+        "numcustomers": 6,
+        "numfacilities": 3,
+        "cost": [[11, 12, 13, 14, 15, 16],
+            [21, 22, 23, 24, 25, 26],
+            [31, 32, 33, 34, 35, 36]],
+        "req": [[4, 4, 4, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4]],
+        "cap": [10, 10, 10]
     };
     HTMLElements.textArea.val(JSON.stringify(example, undefined, 4));
     onTextAreaClick();
 }
 
-function randomJsonExample(){
+function randomJsonExample() {
 
     var name = "random example";
-    var nCustomers = Math.floor(Math.random()*100)+1;
-    var nStores = Math.floor(Math.random()*10)+1;
+    var nCustomers = Math.floor(Math.random() * 100) + 1;
+    var nStores = Math.floor(Math.random() * 10) + 1;
 
     var costs = new Array(nStores);
     var req = new Array(nStores);
     var cap = new Array(nStores);
 
-    for(var i=0;i<nStores;i++){
+    for (var i = 0; i < nStores; i++) {
         costs[i] = new Array(nCustomers);
         req[i] = new Array(nCustomers);
-        for(var j=0;j<nCustomers;j++){
-            costs[i][j] = Math.floor(Math.random()*100);
-            req[i][j] =  Math.floor(Math.random()*50);
+        for (var j = 0; j < nCustomers; j++) {
+            costs[i][j] = Math.floor(Math.random() * 100);
+            req[i][j] = Math.floor(Math.random() * 50);
         }
-        cap[i]=Math.floor(Math.random()*500);
+        cap[i] = Math.floor(Math.random() * 500);
     }
 
-    var randomExample ={
+    var randomExample = {
         "name": name,
-        "numcustomers":nCustomers,
-        "numfacilities":nStores,
-        "cost":costs,
-        "req":req,
-        "cap":cap
+        "numcustomers": nCustomers,
+        "numfacilities": nStores,
+        "cost": costs,
+        "req": req,
+        "cap": cap
     };
 
     HTMLElements.textArea.val(JSON.stringify(randomExample, undefined, 4));
     onTextAreaClick();
 }
 
-function prettyPrint(){
+function prettyPrint() {
     var ugly = document.getElementById('textarea').value;
     var obj = JSON.parse(ugly);
     var pretty = JSON.stringify(obj, undefined, 4);

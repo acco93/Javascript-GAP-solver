@@ -11,13 +11,8 @@
  *                      }
  */
 
-function tabuSearch() {
+function tabuSearch(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
 
-    self.addEventListener("message", function (parameters) {
-
-
-        var instance = parameters.data.instance;
-        var solution = parameters.data.solution;
         // Some instance vars ...
         var nStores = instance.nStores;
         var nCustomers = instance.nCustomers;
@@ -29,7 +24,6 @@ function tabuSearch() {
         var graphData = [];
 
         // Some tabu search parameters
-        var MAX_ITER = parameters.data.MAX_ITER;
         var TABU_TENURE = 2 * nStores; // tabu "time"
         var iter = 0;
 
@@ -125,7 +119,7 @@ function tabuSearch() {
 
 
             iter++;
-        } while (iter < MAX_ITER && (new Date() - startTime) < parameters.data.MAX_PROCESSING_MILLISECONDS);
+        } while (iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
 
         var endTime = new Date();
 
@@ -137,7 +131,7 @@ function tabuSearch() {
             bestSolutionStoreSum[bestSolution[j]] += requests[bestSolution[j]][j];
         }
 
-        postMessage({
+        return{
             tag: "result",
             functionName: "Tabu search (10opt)",
             instance: instance,
@@ -151,11 +145,8 @@ function tabuSearch() {
                 name: "TS10",
                 data: graphData
             }
-        });
+        };
 
 
-    }, false);
 
 }
-
-tabuSearch();

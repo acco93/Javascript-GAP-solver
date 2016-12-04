@@ -26,6 +26,7 @@ $(document).ready(function(){
     HTMLElements.lastUpInfo = $("#lastUpInfo");
     HTMLElements.ils10Button = $("#ils10Button");
     HTMLElements.ils11Button = $("#ils11Button");
+    HTMLElements.vnsButton = $("#vnsButton");
     HTMLElements.iterInput = $("#iterInput");
     HTMLElements.timeInput = $("#timeInput");
 
