@@ -234,7 +234,9 @@ function process() {
         AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
 
-        var solutionConstructionTask = addWorkerTask({
+        var executor = new SingleWorkerExecutor();
+
+        var solutionConstructionTask = executor.addWorkerTask({
             parameters: [
                 instance,
                 AlgorithmSettings.randomizeCustomers
@@ -256,36 +258,36 @@ function process() {
             }
 
             /*addWorkerTask({
-                parameters: [
-                    result.solution,
-                    instance
-                ],
-                filesToLoad: [
-                    "../../js/localSearches/21moves.js"
-                ],
-                functionToCall: "gap21moves"
-            });*/
+             parameters: [
+             result.solution,
+             instance
+             ],
+             filesToLoad: [
+             "../../js/localSearches/21moves.js"
+             ],
+             functionToCall: "gap21moves"
+             });*/
 
-           /*
-            tasks.push(addWorkerTask({
-                parameters:[
+            /*
+             tasks.push(addWorkerTask({
+             parameters:[
 
-                ],
-                filesToLoad: [
+             ],
+             filesToLoad: [
 
-                ],
-                functionToCall:
-            }));
+             ],
+             functionToCall:
+             }));
 
-*/
+             */
 
             var solution = result.solution;
 
             var tasks = [];
 
             if (AlgorithmSettings.perform10opt) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance
                     ],
@@ -298,8 +300,8 @@ function process() {
 
 
             if (AlgorithmSettings.perform11opt) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance
                     ],
@@ -314,8 +316,8 @@ function process() {
 
 
             if (AlgorithmSettings.performSA10) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
@@ -329,8 +331,8 @@ function process() {
             }
 
             if (AlgorithmSettings.performSA11) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
@@ -344,8 +346,8 @@ function process() {
             }
 
             if (AlgorithmSettings.performTS10) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
@@ -359,8 +361,8 @@ function process() {
             }
 
             if (AlgorithmSettings.performILS10) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
@@ -376,8 +378,8 @@ function process() {
             }
 
             if (AlgorithmSettings.performILS11) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
@@ -395,8 +397,8 @@ function process() {
             }
 
             if (AlgorithmSettings.performVNS) {
-                tasks.push(addWorkerTask({
-                    parameters:[
+                tasks.push(executor.addWorkerTask({
+                    parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
@@ -496,54 +498,52 @@ function process() {
              }
              }));
              }
-                */
+             */
 
-             var remainingTime = getProcessingTime()*tasks.length;
-             var timeSpan=$("#timeSpan");
+            var remainingTime = getProcessingTime() * tasks.length;
+            var timeSpan = $("#timeSpan");
 
-             var delta = 100 / tasks.length;
+            var delta = 100 / tasks.length;
 
-             for (var i = 0; i < tasks.length; i++) {
-             tasks[i].then(function (result) {
+            for (var i = 0; i < tasks.length; i++) {
+                tasks[i].then(function (result) {
 
-             remainingTime=getProcessingTime();
-             showResult(result);
-             incrementProgressBar(delta);
-             });
-             }
-
-
+                    remainingTime = getProcessingTime();
+                    showResult(result);
+                    incrementProgressBar(delta);
+                });
+            }
 
 
-             processTasks().then(function (value) {
-             processing = false;
-             clearInterval(interval);
-             timeSpan.removeClass("red");
+            executor.processTasks().then(function (value) {
+                processing = false;
+                clearInterval(interval);
+                timeSpan.removeClass("red");
 
-             setTimeout(function () {
-             terminateSession();
-             unlockScreen();
-             }, 800);
+                setTimeout(function () {
+                    terminateSession();
+                    unlockScreen();
+                }, 800);
 
-             });
-
-
-             timeSpan.text(remainingTime+" milliseconds");
-             interval = setInterval(function(){
-             if(remainingTime>0){
-             remainingTime-=25;
-             timeSpan.html("Timeout &asymp; "+remainingTime+" milliseconds");
-             } else {
-             timeSpan.addClass("red");
-             timeSpan.text("Run out of time!");
-             }
+            });
 
 
-             },25);
+            timeSpan.text(remainingTime + " milliseconds");
+            interval = setInterval(function () {
+                if (remainingTime > 0) {
+                    remainingTime -= 25;
+                    timeSpan.html("Timeout &asymp; " + remainingTime + " milliseconds");
+                } else {
+                    timeSpan.addClass("red");
+                    timeSpan.text("Run out of time!");
+                }
+
+
+            }, 25);
 
         });
 
-        processTasks();
+        executor.processTasks();
 
 
     });

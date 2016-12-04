@@ -1,11 +1,7 @@
-/**
- * Single worker executor.
- * Add some tasks to the queue and process them sequentially.
- *
- */
-
-var queue = [];
-var worker = undefined;
+var SingleWorkerExecutor = function () {
+    this.queue = [];
+    this.worker = undefined;
+};
 
 /**
  * Add a task to the queue.
@@ -13,11 +9,11 @@ var worker = undefined;
  * @param task
  * @returns {$.Deferred} a promise solved when the task completes.
  */
-function addTask(task){
+SingleWorkerExecutor.prototype.addTask = function (task) {
 
     var deferred = new $.Deferred();
 
-    queue.push({
+    this.queue.push({
         deferred: deferred,
         task: task
     });
@@ -25,63 +21,66 @@ function addTask(task){
     //console.log("Added a new task ... ("+queue.length+" in queue)");
 
     return deferred;
-}
+
+};
 
 /**
  * Shortcut to add a task where the worker file is genericWorker.js
  * @param task
  * @returns {$.Deferred}
  */
-function addWorkerTask(task) {
+SingleWorkerExecutor.prototype.addWorkerTask = function (task) {
 
-    return addTask({
+    return this.addTask({
         workerFile: "js/executor/genericWorker.js",
         parameters: task
     });
 
-}
+};
 
 /**
  * Start the computation.
  * @returns {$.Deferred} a promise resolved when all tasks have been processed.
  */
-function processTasks(){
+SingleWorkerExecutor.prototype.processTasks = function () {
 
     var execDeferred = new $.Deferred();
 
-    processRecursively(execDeferred);
+    processRecursively(execDeferred, this);
 
     return execDeferred;
 
-}
+};
 
 /**
  * (Private function) Recursively process the tasks in the queue.
  * @param execDeferred
  */
-function processRecursively(execDeferred){
+function processRecursively(execDeferred, context) {
 
-    if(queue.length==0){
+    console.log(context);
+
+    if (context.queue.length == 0) {
         execDeferred.resolve(true);
-        worker = undefined;
+        context.worker = undefined;
         return;
     }
 
-    var queueElem = queue.shift();
+    var queueElem = context.queue.shift();
 
     var task = queueElem.task;
     var deferred = queueElem.deferred;
 
-    worker = new Worker(task.workerFile);
+    context.worker = new Worker(task.workerFile);
 
-    worker.postMessage(task.parameters);
+    context.worker.postMessage(task.parameters);
 
-    worker.onmessage = function (event) {
+    context.worker.onmessage = function (event) {
 
-        switch(event.data.tag) {
+        switch (event.data.tag) {
             case "result":
                 deferred.resolve(event.data);
-                processRecursively(execDeferred);
+                processRecursively(execDeferred, context);
                 break;
             case "warning":
                 warning(event.data.msg);
@@ -100,74 +99,15 @@ function processRecursively(execDeferred){
 /**
  * Stop the executor.
  */
-function shutdown(){
+SingleWorkerExecutor.prototype.shutdown = function() {
 
-    if(worker == undefined){
+    if (this.worker == undefined) {
         return;
     }
 
-    worker.terminate();
-    console.log("Shutting down... "+queue.length+" task(s) queued lost.");
-    worker = undefined;
-    queue.length = 0;
+    this.worker.terminate();
+    //console.log("Shutting down... " + queue.length + " task(s) queued lost.");
+    this.worker = undefined;
+    this.queue.length = 0;
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-function processTasks(){
-
-    var execDeferred = new $.Deferred();
-
-    if(queue.length==0){
-        execDeferred.resolve(true);
-        return;
-    }
-
-    var queueElem = queue.shift();
-
-    var task = queueElem.task;
-    var deferred = queueElem.deferred;
-
-    worker = new Worker(task.workerFile);
-
-    worker.postMessage(task.parameters);
-
-    worker.onmessage = function (event) {
-        deferred.resolve(event.data);
-        processTasks();
-    };
-
-    return execDeferred;
-
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
