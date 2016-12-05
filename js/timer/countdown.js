@@ -44,7 +44,7 @@ Countdown.prototype.start = function () {
             timeout -= 25;
             outerThis.htmlElement.html(timeout + " ms");
         } else {
-            outerThis.htmlElement.html("Out of time!");
+            outerThis.htmlElement.html("Time expired!");
             this.stop();
         }
 
@@ -58,5 +58,6 @@ Countdown.prototype.stop = function () {
     }
 
     clearInterval(this.interval);
+	this.htmlElement.html("");
     this.interval = undefined;
 };

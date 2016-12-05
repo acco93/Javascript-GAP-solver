@@ -1,6 +1,8 @@
 
 function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
 
+	graphData = [];
+
     var localSearches = [
         gap10opt,
         gap11moves,
@@ -26,6 +28,11 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
             solution = newSolution;
         }
 
+		graphData[iter] = {
+		    x: iter,
+		    y: solution.z
+		};
+
         iter++;
     } while(iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
 
@@ -37,7 +44,10 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
         instance: instance,
         solution: solution,
         processingTime: (endTime - startTime),
-        graph: undefined
+        graph: {
+			name:"VNS",
+			data: graphData		
+		}
     };
 
 }
