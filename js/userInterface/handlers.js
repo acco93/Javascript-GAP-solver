@@ -56,11 +56,11 @@ function clearSession(session) {
 function toggleLog() {
     if (AppSettings.verboseLog) {
         AppSettings.verboseLog = false;
-        HTMLElements.verboseLogButton.addClass("btn-danger");
+        HTMLElements.verboseLogButton.addClass("btn-default");
         HTMLElements.verboseLogButton.removeClass("btn-success");
     } else {
         AppSettings.verboseLog = true;
-        HTMLElements.verboseLogButton.removeClass("btn-danger");
+        HTMLElements.verboseLogButton.removeClass("btn-default");
         HTMLElements.verboseLogButton.addClass("btn-success");
     }
 }
@@ -68,11 +68,11 @@ function toggleLog() {
 function randomizeCustomers() {
     if (AlgorithmSettings.randomizeCustomers) {
         AlgorithmSettings.randomizeCustomers = false;
-        HTMLElements.randomizeCustomersButton.addClass("btn-danger");
+        HTMLElements.randomizeCustomersButton.addClass("btn-default");
         HTMLElements.randomizeCustomersButton.removeClass("btn-success");
     } else {
         AlgorithmSettings.randomizeCustomers = true;
-        HTMLElements.randomizeCustomersButton.removeClass("btn-danger");
+        HTMLElements.randomizeCustomersButton.removeClass("btn-default");
         HTMLElements.randomizeCustomersButton.addClass("btn-success");
     }
 }
@@ -87,22 +87,22 @@ function toggleLocalSearch(index) {
         case GAP10OPT:
             if (AlgorithmSettings.perform10opt) {
                 AlgorithmSettings.perform10opt = false;
-                HTMLElements.gap10Button.addClass("btn-danger");
+                HTMLElements.gap10Button.addClass("btn-default");
                 HTMLElements.gap10Button.removeClass("btn-success");
             } else {
                 AlgorithmSettings.perform10opt = true;
-                HTMLElements.gap10Button.removeClass("btn-danger");
+                HTMLElements.gap10Button.removeClass("btn-default");
                 HTMLElements.gap10Button.addClass("btn-success");
             }
             break;
         case GAP11OPT:
             if (AlgorithmSettings.perform11opt) {
                 AlgorithmSettings.perform11opt = false;
-                HTMLElements.gap11Button.addClass("btn-danger");
+                HTMLElements.gap11Button.addClass("btn-default");
                 HTMLElements.gap11Button.removeClass("btn-success");
             } else {
                 AlgorithmSettings.perform11opt = true;
-                HTMLElements.gap11Button.removeClass("btn-danger");
+                HTMLElements.gap11Button.removeClass("btn-default");
                 HTMLElements.gap11Button.addClass("btn-success");
             }
             break;
@@ -132,72 +132,84 @@ function showChangelog() {
 function toggleSA10() {
     if (AlgorithmSettings.performSA10) {
         AlgorithmSettings.performSA10 = false;
-        HTMLElements.sa10Button.addClass("btn-danger");
+        HTMLElements.sa10Button.addClass("btn-default");
         HTMLElements.sa10Button.removeClass("btn-success");
+        HTMLElements.sa10Button.text("OFF");
     } else {
         AlgorithmSettings.performSA10 = true;
-        HTMLElements.sa10Button.removeClass("btn-danger");
+        HTMLElements.sa10Button.removeClass("btn-default");
         HTMLElements.sa10Button.addClass("btn-success");
+        HTMLElements.sa10Button.text("ON");
     }
 }
 
 function toggleSA11() {
     if (AlgorithmSettings.performSA11) {
         AlgorithmSettings.performSA11 = false;
-        HTMLElements.sa11Button.addClass("btn-danger");
+        HTMLElements.sa11Button.addClass("btn-default");
         HTMLElements.sa11Button.removeClass("btn-success");
+        HTMLElements.sa11Button.text("OFF");
     } else {
         AlgorithmSettings.performSA11 = true;
-        HTMLElements.sa11Button.removeClass("btn-danger");
+        HTMLElements.sa11Button.removeClass("btn-default");
         HTMLElements.sa11Button.addClass("btn-success");
+        HTMLElements.sa11Button.text("ON");
     }
 }
 
 function toggleTS10() {
     if (AlgorithmSettings.performTS10) {
         AlgorithmSettings.performTS10 = false;
-        HTMLElements.ts10Button.addClass("btn-danger");
+        HTMLElements.ts10Button.addClass("btn-default");
         HTMLElements.ts10Button.removeClass("btn-success");
+        HTMLElements.ts10Button.text("OFF");
     } else {
         AlgorithmSettings.performTS10 = true;
-        HTMLElements.ts10Button.removeClass("btn-danger");
+        HTMLElements.ts10Button.removeClass("btn-default");
         HTMLElements.ts10Button.addClass("btn-success");
+        HTMLElements.ts10Button.text("ON");
     }
 }
 
 function toggleILS10() {
     if (AlgorithmSettings.performILS10) {
         AlgorithmSettings.performILS10 = false;
-        HTMLElements.ils10Button.addClass("btn-danger");
+        HTMLElements.ils10Button.addClass("btn-default");
         HTMLElements.ils10Button.removeClass("btn-success");
+        HTMLElements.ils10Button.text("OFF");
     } else {
         AlgorithmSettings.performILS10 = true;
-        HTMLElements.ils10Button.removeClass("btn-danger");
+        HTMLElements.ils10Button.removeClass("btn-default");
         HTMLElements.ils10Button.addClass("btn-success");
+        HTMLElements.ils10Button.text("ON");
     }
 }
 
 function toggleILS11() {
     if (AlgorithmSettings.performILS11) {
         AlgorithmSettings.performILS11 = false;
-        HTMLElements.ils11Button.addClass("btn-danger");
+        HTMLElements.ils11Button.addClass("btn-default");
         HTMLElements.ils11Button.removeClass("btn-success");
+        HTMLElements.ils11Button.text("OFF");
     } else {
         AlgorithmSettings.performILS11 = true;
-        HTMLElements.ils11Button.removeClass("btn-danger");
+        HTMLElements.ils11Button.removeClass("btn-default");
         HTMLElements.ils11Button.addClass("btn-success");
+        HTMLElements.ils11Button.text("ON");
     }
 }
 
 function toggleVNS() {
     if (AlgorithmSettings.performVNS) {
         AlgorithmSettings.performVNS = false;
-        HTMLElements.vnsButton.addClass("btn-danger");
+        HTMLElements.vnsButton.addClass("btn-default");
         HTMLElements.vnsButton.removeClass("btn-success");
+        HTMLElements.vnsButton.text("OFF");
     } else {
         AlgorithmSettings.performVNS = true;
-        HTMLElements.vnsButton.removeClass("btn-danger");
+        HTMLElements.vnsButton.removeClass("btn-default");
         HTMLElements.vnsButton.addClass("btn-success");
+        HTMLElements.vnsButton.text("ON");
     }
 }
 
@@ -497,6 +509,9 @@ function resetConfig() {
         toggleILS11();
     }
 
+    if(!AlgorithmSettings.performVNS){
+        toggleVNS();
+    }
 
 }
 

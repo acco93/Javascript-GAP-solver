@@ -100,8 +100,7 @@
 
 
             <div class="form-group">
-                <label>Hint: Customize your run <span class="green">enabling</span> or <span
-                        class="red">disabling</span> the buttons below!</label>
+                <label>Hint: Customize your run <span class="green">enabling</span> or <span style="color: #fff; text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;">disabling</span> the buttons below!</label>
 
             </div>
 
@@ -117,10 +116,11 @@
             <div class="form-group">
                 <label>2) Decide some algorithm config ... </label>
                 <div class="">
-                    <button id="randomizeCustomersButton" class="btn btn-danger" onclick="randomizeCustomers()">
+                    <button id="randomizeCustomersButton" class="btn btn-default" onclick="randomizeCustomers()">
                         Randomize customer order
                     </button>
                 </div>
+
                 <br>
                 <div class="input-group">
                     <span class="input-group-addon">Max iterations</span>
@@ -155,7 +155,7 @@
                 <div class="">
                     <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)">1-0 opt
                     </button>
-                    <button id="gap11Button" class="btn btn-danger" onclick="toggleLocalSearch(1)">1-1 opt
+                    <button id="gap11Button" class="btn btn-default" onclick="toggleLocalSearch(1)">1-1 opt
                     </button>
                 </div>
             </div>
@@ -163,23 +163,38 @@
             <!-- metaheuristics -->
             <div class="form-group">
                 <label>4) Try to improve <span style="color: blue">S</span> using some metaheuristics ... </label>
+                <div class="form-group">
+                    <ul class="list-group col-lg-6">
+                        <li class="list-group-item"><button id="sa10Button" class="btn btn-success" onclick="toggleSA10()">ON</button> Simulated annealing (1-0 move)</li>
+                        <li class="list-group-item"><button id="sa11Button" class="btn btn-success" onclick="toggleSA11()">ON</button> Simulated annealing (1-1 move)</li>
+                        <li class="list-group-item"><button id="ts10Button" class="btn btn-success" onclick="toggleTS10()">ON</button> Tabu search (1-0 move)</li>
+                    </ul>
+                    <ul class="list-group col-lg-6">
+                        <li class="list-group-item">
+                            <button id="ils10Button" class="btn btn-success" onclick="toggleILS10()">ON</button>
+                            Iterated local search (1-0 opt)
+                        </li>
+                        <li class="list-group-item">
+                            <button id="ils11Button" class="btn btn-success" onclick="toggleILS11()">ON
+                            </button>
+                            Iterated local search (1-1 opt)
+                        </li>
+                        <li class="list-group-item">
+                            <button id="vnsButton" class="btn btn-success" onclick="toggleVNS()">ON
+                            </button>
+                            Variable neighbourhood search (1-0, 1-1, 2-1, 1-1-1 opt + 2-1-1 move)
+                        </li>
+                    </ul>
+                </div>
+
+
                 <div class="">
-                    <button id="sa10Button" class="btn btn-success" onclick="toggleSA10()">Simulated annealing (1-0
-                        move)
-                    </button>
-                    <button id="sa11Button" class="btn btn-success" onclick="toggleSA11()">Simulated annealing (1-1
-                        move)
-                    </button>
-                    <button id="ts10Button" class="btn btn-success" onclick="toggleTS10()">Tabu search (1-0 move)
-                    </button>
-                    <button id="ils10Button" class="btn btn-success" onclick="toggleILS10()">Iterated local search (1-0
-                        opt)
-                    </button>
-                    <button id="ils11Button" class="btn btn-success" onclick="toggleILS11()">Iterated local search (1-1
-                        move)
-                    </button>
-                    <button id="vnsButton" class="btn btn-success" onclick="toggleVNS()">VNS
-                    </button>
+
+
+
+
+
+
                 </div>
             </div>
 
@@ -187,7 +202,7 @@
             <div class="form-group">
                 <label>5) Chose some output settings ... </label>
                 <div class="">
-                    <button id="verboseLogButton" class="btn btn-danger" onclick="toggleLog()" style="margin-top:5px;">
+                    <button id="verboseLogButton" class="btn btn-default" onclick="toggleLog()" style="margin-top:5px;">
                         Verbose log
                     </button>
                 </div>
