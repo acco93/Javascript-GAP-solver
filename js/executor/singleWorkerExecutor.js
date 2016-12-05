@@ -1,6 +1,11 @@
 var SingleWorkerExecutor = function () {
     this.queue = [];
     this.worker = undefined;
+    this.outputView = undefined;
+};
+
+SingleWorkerExecutor.prototype.setOutputView = function(output) {
+    this.outputView = output;
 };
 
 /**
@@ -58,7 +63,6 @@ SingleWorkerExecutor.prototype.processTasks = function () {
  */
 function processRecursively(execDeferred, context) {
 
-    console.log(context);
 
     if (context.queue.length == 0) {
         execDeferred.resolve(true);
@@ -69,6 +73,12 @@ function processRecursively(execDeferred, context) {
     var queueElem = context.queue.shift();
 
     var task = queueElem.task;
+
+    context.outputView.html("Processing "+task.parameters.name);
+
+    var countdown = new Countdown(task.parameters.timeout, HTMLElements.timeSpan);
+    countdown.start();
+
     var deferred = queueElem.deferred;
 
     context.worker = new Worker(task.workerFile);
@@ -80,6 +90,7 @@ function processRecursively(execDeferred, context) {
         switch (event.data.tag) {
             case "result":
                 deferred.resolve(event.data);
+                countdown.stop();
                 processRecursively(execDeferred, context);
                 break;
             case "warning":

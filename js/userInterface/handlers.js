@@ -203,7 +203,7 @@ function toggleVNS() {
 
 var processing;
 var interval;
-
+var executor;
 function process() {
 
     initSession();
@@ -234,9 +234,12 @@ function process() {
         AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
 
-        var executor = new SingleWorkerExecutor();
+        executor = new SingleWorkerExecutor();
+        executor.setOutputView($('#currentTask'));
 
         var solutionConstructionTask = executor.addWorkerTask({
+            name: "Constructive heuristic",
+            timeout: undefined,
             parameters: [
                 instance,
                 AlgorithmSettings.randomizeCustomers
@@ -257,29 +260,6 @@ function process() {
                 return;
             }
 
-            /*addWorkerTask({
-             parameters: [
-             result.solution,
-             instance
-             ],
-             filesToLoad: [
-             "../../js/localSearches/21moves.js"
-             ],
-             functionToCall: "gap21moves"
-             });*/
-
-            /*
-             tasks.push(addWorkerTask({
-             parameters:[
-
-             ],
-             filesToLoad: [
-
-             ],
-             functionToCall:
-             }));
-
-             */
 
             var solution = result.solution;
 
@@ -287,6 +267,8 @@ function process() {
 
             if (AlgorithmSettings.perform10opt) {
                 tasks.push(executor.addWorkerTask({
+                    name: "1-0 opt",
+                    timeout: undefined,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance
@@ -301,6 +283,8 @@ function process() {
 
             if (AlgorithmSettings.perform11opt) {
                 tasks.push(executor.addWorkerTask({
+                    name: "1-1 opt",
+                    timeout: undefined,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance
@@ -317,6 +301,8 @@ function process() {
 
             if (AlgorithmSettings.performSA10) {
                 tasks.push(executor.addWorkerTask({
+                    name: "Simulated annealing (1-0 moves)",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
@@ -332,6 +318,8 @@ function process() {
 
             if (AlgorithmSettings.performSA11) {
                 tasks.push(executor.addWorkerTask({
+                    name: "Simulated annealing (1-1 moves)",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
@@ -347,6 +335,8 @@ function process() {
 
             if (AlgorithmSettings.performTS10) {
                 tasks.push(executor.addWorkerTask({
+                    name: "Tabu search (1-0 opt)",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
@@ -362,6 +352,8 @@ function process() {
 
             if (AlgorithmSettings.performILS10) {
                 tasks.push(executor.addWorkerTask({
+                    name: "Iterated local search (1-0 opt)",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
@@ -379,6 +371,8 @@ function process() {
 
             if (AlgorithmSettings.performILS11) {
                 tasks.push(executor.addWorkerTask({
+                    name: "Iterated local search (1-1 opt)",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
@@ -398,6 +392,8 @@ function process() {
 
             if (AlgorithmSettings.performVNS) {
                 tasks.push(executor.addWorkerTask({
+                    name: "VNS",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
                     parameters: [
                         jQuery.extend(true, {}, solution),
                         instance,
@@ -417,98 +413,10 @@ function process() {
                 }));
             }
 
-            /*
-
-             if (AlgorithmSettings.perform10opt) {
-             tasks.push(addTask({
-             workerFile: "js/localSearches/10opt.js",
-             parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
-             }));
-             }
-
-             if (AlgorithmSettings.perform11opt) {
-             tasks.push(addTask({
-             workerFile: "js/localSearches/11opt.js",
-             parameters: {instance: instance, solution: jQuery.extend(true, {}, solution)}
-             }));
-             }
-
-             if (AlgorithmSettings.performSA10) {
-             tasks.push(addTask({
-             workerFile: "js/metaheuristics/simulatedAnnealing.js",
-             parameters: {
-             instance: instance,
-             solution: jQuery.extend(true, {}, solution),
-             neighbourFunctionName: "10opt",
-             MAX_ITER: AlgorithmSettings.MAX_ITER,
-             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-             }
-             }));
-             }
-
-             if (AlgorithmSettings.performSA11) {
-             tasks.push(addTask({
-             workerFile: "js/metaheuristics/simulatedAnnealing.js",
-             parameters: {
-             instance: instance,
-             solution: jQuery.extend(true, {}, solution),
-             neighbourFunctionName: "11opt",
-             MAX_ITER: AlgorithmSettings.MAX_ITER,
-             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-             }
-             }));
-             }
-
-
-             if (AlgorithmSettings.performTS10) {
-             tasks.push(addTask({
-             workerFile: "js/metaheuristics/tabuSearch.js",
-             parameters: {
-             instance: instance,
-             solution: jQuery.extend(true, {}, solution),
-             MAX_ITER: AlgorithmSettings.MAX_ITER,
-             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-             }
-             }));
-
-             }
-
-             if (AlgorithmSettings.performILS10) {
-             tasks.push(addTask({
-             workerFile: "js/metaheuristics/iteratedLocalSearch.js",
-             parameters: {
-             instance: instance,
-             solution: jQuery.extend(true, {}, solution),
-             localSearch: "10opt",
-             MAX_ITER: AlgorithmSettings.MAX_ITER,
-             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-             }
-             }));
-             }
-
-             if (AlgorithmSettings.performILS11) {
-             tasks.push(addTask({
-             workerFile: "js/metaheuristics/iteratedLocalSearch.js",
-             parameters: {
-             instance: instance,
-             solution: jQuery.extend(true, {}, solution),
-             localSearch: "11opt",
-             MAX_ITER: AlgorithmSettings.MAX_ITER,
-             MAX_PROCESSING_MILLISECONDS: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
-             }
-             }));
-             }
-             */
-
-            var remainingTime = getProcessingTime() * tasks.length;
-            var timeSpan = $("#timeSpan");
-
             var delta = 100 / tasks.length;
 
             for (var i = 0; i < tasks.length; i++) {
                 tasks[i].then(function (result) {
-
-                    remainingTime = getProcessingTime();
                     showResult(result);
                     incrementProgressBar(delta);
                 });
@@ -517,8 +425,6 @@ function process() {
 
             executor.processTasks().then(function (value) {
                 processing = false;
-                clearInterval(interval);
-                timeSpan.removeClass("red");
 
                 setTimeout(function () {
                     terminateSession();
@@ -526,20 +432,6 @@ function process() {
                 }, 800);
 
             });
-
-
-            timeSpan.text(remainingTime + " milliseconds");
-            interval = setInterval(function () {
-                if (remainingTime > 0) {
-                    remainingTime -= 25;
-                    timeSpan.html("Timeout &asymp; " + remainingTime + " milliseconds");
-                } else {
-                    timeSpan.addClass("red");
-                    timeSpan.text("Run out of time!");
-                }
-
-
-            }, 25);
 
         });
 
@@ -555,7 +447,7 @@ function abortComputation() {
     if (!processing) {
         return;
     }
-    shutdown();
+    executor.shutdown();
     clearInterval(interval);
     warning("/!\\ Computation aborted /!\\");
     resetProgressBar();

@@ -9,6 +9,43 @@ $(document).ready(function(){
         cache: false
     });
 
+    // load scripts
+    $.when(
+        $.getScript( "js/io/input.js" ),
+        $.getScript( "js/io/output.js" ),
+        $.getScript( "js/executor/singleWorkerExecutor.js" ),
+        $.getScript( "js/localSearches/10opt.js" ),
+        $.getScript( "js/localSearches/11opt.js" ),
+        $.getScript( "js/localSearches/11moves.js" ),
+        $.getScript( "js/localSearches/21moves.js" ),
+        $.getScript( "js/metaheuristics/iteratedLocalSearch.js" ),
+        $.getScript( "js/metaheuristics/simulatedAnnealing.js" ),
+        $.getScript( "js/metaheuristics/tabuSearch.js" ),
+        $.getScript( "js/solutionBuilders/constructiveHeuristic.js" ),
+        $.getScript( "js/timer/countdown.js" ),
+        $.getScript( "js/userInterface/handlers.js" ),
+        $.getScript( "js/userInterface/timeHandler.js" ),
+        $.getScript( "js/utilities/algorithmUtilities.js" ),
+        $.getScript( "js/globalVariables.js" ),
+        $.Deferred(function( deferred ){
+            $( deferred.resolve );
+        })
+    ).done(function(){
+
+        //console.log("Everything has been loaded.");
+
+        bindHTMLElements();
+        bindBehaviors();
+
+    });
+
+
+
+
+
+});
+
+function bindHTMLElements() {
     // Bind all HTML elements to global variables
     HTMLElements.textArea = $('#textarea');
     HTMLElements.processButton = $('#processButton');
@@ -29,8 +66,10 @@ $(document).ready(function(){
     HTMLElements.vnsButton = $("#vnsButton");
     HTMLElements.iterInput = $("#iterInput");
     HTMLElements.timeInput = $("#timeInput");
+    HTMLElements.timeSpan = $("#timeSpan");
+}
 
-
+function bindBehaviors(){
     // Bind behaviors to actions
     HTMLElements.textArea.click(onTextAreaClick);
     HTMLElements.input.click(onInputClick);
@@ -62,5 +101,4 @@ $(document).ready(function(){
         return false;
     });
 
-});
-
+}
