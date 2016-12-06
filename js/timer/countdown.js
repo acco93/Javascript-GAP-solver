@@ -58,6 +58,6 @@ Countdown.prototype.stop = function () {
     }
 
     clearInterval(this.interval);
-	this.htmlElement.html("");
+	this.htmlElement.html(" ");
     this.interval = undefined;
 };

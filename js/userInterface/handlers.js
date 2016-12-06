@@ -220,6 +220,9 @@ function process() {
 
     initSession();
     processing = true;
+
+    $('#currentTask').html("Downloading the json");
+
     // load the json (download or read it according to the user needs)
     loadJSON().then(function (data) {
 
@@ -413,6 +416,7 @@ function process() {
                         AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
                     ],
                     filesToLoad: [
+                        "../../js/utilities/algorithmUtilities.js",
                         "../../js/metaheuristics/vns.js",
                         "../../js/localSearches/vnd.js",
                         "../../js/localSearches/10opt.js",
