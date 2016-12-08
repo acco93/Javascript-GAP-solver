@@ -111,9 +111,10 @@ function toggleLocalSearch(index) {
 
 function showChangelog() {
     HTMLElements.changelogModal.modal("show");
-    HTMLElements.changelogBody.append('<h1 style="text-align=center">Loading ...</h1>');
+
 
     if (Cache.changelog == undefined) {
+        HTMLElements.changelogBody.append('<h1 style="text-align=center">Loading ...</h1>');
         $.getJSON("https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/commits", function (data) {
             HTMLElements.changelogBody.empty();
             Cache.changelog = data;

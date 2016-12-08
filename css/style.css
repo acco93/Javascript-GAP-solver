@@ -8,7 +8,7 @@
             #0cf 20px
     );
     width: 100%;
-    height: 10px;
+    height: 7px;
 }
 
 .menubar {
@@ -147,4 +147,27 @@
     margin-top: 5px;
     margin-bottom: 5px;
     border-bottom: 3px dashed #ffe6d5;
+}
+
+.hint {
+    display: block;
+    padding: 10px;
+    margin-left: -15px;
+    margin-right: -15px;
+    text-align: center;
+    font-variant: small-caps;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 215px;
+    overflow-x: hidden;
+}
+
+.boxShadow {
+    -webkit-box-shadow: 1px 1px 25px 1px rgba(0,0,0,0.41);
+    -moz-box-shadow: 1px 1px 25px 1px rgba(0,0,0,0.41);
+    box-shadow: 1px 1px 25px 1px rgba(0,0,0,0.41);
 }

@@ -36,6 +36,7 @@ $(document).ready(function(){
 
         bindHTMLElements();
         bindBehaviors();
+        loadFiles();
 
     });
 
@@ -44,6 +45,30 @@ $(document).ready(function(){
 
 
 });
+
+function loadFiles(){
+    var li = '';
+    var base_url = "http://astarte.csr.unibo.it/gapdata/";
+
+    var urlList = $('#urlList');
+
+    $.get("http://astarte.csr.unibo.it/gapdata/gapinstances.html", function(data){
+        var html = $(data);
+        var matches = $(html).find('[href]');
+        urlList.empty();
+
+        $.each(matches, function(i, el){
+            var h = $(el).attr('href');
+            if( h.indexOf(".json") > 0){
+                var url = base_url + $(el).attr('href').trim().replace('\\','/');
+                var fname = getFilename(url);
+
+                urlList.append('<li><a href=\'javascript:void(0)\' onclick=\'changeUrl("'+url+'")\'>'+fname+'</a></li>');
+            }
+        });
+    });
+
+}
 
 function bindHTMLElements() {
     // Bind all HTML elements to global variables
@@ -101,4 +126,28 @@ function bindBehaviors(){
         return false;
     });
 
+    jQuery("#input").keyup(function () {
+        var filter = jQuery(this).val();
+        jQuery("ul li").each(function () {
+            if (jQuery(this).text().search(new RegExp(filter, "i")) < 0 && jQuery(this).attr("id")!="listSearch") {
+                jQuery(this).hide();
+            } else {
+                jQuery(this).show()
+            }
+        });
+
+        dd=$("#dropdown");
+        if(dd.attr("aria-expanded") == "false"){
+            dd.dropdown('toggle');
+        }
+
+        $('#input').focus();
+    });
+
 }
+
+function getFilename(url){
+    url = url.split('/').pop().replace(/\#(.*?)$/, '').replace(/\?(.*?)$/, '');
+    return url
+}
+
