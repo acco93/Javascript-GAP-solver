@@ -48,7 +48,7 @@ function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECON
         tag: "result",
         functionName: "GRASP",
         instance: instance,
-        solution: solution,
+        solution: bestSolution,
         processingTime: (endTime - startTime),
         graph: {
             name: "GRASP",
