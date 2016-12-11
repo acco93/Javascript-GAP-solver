@@ -15,14 +15,17 @@ function doWork() {
     // wait for parameters
     self.addEventListener("message", function (event) {
 
+        // retrieve some params
         var parameters = event.data.parameters;
         var filesToLoad = event.data.filesToLoad;
         var functionToCall = event.data.functionToCall;
 
+        // load some scripts
         for(var i=0;i<filesToLoad.length;i++){
             importScripts(filesToLoad[i]);
         }
 
+        // call the appropriate function and post message the result
         var result = eval(functionToCall).apply(null,parameters);
 
         postMessage(result);

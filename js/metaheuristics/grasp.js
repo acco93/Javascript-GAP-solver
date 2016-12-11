@@ -1,3 +1,65 @@
+function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
+
+    // candidate list # elements
+    var k = Math.floor(instance.nStores*0.2);
+    console.log(k);
+
+    var graphData = [];
+    var iter = 0;
+
+    var bestSolution = undefined;
+
+    var startTime = new Date();
+    do {
+
+        var solution = constructiveHeuristic(instance, randomizeCustomers, k);
+
+        if(isFeasible(solution.array, instance, false)) {
+
+            var result = gap11opt(solution, instance);
+
+            if (bestSolution == undefined || result.solution.z < bestSolution.z) {
+                bestSolution = {
+                    array: result.solution.array.slice(),
+                    z: result.solution.z,
+                    storeSum: result.solution.storeSum.slice()
+                }
+            }
+            graphData[iter] = {
+                x: iter,
+                y: solution.z
+            };
+
+        } else {
+            graphData[iter] = {
+                x: iter,
+                y: Number.MAX_VALUE
+            };
+        }
+
+
+
+        iter++;
+    } while (iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
+
+    var endTime = new Date();
+
+    return {
+        tag: "result",
+        functionName: "GRASP",
+        instance: instance,
+        solution: solution,
+        processingTime: (endTime - startTime),
+        graph: {
+            name: "GRASP",
+            data: graphData
+        }
+    };
+
+
+}
+
+
 /**
  * Try to build a solution using a simple constructive heuristic approach:
  * assign a customer to the first empty store for which are required
@@ -13,9 +75,7 @@
  */
 var KEY = 0;
 var VALUE = 1;
-function constructiveHeuristic(instance, randomizeCustomers) {
-
-    var startTime = new Date();
+function constructiveHeuristic(instance, randomizeCustomers, k) {
 
     var nStores = instance.nStores;
     var nCustomers = instance.nCustomers;
@@ -73,8 +133,10 @@ function constructiveHeuristic(instance, randomizeCustomers) {
         // ora ho le richieste del cliente ordinate per richiesta minore
         // le scorro e assegno al primo magazzino libero
 
-        for (i = 0; i < nStores; i++) {
-            var realIndexStore = requestsCustomer[i][KEY];
+        var startI = Math.floor(Math.random() * k);
+        var storesProcessed = 0;
+        while(storesProcessed < nStores) {
+            var realIndexStore = requestsCustomer[startI][KEY];
             if (requestsSum[realIndexStore] + requests[realIndexStore][customerIndex] <= capacities[realIndexStore]) {
 
                 solution[customerIndex] = realIndexStore;
@@ -84,23 +146,16 @@ function constructiveHeuristic(instance, randomizeCustomers) {
                 //info("Customer "+customerIndex+" assigned to store "+realIndexStore);
                 break;
             }
+            startI = (startI+1)%nStores;
+            storesProcessed++;
         }
 
     }
 
-    var endTime = new Date();
-
     return {
-        tag: "result",
-        functionName: "Constructive heuristic",
-        instance: instance,
-        solution: {
-            array: solution,
-            z: z,
-            storeSum: requestsSum
-        },
-        processingTime: (endTime - startTime),
-        graph: undefined
+        array: solution,
+        z: z,
+        storeSum: requestsSum
     };
 
 

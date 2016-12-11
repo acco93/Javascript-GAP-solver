@@ -430,6 +430,29 @@ function process() {
                 }));
             }
 
+            if (AlgorithmSettings.performGrasp) {
+                tasks.push(executor.addWorkerTask({
+                    name: "GRASP",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                    parameters: [
+                        instance,
+                        AlgorithmSettings.randomizeCustomers,
+                        //10, // k: candidate list elements
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                    ],
+                    filesToLoad: [
+                        "../../js/utilities/algorithmUtilities.js",
+                        "../../js/metaheuristics/grasp.js",
+                        "../../js/localSearches/10opt.js",
+                        "../../js/localSearches/11moves.js",
+                        "../../js/localSearches/11opt.js"
+                    ],
+                    functionToCall: "grasp"
+                }));
+            }
+
+
             var delta = 100 / tasks.length;
 
             for (var i = 0; i < tasks.length; i++) {
@@ -514,8 +537,12 @@ function resetConfig() {
         toggleILS11();
     }
 
-    if(!AlgorithmSettings.performVNS){
+    if (!AlgorithmSettings.performVNS) {
         toggleVNS();
+    }
+
+    if (!AlgorithmSettings.performGrasp) {
+        toggleGrasp();
     }
 
 }
@@ -576,4 +603,28 @@ function prettyPrint() {
     var pretty = JSON.stringify(obj, undefined, 4);
     document.getElementById('textarea').value = pretty;
     onTextAreaClick();
+}
+
+function toggleGrasp() {
+    if (AlgorithmSettings.performGrasp) {
+        AlgorithmSettings.performGrasp = false;
+        HTMLElements.graspButton.addClass("btn-default");
+        HTMLElements.graspButton.removeClass("btn-success");
+    } else {
+        AlgorithmSettings.performGrasp = true;
+        HTMLElements.graspButton.removeClass("btn-default");
+        HTMLElements.graspButton.addClass("btn-success");
+    }
+}
+
+
+function clearInput() {
+
+    HTMLElements.input.val("");
+    $("#urlList").each(function () {
+        $(this).find('li').each(function () {
+            $(this).show();
+        });
+    });
+    HTMLElements.input.focus();
 }

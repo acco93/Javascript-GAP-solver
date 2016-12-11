@@ -2,7 +2,7 @@
  * Application entry point.
  */
 
-$(document).ready(function(){
+$(document).ready(function () {
 
     // Disable caching of AJAX responses
     $.ajaxSetup({
@@ -11,26 +11,26 @@ $(document).ready(function(){
 
     // load scripts
     $.when(
-        $.getScript( "js/io/input.js" ),
-        $.getScript( "js/io/output.js" ),
-        $.getScript( "js/executor/singleWorkerExecutor.js" ),
-        $.getScript( "js/localSearches/10opt.js" ),
-        $.getScript( "js/localSearches/11opt.js" ),
-        $.getScript( "js/localSearches/11moves.js" ),
-        $.getScript( "js/localSearches/21moves.js" ),
-        $.getScript( "js/metaheuristics/iteratedLocalSearch.js" ),
-        $.getScript( "js/metaheuristics/simulatedAnnealing.js" ),
-        $.getScript( "js/metaheuristics/tabuSearch.js" ),
-        $.getScript( "js/solutionBuilders/constructiveHeuristic.js" ),
-        $.getScript( "js/timer/countdown.js" ),
-        $.getScript( "js/userInterface/handlers.js" ),
-        $.getScript( "js/userInterface/timeHandler.js" ),
-        $.getScript( "js/utilities/algorithmUtilities.js" ),
-        $.getScript( "js/globalVariables.js" ),
-        $.Deferred(function( deferred ){
-            $( deferred.resolve );
+        $.getScript("js/io/input.js"),
+        $.getScript("js/io/output.js"),
+        $.getScript("js/executor/singleWorkerExecutor.js"),
+        $.getScript("js/localSearches/10opt.js"),
+        $.getScript("js/localSearches/11opt.js"),
+        $.getScript("js/localSearches/11moves.js"),
+        $.getScript("js/localSearches/21moves.js"),
+        $.getScript("js/metaheuristics/iteratedLocalSearch.js"),
+        $.getScript("js/metaheuristics/simulatedAnnealing.js"),
+        $.getScript("js/metaheuristics/tabuSearch.js"),
+        $.getScript("js/solutionBuilders/constructiveHeuristic.js"),
+        $.getScript("js/timer/countdown.js"),
+        $.getScript("js/userInterface/handlers.js"),
+        $.getScript("js/userInterface/timeHandler.js"),
+        $.getScript("js/utilities/algorithmUtilities.js"),
+        $.getScript("js/globalVariables.js"),
+        $.Deferred(function (deferred) {
+            $(deferred.resolve);
         })
-    ).done(function(){
+    ).done(function () {
 
         //console.log("Everything has been loaded.");
 
@@ -41,29 +41,31 @@ $(document).ready(function(){
     });
 
 
-
-
-
 });
 
-function loadFiles(){
+function loadFiles() {
     var li = '';
     var base_url = "http://astarte.csr.unibo.it/gapdata/";
 
     var urlList = $('#urlList');
 
-    $.get("http://astarte.csr.unibo.it/gapdata/gapinstances.html", function(data){
+    $.get("http://astarte.csr.unibo.it/gapdata/gapinstances.html", function (data) {
         var html = $(data);
         var matches = $(html).find('[href]');
         urlList.empty();
 
-        $.each(matches, function(i, el){
+        urlList.append('<li id="noUrlMatch"><a  href="javascript: void(0)" style="color:darkred;" onclick="clearInput()">Nothing here ... Clear regexp? </a></li>');
+        HTMLElements.noUrlMatch = $('#noUrlMatch');
+        HTMLElements.noUrlMatch.hide();
+
+
+        $.each(matches, function (i, el) {
             var h = $(el).attr('href');
-            if( h.indexOf(".json") > 0){
-                var url = base_url + $(el).attr('href').trim().replace('\\','/');
+            if (h.indexOf(".json") > 0) {
+                var url = base_url + $(el).attr('href').trim().replace('\\', '/');
                 var fname = getFilename(url);
 
-                urlList.append('<li><a href=\'javascript:void(0)\' onclick=\'changeUrl("'+url+'")\'>'+fname+'</a></li>');
+                urlList.append('<li><a href=\'javascript:void(0)\' onclick=\'changeUrl("' + url + '")\'>' + fname + '</a></li>');
             }
         });
     });
@@ -92,19 +94,22 @@ function bindHTMLElements() {
     HTMLElements.iterInput = $("#iterInput");
     HTMLElements.timeInput = $("#timeInput");
     HTMLElements.timeSpan = $("#timeSpan");
+    HTMLElements.graspButton = $('#graspButton');
+    HTMLElements.constructiveHeuButton = $('#constructiveHeuButton');
+
 }
 
-function bindBehaviors(){
+function bindBehaviors() {
     // Bind behaviors to actions
     HTMLElements.textArea.click(onTextAreaClick);
     HTMLElements.input.click(onInputClick);
 
 
-    $.getJSON("https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/?callback=", function( data ) {
+    $.getJSON("https://api.bitbucket.org/2.0/repositories/acco93/gap-solver-js/?callback=", function (data) {
         var htmlLastModified = new Date(document.lastModified);
         var repoLastUpdate = new Date(data.updated_on);
 
-        if(htmlLastModified.getTime() - repoLastUpdate.getTime() > 0){
+        if (htmlLastModified.getTime() - repoLastUpdate.getTime() > 0) {
             HTMLElements.lastUpInfo.html('<small style="color: green;">UP TO DATE</small>');
         } else {
             HTMLElements.lastUpInfo.html('<small style="color: red;">Repo version is more updated!</small>');
@@ -112,7 +117,7 @@ function bindBehaviors(){
 
     });
 
-    $(window).scroll(function(){
+    $(window).scroll(function () {
         if ($(this).scrollTop() > 100) {
             $('.scrollToTop').fadeIn();
         } else {
@@ -121,32 +126,69 @@ function bindBehaviors(){
     });
 
     //Click event to scroll to top
-    $('.scrollToTop').click(function(){
-        $('html, body').animate({scrollTop : 0},800);
+    $('.scrollToTop').click(function () {
+        $('html, body').animate({scrollTop: 0}, 800);
         return false;
     });
 
-    jQuery("#input").keyup(function () {
-        var filter = jQuery(this).val();
-        jQuery("ul li").each(function () {
-            if (jQuery(this).text().search(new RegExp(filter, "i")) < 0 && jQuery(this).attr("id")!="listSearch") {
-                jQuery(this).hide();
-            } else {
-                jQuery(this).show()
-            }
-        });
 
-        dd=$("#dropdown");
-        if(dd.attr("aria-expanded") == "false"){
-            dd.dropdown('toggle');
+    HTMLElements.input.keyup(function () {
+
+        var keyCode = (event.keyCode ? event.keyCode : event.which);
+        if (keyCode == 13) { // enter
+            $("#urlList").each(function () {
+                $(this).find('li').each(function () {
+                    if ($(this).is(":visible")) {
+                        $(this).find("a").click();
+                        event.stopPropagation();
+                        return;
+                    }
+                });
+
+            });
+        } else if (keyCode == 27) {
+            clearInput();
+        } else {
+            var shown = 0;
+            var filter = jQuery(this).val();
+            $("#urlList").each(function () {
+                $(this).find('li').each(function () {
+                    if (jQuery(this).text().search(new RegExp(filter, "i")) < 0) {
+                        jQuery(this).hide();
+                    } else {
+                        jQuery(this).show();
+                        shown++;
+                    }
+                });
+
+            });
+
+            dd = $("#dropdown");
+            if (dd.attr("aria-expanded") == "false") {
+                dd.dropdown('toggle');
+            }
+
+
+            if (shown == 0) {
+                HTMLElements.noUrlMatch.show();
+            } else {
+                HTMLElements.noUrlMatch.hide();
+            }
+
+            $('#input').focus();
         }
 
-        $('#input').focus();
+
+    });
+
+
+    HTMLElements.input.keydown(function (event) {
+
     });
 
 }
 
-function getFilename(url){
+function getFilename(url) {
     url = url.split('/').pop().replace(/\#(.*?)$/, '').replace(/\?(.*?)$/, '');
     return url
 }

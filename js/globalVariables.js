@@ -5,10 +5,13 @@ var SUCCESS = 0;
 var ERROR = 1;
 
 
+var CONSTRUCTIVE = 0;
+var GRASP = 1;
+
+
 /*
  Utility objects
 */
-
 
 
 var AppSettings = {
@@ -26,6 +29,7 @@ var AlgorithmSettings = {
     performILS10: true,
     performILS11: true,
     performVNS: true,
+    performGrasp: true,
     MAX_ITER: 5000,
     MAX_PROCESSING_MILLISECONDS: 3000
 };

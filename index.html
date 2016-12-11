@@ -46,10 +46,14 @@
     </div>
     <div class="panel panel-default " style="margin-top:30px;">
         <div class="panel-body">
-            <label class="">0a) Select (or write) a json instance URL:</label>
+            <div>
+                <label class="">0a) Select (or write) a json instance URL:</label>
+                <small style="float: right;">When the input field is focused press <strong>Esc</strong> to clear it and <strong>Enter</strong> to select the first list item shown</small>
+            </div>
             <div class="input-group">
                 <input type="text" id="input" class="form-control"
-                       value="" aria-label="..." placeholder="Paste a json or write to search through the available ones">
+                       value="http://astarte.csr.unibo.it/gapdata/homemade/ForliCesenaGAP.json" aria-label="..."
+                       placeholder="Paste a json or write to search through the available ones">
                 <div class="input-group-btn">
                     <button id="dropdown" type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">&nbsp;<span class="caret"></span> <span
@@ -57,6 +61,9 @@
                     <ul id="urlList" class="dropdown-menu dropdown-menu-right scrollable-menu">
                         <li><a href="javascript: void(0)" style="color: orangered">Loading ...</a></li>
                     </ul>
+                    <button type="button" class="btn btn-warning" onclick="clearInput()">
+                        <span class="" aria-hidden="true"><strong>x</strong></span>
+                    </button>
                 </div><!-- /btn-group -->
             </div><!-- /input-group -->
             <div class="form-group">
@@ -82,8 +89,10 @@
             </div>
 
 
-            <div class="form-group hint" style="margin-top: 20px;" >
-                <label><span class="label label-info">HINT</span> <span>Customize your run <span class="green">enabling</span> or <span style="color: #fff; text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;">disabling</span> the buttons below!</span></label>
+            <div class="form-group hint" style="margin-top: 20px;">
+                <label><span class="label label-info">HINT</span> <span>Customize your run <span
+                        class="green">enabling</span> or <span
+                        style="color: #fff; text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;">disabling</span> the buttons below!</span></label>
 
             </div>
 
@@ -101,6 +110,7 @@
                     <button id="randomizeCustomersButton" class="btn btn-default" onclick="randomizeCustomers()">
                         Randomize customer order
                     </button>
+                    <small> -> It affects <strong>Constructive heuristic</strong> and <strong>GRASP</strong></small>
                 </div>
 
                 <br>
@@ -133,7 +143,8 @@
 
             <!-- local searches -->
             <div class="form-group">
-                <label class="">3) Try to improve <span style="color: blue">S</span> using some local searches ... </label>
+                <label class="">3) Try to improve <span style="color: blue">S</span> using some local searches ...
+                </label>
                 <div class="">
                     <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)">1-0 opt
                     </button>
@@ -144,12 +155,22 @@
 
             <!-- metaheuristics -->
             <div class="form-group">
-                <label class="">4) Try to improve <span style="color: blue">S</span> using some metaheuristics ... </label>
+                <label class="">4a) Try to improve <span style="color: blue">S</span> using some metaheuristics based on
+                    local searches ... </label>
                 <div class="form-group">
                     <ul class="list-group col-lg-6">
-                        <li class="list-group-item"><button id="sa10Button" class="btn btn-success" onclick="toggleSA10()">ON</button> Simulated annealing (1-0 move)</li>
-                        <li class="list-group-item"><button id="sa11Button" class="btn btn-success" onclick="toggleSA11()">ON</button> Simulated annealing (1-1 move)</li>
-                        <li class="list-group-item"><button id="ts10Button" class="btn btn-success" onclick="toggleTS10()">ON</button> Tabu search (1-0 move)</li>
+                        <li class="list-group-item">
+                            <button id="sa10Button" class="btn btn-success" onclick="toggleSA10()">ON</button>
+                            Simulated annealing (1-0 move)
+                        </li>
+                        <li class="list-group-item">
+                            <button id="sa11Button" class="btn btn-success" onclick="toggleSA11()">ON</button>
+                            Simulated annealing (1-1 move)
+                        </li>
+                        <li class="list-group-item">
+                            <button id="ts10Button" class="btn btn-success" onclick="toggleTS10()">ON</button>
+                            Tabu search (1-0 move)
+                        </li>
                     </ul>
                     <ul class="list-group col-lg-6">
                         <li class="list-group-item">
@@ -173,10 +194,13 @@
                 <div style="clear: both;">
 
 
+                </div>
+            </div>
 
-
-
-
+            <div class="form-group">
+                <label class="">4b) or/and a constructive metaheuristic ... </label>
+                <div class="form-group">
+                    <button id="graspButton" class="btn btn-success" onclick="toggleGrasp()">GRASP</button>
                 </div>
             </div>
 
@@ -264,11 +288,11 @@
             <span class="green">.</span>
         </p>
         <p>
-            <span id="currentTask"></span> 
+            <span id="currentTask"></span>
         </p>
-		<p>
-			<small id="timeSpan"></small>
-		</p>
+        <p>
+            <small id="timeSpan"></small>
+        </p>
         <div class="panel panel-default" style="margin-top:30px; background: transparent; border: none;">
             <div class="panel-body">
                 <div class="form-group">
