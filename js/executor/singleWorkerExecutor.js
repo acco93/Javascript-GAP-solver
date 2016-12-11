@@ -74,7 +74,7 @@ function processRecursively(execDeferred, context) {
 
     var task = queueElem.task;
 
-    context.outputView.html("Processing "+task.parameters.name);
+    context.outputView.html(task.parameters.name);
 
     var countdown = new Countdown(task.parameters.timeout, HTMLElements.timeSpan);
     countdown.start();

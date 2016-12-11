@@ -132,7 +132,7 @@ function bindBehaviors() {
     });
 
 
-    HTMLElements.input.keyup(function () {
+    HTMLElements.input.keyup(function (event) {
 
         var keyCode = (event.keyCode ? event.keyCode : event.which);
         if (keyCode == 13) { // enter
@@ -182,9 +182,6 @@ function bindBehaviors() {
     });
 
 
-    HTMLElements.input.keydown(function (event) {
-
-    });
 
 }
 

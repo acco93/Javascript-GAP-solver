@@ -1,0 +1,45 @@
+<style>
+*{
+  margin: 0; 
+  padding: 0
+  }
+body{
+  font-family:"arial";
+  font-size:16pt;
+  background-color:#F4F4F4;
+  }
+p{
+  padding:3px 5px 2px 10px;
+  }
+h1{
+  color: #277A77;
+  padding:3px 5px 2px 10px;
+  }
+table{
+  font-size:12pt;
+  border: 1px solid black;
+  border-collapse:collapse;
+  text-align:center;
+  padding:5px;
+  }
+th{
+  color: white;
+  background-color: #277A77;
+  padding:3px 10px 2px 10px;
+  }
+td{
+  padding:3px 10px 2px 10px;
+}
+div{
+  padding:20px 10px 2px 10px;
+  }
+.blu{color: blue}
+#div2{
+  font-size:12pt;
+  padding:40px 10px 2px 10px;
+  }
+#div3{
+  font-size:12pt;
+  padding:40px 10px 2px 10px;
+  }
+</style>

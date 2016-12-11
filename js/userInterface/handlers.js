@@ -626,5 +626,6 @@ function clearInput() {
             $(this).show();
         });
     });
+    HTMLElements.noUrlMatch.hide();
     HTMLElements.input.focus();
 }
