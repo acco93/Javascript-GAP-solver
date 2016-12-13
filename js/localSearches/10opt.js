@@ -8,8 +8,11 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap10opt(solution, instance) {
+function gap10opt(solution, instance, maxDuration) {
 
+        if(maxDuration == undefined){
+            maxDuration = Number.MAX_VALUE;
+        }
 
         var startTime = new Date();
 
@@ -76,7 +79,7 @@ function gap10opt(solution, instance) {
 
             }
 
-        } while (improved);
+        } while (improved && (new Date() - startTime) < maxDuration);
 
         var endTime = new Date();
 

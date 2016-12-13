@@ -20,6 +20,7 @@ function loadJSON(){
         try {
             json = $.parseJSON(text);
         }catch(e) {
+            console.log(e);
             deferred.resolve(undefined);
         }
         deferred.resolve(json);
@@ -52,10 +53,10 @@ function downloadJSON(url) {
         deferred.resolve(data);
 
 
-    }).fail(function() {
+    }).fail(function(jqxhr, textStatus, err) {
 
-        error("ERROR: Not able to get the JSON");
-
+        error("ERROR: Not able to get the JSON (check the console for details)");
+        console.error("getJSON failed, status: " + textStatus + ", error: "+err);
         deferred.resolve(undefined);
 
     }).always(function(){

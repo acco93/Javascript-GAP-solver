@@ -8,7 +8,7 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap11opt(solution, instance) {
+function gap11opt_old(solution, instance) {
 
         var startTime = new Date();
 

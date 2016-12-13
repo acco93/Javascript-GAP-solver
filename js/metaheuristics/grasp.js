@@ -2,7 +2,6 @@ function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECON
 
     // candidate list # elements
     var k = Math.floor(instance.nStores*0.2);
-    console.log(k);
 
     var graphData = [];
     var iter = 0;
@@ -10,13 +9,18 @@ function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECON
     var bestSolution = undefined;
 
     var startTime = new Date();
+
+    var remainingTime =  MAX_PROCESSING_MILLISECONDS;
+
     do {
 
         var solution = constructiveHeuristic(instance, randomizeCustomers, k);
 
         if(isFeasible(solution.array, instance, false)) {
 
-            var result = gap11opt(solution, instance);
+            var result = gap11opt(solution, instance, remainingTime);
+            remainingTime-=result.processingTime;
+
 
             if (bestSolution == undefined || result.solution.z < bestSolution.z) {
                 bestSolution = {

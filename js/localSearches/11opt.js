@@ -1,4 +1,9 @@
-function gap11opt(solution, instance) {
+function gap11opt(solution, instance, maxDuration) {
+
+    if(maxDuration == undefined){
+        maxDuration = Number.MAX_VALUE;
+    }
+
 
     var startTime = new Date();
 
@@ -7,15 +12,15 @@ function gap11opt(solution, instance) {
 
         var oldZ = solution.z;
 
-        solution = gap10opt(solution, instance).solution;
+        solution = gap10opt(solution, instance, maxDuration).solution;
 
-        solution = gap11moves(solution, instance).solution;
+        solution = gap11moves(solution, instance, maxDuration).solution;
 
         if (solution.z < oldZ) {
             improved = true;
         }
 
-    } while (improved);
+    } while (improved && (new Date() - startTime) < maxDuration);
 
     var endTime = new Date();
 

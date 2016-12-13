@@ -4,15 +4,17 @@
  * @param instance
  * @param localSearches
  */
-function vnd(solution, instance, localSearches){
+function vnd(solution, instance, localSearches, maxDuration){
 
     var k=0;
+
+    var startTime = new Date();
 
     do {
 
         var oldZ = solution.z;
 
-        solution = localSearches[k](solution, instance).solution;
+        solution = localSearches[k](solution, instance, maxDuration).solution;
 
         if(solution.z < oldZ){
             k=0;
@@ -20,8 +22,14 @@ function vnd(solution, instance, localSearches){
             k++;
         }
 
-    } while(k<localSearches.length);
+    } while(k<localSearches.length && (new Date() - startTime) < maxDuration);
 
-    return solution;
+
+    return{
+        functionName: "vnd",
+        solution: solution,
+        processingTime: (new Date()-startTime),
+        graph: undefined
+    };
 
 }

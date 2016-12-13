@@ -51,13 +51,16 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
 
     // Simulated annealing parameters ...
     var k = 1.0;
-    var beta = 0.0001;
+
     var iter = 0;
     // # of moves performed before decrementing t
     var movesPerT = Math.floor(MAX_ITER/nCustomers);
 
-
     var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
+    //var beta = 0.1;
+    var delta = 0.95;
+
+    //delta = Math.pow(Number.MIN_VALUE,(1/(MAX_ITER-iter)))/t;
 
     postMessage({
         tag: "info",
@@ -85,6 +88,8 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
     var startTime = new Date();
     // simulated annealing core
     do {
+
+
 
         // result is an object {z: Number, moves:Array} that specifies the solution cost
         // if the returned moves are applied to the current solution
@@ -151,9 +156,9 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
         }
 
 
-        // update the temperature after 25% of the length of the array
         if(iter% movesPerT == 0){
-            t = t / (1 + beta * t);
+            //t = t / (1 + beta * t);
+            t*=delta;
         }
 
         // store some graphdata
@@ -167,10 +172,11 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
     } while (iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
 
 
+
     var endTime = new Date();
 
     var bestSolutionStoreSum = new Array(nStores);
-    for (j = 0; j < nCustomers; j++) {
+    for (j = 0; j < nStores; j++) {
         bestSolutionStoreSum[j] = 0;
     }
     for (j = 0; j < nCustomers; j++) {
@@ -222,7 +228,7 @@ function defineInitialTemperature(solution, instance, neighbourFunction, k) {
         avgZ = solution.z + (solution.z * 0.2);
     }
 
-    var p = 0.1;
+    var p = 0.05;
 
     var t = -(avgZ - solution.z) / (k * Math.log(p));
 

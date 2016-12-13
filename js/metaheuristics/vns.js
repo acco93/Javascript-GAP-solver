@@ -13,7 +13,7 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
     var biggestNeighbourhood = gap211move;
 
 
-    var DISTURB_FACTOR_PERC = 0.5;
+    var DISTURB_FACTOR_PERC = 0.8;
     var iter = 0;
 
     // copy the costs matrix (and perturbed it!)
@@ -24,13 +24,22 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
 
     var startTime = new Date();
 
-    solution = vnd(solution, instance, localSearches);
+    var remainingTime =  MAX_PROCESSING_MILLISECONDS;
+
+    var vndResult = vnd(solution, instance, localSearches, remainingTime);
+    solution = vndResult.solution;
+    remainingTime -= vndResult.processingTime;
 
     do {
 
-        var newSolution = biggestNeighbourhood(copy(solution),instance).solution;
+        var biggestNeighRes = biggestNeighbourhood(copy(solution),instance, remainingTime);
+        var newSolution = biggestNeighRes.solution;
+        remainingTime-= biggestNeighRes.processingTime;
 
-        newSolution = vnd(newSolution, instance, localSearches);
+        var newVndResult = vnd(newSolution, instance, localSearches,remainingTime);
+        newSolution = newVndResult.solution;
+        remainingTime -= newVndResult.processingTime;
+
 
         if(newSolution.z < solution.z) {
             solution = newSolution;
@@ -40,7 +49,11 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
             var originalCosts = instance.costs;
 
             instance.costs = perturbMatrix(originalCosts, perturbedCosts, instance.nStores, instance.nCustomers, DISTURB_FACTOR_PERC);
-            var perturbedSolution = vnd(newSolution, instance, localSearches);
+
+            var perturbedVndResult =vnd(newSolution, instance, localSearches, remainingTime);
+            var perturbedSolution = perturbedVndResult.solution;
+            remainingTime -= perturbedVndResult.processingTime;
+
 
             // restore the instance
             instance.costs = originalCosts;
@@ -75,7 +88,7 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS){
         processingTime: (endTime - startTime),
         graph: {
 			name:"VNS",
-			data: graphData		
+			data: graphData
 		}
     };
 

@@ -6,7 +6,11 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap21moves(solution, instance){
+function gap21moves(solution, instance, maxDuration){
+
+    if(maxDuration == undefined){
+        maxDuration = Number.MAX_VALUE;
+    }
 
     var startTime = new Date();
 
@@ -18,18 +22,18 @@ function gap21moves(solution, instance){
     do {
         var improved = false;
 
-        for(var i=0;i<instance.nCustomers-2 && !improved; i++){
+        for(var i=0;i<instance.nCustomers-2 && (new Date() - startTime) < maxDuration; i++){
 
             var currentStoreI = solution.array[i];
 
-            for(var j=i+1;j<instance.nCustomers-1 && !improved; j++){
+            for(var j=i+1;j<instance.nCustomers-1 && (new Date() - startTime) < maxDuration; j++){
 
                 var currentStoreJ = solution.array[j];
 
                 // i and j should be from the same store!
                 if(currentStoreI != currentStoreJ) { continue; }
 
-                for(var k=0;k<instance.nCustomers && !improved; k++){
+                for(var k=0;k<instance.nCustomers && (new Date() - startTime) < maxDuration; k++){
 
 
                     // try to reassign them! there are 8 possible ways
@@ -100,7 +104,7 @@ function gap21moves(solution, instance){
             if(improved) {break;}
         } // for i
 
-    } while(improved);
+    } while (improved && (new Date() - startTime) < maxDuration);
 
     var endTime = new Date();
 

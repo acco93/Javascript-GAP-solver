@@ -215,7 +215,6 @@ function toggleVNS() {
 }
 
 var processing;
-var interval;
 var executor;
 function process() {
 
@@ -488,7 +487,6 @@ function abortComputation() {
         return;
     }
     executor.shutdown();
-    clearInterval(interval);
     warning("/!\\ Computation aborted /!\\");
     resetProgressBar();
     terminateSession();

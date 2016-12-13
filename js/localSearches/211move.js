@@ -1,15 +1,15 @@
-function gap211move(solution, instance) {
+function gap211move(solution, instance, maxDuration) {
 
 
     var improved = false;
 
     var startTime = new Date();
 
-    for (var a = 0; a < instance.nCustomers - 1; a++) {
+    for (var a = 0; a < instance.nCustomers - 1 && (new Date() - startTime) < maxDuration; a++) {
 
         var currentStoreA = solution.array[a];
 
-        for (var b = a + 1; b < instance.nCustomers; b++) {
+        for (var b = a + 1; b < instance.nCustomers && (new Date() - startTime) < maxDuration; b++) {
 
             var currentStoreB = solution.array[b];
 
@@ -18,7 +18,7 @@ function gap211move(solution, instance) {
                 continue;
             }
 
-            for (var c = 0; c < instance.nCustomers; c++) {
+            for (var c = 0; c < instance.nCustomers && (new Date() - startTime) < maxDuration; c++) {
 
                 var currentStoreC = solution.array[c];
 
@@ -27,7 +27,7 @@ function gap211move(solution, instance) {
                     continue;
                 }
 
-                for (var d = 0; d < instance.nCustomers; d++) {
+                for (var d = 0; d < instance.nCustomers && (new Date() - startTime) < maxDuration; d++) {
 
                     var currentStoreD = solution.array[d];
 

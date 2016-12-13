@@ -6,7 +6,11 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function gap111moves(solution, instance) {
+function gap111moves(solution, instance, maxDuration) {
+
+    if(maxDuration == undefined){
+        maxDuration = Number.MAX_VALUE;
+    }
 
     var startTime = new Date();
 
@@ -17,11 +21,11 @@ function gap111moves(solution, instance) {
     do {
         var improved = false;
 
-        for (var i = 0; i < instance.nCustomers - 2 && !improved; i++) {
+        for (var i = 0; i < instance.nCustomers - 2 && (new Date() - startTime) < maxDuration; i++) {
 
             var currentStoreI = solution.array[i];
 
-            for (var j = i + 1; j < instance.nCustomers - 1 && !improved; j++) {
+            for (var j = i + 1; j < instance.nCustomers - 1 && (new Date() - startTime) < maxDuration; j++) {
 
                 var currentStoreJ = solution.array[j];
 
@@ -30,7 +34,7 @@ function gap111moves(solution, instance) {
                     continue;
                 }
 
-                for (var k = j + 1; k < instance.nCustomers && !improved; k++) {
+                for (var k = j + 1; k < instance.nCustomers && (new Date() - startTime) < maxDuration; k++) {
 
                     var currentStoreK = solution.array[k];
 
@@ -141,7 +145,7 @@ function gap111moves(solution, instance) {
             }
         } // for i
 
-    } while (improved);
+    } while (improved && (new Date() - startTime) < maxDuration);
 
     var endTime = new Date();
 

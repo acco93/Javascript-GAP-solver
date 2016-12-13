@@ -67,13 +67,19 @@ function iteratedLocalSearch(solution, instance, localSearch, MAX_ITER, MAX_PROC
     var iter = 0;
 
     var startTime = new Date();
+
+    var remainingTime =  MAX_PROCESSING_MILLISECONDS;
+
     do {
 
         // store the original costs matrix
         var originalCosts = instance.costs;
 
 
-        solution = localSearch(solution, instance).solution;
+        var lsResult = localSearch(solution, instance, remainingTime);
+        solution = lsResult.solution;
+        remainingTime -= lsResult.processingTime;
+
 
         perturbedSolution = {
             array: solution.array.slice(),
@@ -82,8 +88,10 @@ function iteratedLocalSearch(solution, instance, localSearch, MAX_ITER, MAX_PROC
         };
 
         instance.costs = perturbMatrix(originalCosts, perturbedCosts, nStores, nCustomers, DISTURB_FACTOR_PERC);
-        var perturbedSolution = localSearch(perturbedSolution, instance).solution;
 
+        var perturbedLsResult = localSearch(perturbedSolution, instance, remainingTime);
+        var perturbedSolution = perturbedLsResult.solution;
+        remainingTime -= perturbedLsResult.processingTime;
 
         // restore the instance
         instance.costs = originalCosts;
@@ -105,6 +113,7 @@ function iteratedLocalSearch(solution, instance, localSearch, MAX_ITER, MAX_PROC
 
 
         iter++;
+
     } while (iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
 
     var endTime = new Date();

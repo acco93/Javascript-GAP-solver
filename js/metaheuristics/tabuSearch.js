@@ -24,7 +24,7 @@ function tabuSearch(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
         var graphData = [];
 
         // Some tabu search parameters
-        var TABU_TENURE = 2 * nStores * nCustomers; // tabu "time"
+        var TABU_TENURE = nStores * nCustomers; // tabu "time"
         var iter = 0;
 
         var i, j;
