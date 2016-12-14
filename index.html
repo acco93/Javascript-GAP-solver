@@ -118,6 +118,7 @@
                     <span class="input-group-addon">Max iterations</span>
                     <input id="iterInput" class="form-control" placeholder="" type="number" min="1" step="1"
                            value="5000">
+                    <span class="input-group-addon">0 means &#8734;</span>
                 </div>
                 <br>
                 <div class="input-group">
@@ -143,7 +144,7 @@
 
             <!-- local searches -->
             <div class="form-group">
-                <label class="">3) Try to improve <span style="color: blue">S</span> using some local searches ...
+                <label class="">3) Try to improve <span style="color: blue">S</span> using some (<span class="red">complete</span>) local searches ...
                 </label>
                 <div class="">
                     <button id="gap10Button" class="btn btn-success" onclick="toggleLocalSearch(0)">1-0 opt
@@ -156,7 +157,7 @@
             <!-- metaheuristics -->
             <div class="form-group">
                 <label class="">4a) Try to improve <span style="color: blue">S</span> using some metaheuristics based on
-                    local searches ... </label>
+                    (<span class="red">timed</span>) local searches ... </label>
                 <div class="form-group">
                     <ul class="list-group col-lg-6">
                         <li class="list-group-item">
@@ -210,6 +211,9 @@
                 <div class="">
                     <button id="verboseLogButton" class="btn btn-default" onclick="toggleLog()" style="margin-top:5px;">
                         Verbose log
+                    </button>
+                    <button id="showGraphButton" class="btn btn-success" onclick="showGraph()" style="margin-top:5px;">
+                        Show graphs
                     </button>
                 </div>
             </div>

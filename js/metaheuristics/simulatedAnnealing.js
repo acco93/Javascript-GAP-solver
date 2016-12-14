@@ -7,8 +7,8 @@
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function simulatedAnnealing10Move(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
-    return simulatedAnnealing(solution, instance, gap10optSA, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "10move");
+function simulatedAnnealing10Move(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS, showGraph) {
+    return simulatedAnnealing(solution, instance, gap10optSA, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "10move", showGraph);
 }
 
 /**
@@ -20,8 +20,8 @@ function simulatedAnnealing10Move(solution, instance, MAX_ITER, MAX_PROCESSING_M
  *
  * @returns a solution = {array: Array, z:Number, storeSum: Array}
  */
-function simulatedAnnealing11Move(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
-    return simulatedAnnealing(solution, instance, gap11optSA, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "11move");
+function simulatedAnnealing11Move(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS, showGraph) {
+    return simulatedAnnealing(solution, instance, gap11optSA, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "11move", showGraph);
 }
 
 /**
@@ -39,7 +39,7 @@ function simulatedAnnealing11Move(solution, instance, MAX_ITER, MAX_PROCESSING_M
  *                          graphData: {x,y} Array
  *                      }
  */
-function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX_PROCESSING_MILLISECONDS, neighbourFunctionName) {
+function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX_PROCESSING_MILLISECONDS, neighbourFunctionName, showGraph) {
 
 
     // Some instance vars ...
@@ -54,7 +54,7 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
 
     var iter = 0;
     // # of moves performed before decrementing t
-    var movesPerT = Math.floor(MAX_ITER/nCustomers);
+    var movesPerT = Math.floor(MAX_ITER / nCustomers);
 
     var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
     //var beta = 0.1;
@@ -71,6 +71,9 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
 
     // graph data
     var graphData = [];
+
+
+
 
     // Some algorithm variables ...
     // best solution array found till now
@@ -156,21 +159,25 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
         }
 
 
-        if(iter% movesPerT == 0){
+        if (iter % movesPerT == 0) {
             //t = t / (1 + beta * t);
-            t*=delta;
+            t *= delta;
         }
 
+
         // store some graphdata
-        graphData[iter] = {
-            x: iter,
-            y: currentCost
-        };
+        if(showGraph){
+            graphData[iter] = {
+                x: iter,
+                y: currentCost
+            };
+        }
+
+
 
         iter++;
 
     } while (iter < MAX_ITER && (new Date() - startTime) < MAX_PROCESSING_MILLISECONDS);
-
 
 
     var endTime = new Date();

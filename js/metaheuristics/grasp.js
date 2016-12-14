@@ -1,7 +1,7 @@
-function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
+function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECONDS, showGraph) {
 
     // candidate list # elements
-    var k = Math.floor(instance.nStores*0.2);
+    var k = Math.floor(instance.nStores * 0.2);
 
     var graphData = [];
     var iter = 0;
@@ -10,16 +10,16 @@ function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECON
 
     var startTime = new Date();
 
-    var remainingTime =  MAX_PROCESSING_MILLISECONDS;
+    var remainingTime = MAX_PROCESSING_MILLISECONDS;
 
     do {
 
         var solution = constructiveHeuristic(instance, randomizeCustomers, k);
 
-        if(isFeasible(solution.array, instance, false)) {
+        if (isFeasible(solution.array, instance, false)) {
 
             var result = gap11opt(solution, instance, remainingTime);
-            remainingTime-=result.processingTime;
+            remainingTime -= result.processingTime;
 
 
             if (bestSolution == undefined || result.solution.z < bestSolution.z) {
@@ -29,18 +29,20 @@ function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECON
                     storeSum: result.solution.storeSum.slice()
                 }
             }
-            graphData[iter] = {
-                x: iter,
-                y: solution.z
-            };
-
+            if (showGraph) {
+                graphData[iter] = {
+                    x: iter,
+                    y: solution.z
+                };
+            }
         } else {
-            graphData[iter] = {
-                x: iter,
-                y: Number.MAX_VALUE
-            };
+            if (showGraph) {
+                graphData[iter] = {
+                    x: iter,
+                    y: Number.MAX_VALUE
+                };
+            }
         }
-
 
 
         iter++;
@@ -139,7 +141,7 @@ function constructiveHeuristic(instance, randomizeCustomers, k) {
 
         var startI = Math.floor(Math.random() * k);
         var storesProcessed = 0;
-        while(storesProcessed < nStores) {
+        while (storesProcessed < nStores) {
             var realIndexStore = requestsCustomer[startI][KEY];
             if (requestsSum[realIndexStore] + requests[realIndexStore][customerIndex] <= capacities[realIndexStore]) {
 
@@ -150,7 +152,7 @@ function constructiveHeuristic(instance, randomizeCustomers, k) {
                 //info("Customer "+customerIndex+" assigned to store "+realIndexStore);
                 break;
             }
-            startI = (startI+1)%nStores;
+            startI = (startI + 1) % nStores;
             storesProcessed++;
         }
 

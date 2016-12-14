@@ -1,6 +1,6 @@
 /*
-  Returns codes
-*/
+ Returns codes
+ */
 var SUCCESS = 0;
 var ERROR = 1;
 
@@ -11,12 +11,13 @@ var GRASP = 1;
 
 /*
  Utility objects
-*/
+ */
 
 
 var AppSettings = {
-  verboseLog: false,
-  whatToProcess: URL,
+    verboseLog: false,
+    showGraphs: true,
+    whatToProcess: URL
 };
 
 var AlgorithmSettings = {
@@ -51,8 +52,8 @@ var HTMLElements = {
 };
 
 var Cache = {
-  instances: [],
-  changelog: undefined
+    instances: [],
+    changelog: undefined
 };
 
 var lineNum = 0;

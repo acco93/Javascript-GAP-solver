@@ -158,7 +158,7 @@ function showResult(data){
         verbosePrint(data.solution, data.instance);
     }
 
-    if(data.graph != undefined){
+    if(data.graph != undefined && AppSettings.showGraphs){
         drawGraph(data.functionName, data.graph.name+""+session, data.graph.data);
     }
 

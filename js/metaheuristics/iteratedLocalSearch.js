@@ -10,8 +10,8 @@
  *                          graphData: {x,y} Array
  *                      }
  */
-function iteratedLocalSearch10opt(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
-    return iteratedLocalSearch(solution, instance, gap10opt, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "10opt");
+function iteratedLocalSearch10opt(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS, showGraph) {
+    return iteratedLocalSearch(solution, instance, gap10opt, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "10opt", showGraph);
 }
 
 /**
@@ -26,8 +26,8 @@ function iteratedLocalSearch10opt(solution, instance, MAX_ITER, MAX_PROCESSING_M
  *                          graphData: {x,y} Array
  *                      }
  */
-function iteratedLocalSearch11opt(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS) {
-    return iteratedLocalSearch(solution, instance, gap11opt, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "11opt");
+function iteratedLocalSearch11opt(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS, showGraph) {
+    return iteratedLocalSearch(solution, instance, gap11opt, MAX_ITER, MAX_PROCESSING_MILLISECONDS, "11opt", showGraph);
 }
 /**
  * Perform an iterated local search on solution using the given function
@@ -42,7 +42,7 @@ function iteratedLocalSearch11opt(solution, instance, MAX_ITER, MAX_PROCESSING_M
  *                          graphData: {x,y} Array
  *                      }
  */
-function iteratedLocalSearch(solution, instance, localSearch, MAX_ITER, MAX_PROCESSING_MILLISECONDS, localSearchName) {
+function iteratedLocalSearch(solution, instance, localSearch, MAX_ITER, MAX_PROCESSING_MILLISECONDS, localSearchName, showGraph) {
 
     var graphData = [];
 
@@ -106,11 +106,13 @@ function iteratedLocalSearch(solution, instance, localSearch, MAX_ITER, MAX_PROC
             solution = perturbedSolution;
         }
 
-        graphData[iter] = {
-            x: iter,
-            y: solution.z
-        };
 
+        if(showGraph) {
+            graphData[iter] = {
+                x: iter,
+                y: solution.z
+            };
+        }
 
         iter++;
 

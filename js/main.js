@@ -96,6 +96,7 @@ function bindHTMLElements() {
     HTMLElements.timeSpan = $("#timeSpan");
     HTMLElements.graspButton = $('#graspButton');
     HTMLElements.constructiveHeuButton = $('#constructiveHeuButton');
+    HTMLElements.showGraphButton = $('#showGraphButton');
 
 }
 

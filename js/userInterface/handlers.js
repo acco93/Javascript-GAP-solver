@@ -248,6 +248,14 @@ function process() {
         AlgorithmSettings.MAX_PROCESSING_MILLISECONDS = getProcessingTime();
         AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
+        if(AlgorithmSettings.MAX_ITER < 0){
+            error("Max iterations should be an integer value >= 0 where 0 means &#8734;");
+            terminateSession();
+            return ERROR;
+        } else if(AlgorithmSettings.MAX_ITER==0){
+            AlgorithmSettings.MAX_ITER = Number.POSITIVE_INFINITY;
+        }
+
 
         executor = new SingleWorkerExecutor();
         executor.setOutputView($('#currentTask'));
@@ -322,7 +330,8 @@ function process() {
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/metaheuristics/simulatedAnnealing.js"
@@ -339,7 +348,8 @@ function process() {
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/metaheuristics/simulatedAnnealing.js"
@@ -356,7 +366,8 @@ function process() {
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/metaheuristics/tabuSearch.js"
@@ -373,7 +384,8 @@ function process() {
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/metaheuristics/iteratedLocalSearch.js",
@@ -392,7 +404,8 @@ function process() {
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/metaheuristics/iteratedLocalSearch.js",
@@ -413,7 +426,8 @@ function process() {
                         jQuery.extend(true, {}, solution),
                         instance,
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/utilities/algorithmUtilities.js",
@@ -438,7 +452,8 @@ function process() {
                         AlgorithmSettings.randomizeCustomers,
                         //10, // k: candidate list elements
                         AlgorithmSettings.MAX_ITER,
-                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
                     ],
                     filesToLoad: [
                         "../../js/utilities/algorithmUtilities.js",
@@ -626,4 +641,18 @@ function clearInput() {
     });
     HTMLElements.noUrlMatch.hide();
     HTMLElements.input.focus();
+}
+
+function showGraph(){
+    if(AppSettings.showGraphs){
+        HTMLElements.showGraphButton.removeClass("btn-success");
+        HTMLElements.showGraphButton.addClass("btn-default");
+        AppSettings.showGraphs = false;
+    } else {
+        HTMLElements.showGraphButton.removeClass("btn-default");
+        HTMLElements.showGraphButton.addClass("btn-success");
+        AppSettings.showGraphs = true;
+    }
+
+
 }
