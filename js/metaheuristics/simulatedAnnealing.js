@@ -56,9 +56,9 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
     // # of moves performed before decrementing t
     var movesPerT = Math.floor(MAX_ITER / nCustomers);
 
-    var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k);
-    //var beta = 0.1;
-    var delta = 0.95;
+    var MAX_T = defineInitialTemperature(solution, instance, neighbourFunction, k, MAX_ITER);
+    var beta = 0.0005;
+    //var delta = 0.95;
 
     //delta = Math.pow(Number.MIN_VALUE,(1/(MAX_ITER-iter)))/t;
 
@@ -159,10 +159,14 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
         }
 
 
-        if (iter % movesPerT == 0) {
-            //t = t / (1 + beta * t);
-            t *= delta;
-        }
+        //if (iter % movesPerT == 0) {
+            t = t / (1 + beta * t);
+            //t *= delta;
+       // }
+
+		if(t < 0.0005){
+			t = MAX_T;
+		}
 
 
         // store some graphdata
@@ -209,7 +213,7 @@ function simulatedAnnealing(solution, instance, neighbourFunction, MAX_ITER, MAX
 
 }
 
-function defineInitialTemperature(solution, instance, neighbourFunction, k) {
+function defineInitialTemperature(solution, instance, neighbourFunction, k, MAX_ITER) {
     var N_TESTS = 1000;
     var avgZ = 0;
     var badMoves = 0;
@@ -235,7 +239,7 @@ function defineInitialTemperature(solution, instance, neighbourFunction, k) {
         avgZ = solution.z + (solution.z * 0.2);
     }
 
-    var p = 0.05;
+    var p = 0.5;
 
     var t = -(avgZ - solution.z) / (k * Math.log(p));
 

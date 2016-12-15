@@ -257,6 +257,12 @@ function process() {
         }
 
 
+        if(AlgorithmSettings.MAX_ITER>1000000 && AppSettings.showGraphs){
+            warning("Automatically turning off graphs (too many points may cause the page to crash)");
+            showGraph();
+        }
+
+
         executor = new SingleWorkerExecutor();
         executor.setOutputView($('#currentTask'));
 
@@ -498,7 +504,7 @@ function process() {
 
 
 function abortComputation() {
-    if (!processing) {
+    if (!processing || executor == undefined) {
         return;
     }
     executor.shutdown();
