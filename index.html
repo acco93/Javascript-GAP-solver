@@ -20,6 +20,11 @@
 
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
+    <script src="js/metaheuristics/randomizedRounding.js"></script>
+    <script src="js/encoders/jsLPSolverEncoder.js"></script>
+    <script src="js/decoders/jsLPSolverDecoder.js"></script>
+    <script src="plugins/jsLPSolver/src/solver.js"></script>
+    <script src="js/utilities/algorithmUtilities.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="plugins/pace/pace.js"></script>
     <script type="text/javascript" src="plugins/bootstrap/bootstrap.min.js"></script>
@@ -205,6 +210,22 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="">4c) or/and an approximation algorithm ...
+                    <span class="green">E</span>
+                    <span class="yellow">X</span>
+                    <span class="red">T</span>
+                    <span class="green">R</span>
+                    <span class="yellow">A</span>
+                </label>
+                <div class="form-group">
+                    <button id="rrButton" class="btn btn-success" onclick="toggleRR()">Randomized rounding</button>
+                </div>
+                <div>
+                    <span><span class="label label-danger">N.B.</span> <a href="https://github.com/JWally/jsLPSolver">Linear relaxation</a> is computed on the main thread, thus the page may momentarily freeze.</span>
+                </div>
+            </div>
+
             <!-- output settings -->
             <div class="form-group">
                 <label class="">5) Chose some output settings ... </label>
@@ -227,8 +248,11 @@
                             (the URL)
                         </button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <button class="btn btn-lg btn-block btn-warning" onclick="resetConfig()">Reset config</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-lg btn-block btn-warning" onclick="disableAllButtons()">Disable all</button>
                     </div>
                     <div class="col-md-4">
                         <button class="btn btn-lg btn-block btn-danger" onclick="clearAllSessions()">Clear all</button>
@@ -313,7 +337,7 @@
     </div>
 
 </div>
-
+ 
 
 <a href="#" class="scrollToTop">Scroll To Top</a>
 </body>

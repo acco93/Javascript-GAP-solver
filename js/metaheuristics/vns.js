@@ -12,7 +12,7 @@ function vns(solution, instance, MAX_ITER, MAX_PROCESSING_MILLISECONDS, showGrap
     var biggestNeighbourhood = gap211move;
 
 
-    var DISTURB_FACTOR_PERC = 1;
+    var DISTURB_FACTOR_PERC = 0.5;
     var iter = 0;
 
     // copy the costs matrix (and perturbed it!)

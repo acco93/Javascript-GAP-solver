@@ -1,7 +1,7 @@
 function gap11opt(solution, instance, maxDuration) {
 
     if(maxDuration == undefined){
-        maxDuration = Number.MAX_VALUE;
+        maxDuration = Number.POSITIVE_INFINITY;
     }
 
 

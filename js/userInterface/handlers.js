@@ -214,6 +214,18 @@ function toggleVNS() {
     }
 }
 
+function toggleRR() {
+    if (AlgorithmSettings.performRR) {
+        AlgorithmSettings.performRR = false;
+        HTMLElements.rrButton.addClass("btn-default");
+        HTMLElements.rrButton.removeClass("btn-success");
+    } else {
+        AlgorithmSettings.performRR = true;
+        HTMLElements.rrButton.removeClass("btn-default");
+        HTMLElements.rrButton.addClass("btn-success");
+    }
+}
+
 var processing;
 var executor;
 function process() {
@@ -244,24 +256,33 @@ function process() {
             printInstance(instance);
         }
 
+
+
         // setup max processing time and iterations
         AlgorithmSettings.MAX_PROCESSING_MILLISECONDS = getProcessingTime();
         AlgorithmSettings.MAX_ITER = HTMLElements.iterInput.val();
 
-        if(AlgorithmSettings.MAX_ITER < 0){
+        if (AlgorithmSettings.MAX_ITER < 0) {
             error("Max iterations should be an integer value >= 0 where 0 means &#8734;");
             terminateSession();
             return ERROR;
-        } else if(AlgorithmSettings.MAX_ITER==0){
+        } else if (AlgorithmSettings.MAX_ITER == 0) {
             AlgorithmSettings.MAX_ITER = Number.POSITIVE_INFINITY;
         }
 
 
-        if(AlgorithmSettings.MAX_ITER>1000000 && AppSettings.showGraphs){
+        if (AlgorithmSettings.MAX_ITER > 1000000 && AppSettings.showGraphs) {
             warning("Automatically turning off graphs (too many points may cause the page to crash)");
             showGraph();
         }
 
+        var linearRelaxation;
+        if (AlgorithmSettings.performRR) {
+            $('#currentTask').html("Linear relaxation (Sync)");
+            linearRelaxation = solver.Solve(encode(instance));
+            info('Linear relaxation cost: '+linearRelaxation.result);
+            HTMLElements.sessionDiv.append('<div class="separator"></div>');
+        }
 
         executor = new SingleWorkerExecutor();
         executor.setOutputView($('#currentTask'));
@@ -443,7 +464,7 @@ function process() {
                         "../../js/localSearches/11moves.js",
                         "../../js/localSearches/21moves.js",
                         "../../js/localSearches/111moves.js",
-                        "../../js/localSearches/211move.js",
+                        "../../js/localSearches/211move.js"
                     ],
                     functionToCall: "vns"
                 }));
@@ -470,6 +491,29 @@ function process() {
                     ],
                     functionToCall: "grasp"
                 }));
+            }
+
+            if (AlgorithmSettings.performRR) {
+                //var linearRelaxation = solver.Solve(encode(instance));
+
+                tasks.push(executor.addWorkerTask({
+                    name: "Randomized rounding",
+                    timeout: AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                    parameters: [
+                        instance,
+                        linearRelaxation,
+                        AlgorithmSettings.MAX_ITER,
+                        AlgorithmSettings.MAX_PROCESSING_MILLISECONDS,
+                        AppSettings.showGraphs
+                    ],
+                    filesToLoad: [
+                        "../../js/utilities/algorithmUtilities.js",
+                        "../../js/decoders/jsLPSolverDecoder.js",
+                        "../../js/metaheuristics/randomizedRounding.js"
+                    ],
+                    functionToCall: "randomizedRounding"
+                }));
+
             }
 
 
@@ -564,6 +608,10 @@ function resetConfig() {
         toggleGrasp();
     }
 
+    if (!AlgorithmSettings.performRR) {
+        toggleRR();
+    }
+
 }
 
 function resetJsonExample() {
@@ -649,8 +697,8 @@ function clearInput() {
     HTMLElements.input.focus();
 }
 
-function showGraph(){
-    if(AppSettings.showGraphs){
+function showGraph() {
+    if (AppSettings.showGraphs) {
         HTMLElements.showGraphButton.removeClass("btn-success");
         HTMLElements.showGraphButton.addClass("btn-default");
         AppSettings.showGraphs = false;
@@ -658,6 +706,60 @@ function showGraph(){
         HTMLElements.showGraphButton.removeClass("btn-default");
         HTMLElements.showGraphButton.addClass("btn-success");
         AppSettings.showGraphs = true;
+    }
+
+
+}
+
+function disableAllButtons(){
+
+    if (AlgorithmSettings.randomizeCustomers) {
+        randomizeCustomers();
+    }
+
+    if (AppSettings.verboseLog) {
+        toggleLog();
+    }
+
+    if (AlgorithmSettings.perform10opt) {
+        toggleLocalSearch(GAP10OPT);
+    }
+
+    if (AlgorithmSettings.perform11opt) {
+        toggleLocalSearch(GAP11OPT);
+    }
+
+    if (AlgorithmSettings.performSA10) {
+        toggleSA10();
+    }
+
+    if (AlgorithmSettings.performSA11) {
+        toggleSA11();
+    }
+
+
+    if (AlgorithmSettings.performTS10) {
+        toggleTS10();
+    }
+
+    if (AlgorithmSettings.performILS10) {
+        toggleILS10();
+    }
+
+    if (AlgorithmSettings.performILS11) {
+        toggleILS11();
+    }
+
+    if (AlgorithmSettings.performVNS) {
+        toggleVNS();
+    }
+
+    if (AlgorithmSettings.performGrasp) {
+        toggleGrasp();
+    }
+
+    if (AlgorithmSettings.performRR) {
+        toggleRR();
     }
 
 

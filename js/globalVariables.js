@@ -31,6 +31,7 @@ var AlgorithmSettings = {
     performILS11: true,
     performVNS: true,
     performGrasp: true,
+    performRR: true,
     MAX_ITER: 5000,
     MAX_PROCESSING_MILLISECONDS: 3000
 };

@@ -10,11 +10,13 @@ function vnd(solution, instance, localSearches, maxDuration){
 
     var startTime = new Date();
 
+
     do {
 
         var oldZ = solution.z;
 
         solution = localSearches[k](solution, instance, maxDuration).solution;
+
 
         if(solution.z < oldZ){
             k=0;

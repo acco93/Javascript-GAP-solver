@@ -2,6 +2,7 @@ var SingleWorkerExecutor = function () {
     this.queue = [];
     this.worker = undefined;
     this.outputView = undefined;
+    this.countdown = undefined;
 };
 
 SingleWorkerExecutor.prototype.setOutputView = function(output) {
@@ -76,8 +77,9 @@ function processRecursively(execDeferred, context) {
 
     context.outputView.html(task.parameters.name);
 
-    var countdown = new Countdown(task.parameters.timeout, HTMLElements.timeSpan);
-    countdown.start();
+
+    context.countdown = new Countdown(task.parameters.timeout, HTMLElements.timeSpan);
+    context.countdown.start();
 
     var deferred = queueElem.deferred;
 
@@ -90,7 +92,9 @@ function processRecursively(execDeferred, context) {
         switch (event.data.tag) {
             case "result":
                 deferred.resolve(event.data);
-                countdown.stop();
+                if(context.countdown != undefined){
+                    context.countdown.stop();
+                }
                 processRecursively(execDeferred, context);
                 break;
             case "warning":
@@ -120,5 +124,10 @@ SingleWorkerExecutor.prototype.shutdown = function() {
     //console.log("Shutting down... " + queue.length + " task(s) queued lost.");
     this.worker = undefined;
     this.queue.length = 0;
+
+    if(this.countdown != undefined){
+        this.countdown.stop();
+        this.countdown = undefined;
+    }
 
 };

@@ -9,7 +9,7 @@
 function gap111moves(solution, instance, maxDuration) {
 
     if(maxDuration == undefined){
-        maxDuration = Number.MAX_VALUE;
+        maxDuration = Number.POSITIVE_INFINITY;
     }
 
     var startTime = new Date();

@@ -9,7 +9,7 @@
 function gap11moves(solution, instance, maxDuration) {
 
     if (maxDuration == undefined) {
-        maxDuration = Number.MAX_VALUE;
+        maxDuration = Number.POSITIVE_INFINITY;
     }
 
 

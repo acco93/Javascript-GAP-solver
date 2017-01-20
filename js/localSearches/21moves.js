@@ -9,7 +9,7 @@
 function gap21moves(solution, instance, maxDuration){
 
     if(maxDuration == undefined){
-        maxDuration = Number.MAX_VALUE;
+        maxDuration = Number.POSITIVE_INFINITY;
     }
 
     var startTime = new Date();
@@ -65,7 +65,6 @@ function gap21moves(solution, instance, maxDuration){
                                                 - instance.costs[currentStoreK][k]
                                                 + instance.costs[currentStoreK][i] + instance.costs[currentStoreK][j]
                                                 + instance.costs[currentStoreI][k];
-
 
 
                     if( newCost < solution.z &&

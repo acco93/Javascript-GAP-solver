@@ -39,7 +39,7 @@ function grasp(instance, randomizeCustomers, MAX_ITER, MAX_PROCESSING_MILLISECON
             if (showGraph) {
                 graphData[iter] = {
                     x: iter,
-                    y: Number.MAX_VALUE
+                    y: 0
                 };
             }
         }

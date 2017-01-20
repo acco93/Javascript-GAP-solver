@@ -151,17 +151,21 @@ function addClearSessionButton(session) {
 function showResult(data){
 
     info("["+data.functionName+"] Processing time: " + data.processingTime + " milliseconds.");
-    log("Solution cost: " + data.solution.z);
-    log("Is feasible: " + isFeasible(data.solution.array, data.instance));
 
-    if (AppSettings.verboseLog) {
-        verbosePrint(data.solution, data.instance);
+    if(data.solution!=undefined) {
+        log("Solution cost: " + data.solution.z);
+        log("Is feasible: " + isFeasible(data.solution.array, data.instance));
+
+        if (AppSettings.verboseLog) {
+            verbosePrint(data.solution, data.instance);
+        }
+
+        if (data.graph != undefined && AppSettings.showGraphs) {
+            drawGraph(data.functionName, data.graph.name + "" + session, data.graph.data);
+        }
+    } else {
+        warning("No feasible solution found.");
     }
-
-    if(data.graph != undefined && AppSettings.showGraphs){
-        drawGraph(data.functionName, data.graph.name+""+session, data.graph.data);
-    }
-
 
     HTMLElements.sessionDiv.append('<div class="separator"></div>');
 
