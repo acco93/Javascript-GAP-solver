@@ -3,12 +3,12 @@ function randomizedRounding(instance, linearRelaxation, MAX_ITER, MAX_PROCESSING
     var graphData = [];
 
     // translate the instance into a suitable model
+
     //var model = encode(instance);
     //var result = solver.Solve(model);
     var x = decode(instance, linearRelaxation);
 
-    //potrei alterare x e mettere prob molto basse dove c'è 0
-
+    // give a very low probability for 0 variables
     for (i = 0; i < instance.nStores; i++) {
         for (j = 0; j < instance.nCustomers; j++) {
             x[i][j] += 0.01;
@@ -16,16 +16,16 @@ function randomizedRounding(instance, linearRelaxation, MAX_ITER, MAX_PROCESSING
     }
 
     var solutionArray = new Array(instance.nCustomers);
-
-
     var bestSolution = undefined;
 
 
     var iter = 0;
 
     var startTime = new Date();
+
     do {
 
+        // perform montecarlo over each column
         for (var j = 0; j < instance.nCustomers; j++) {
             solutionArray[j] = montecarlo(x, instance.nStores, j);
         }
@@ -47,6 +47,7 @@ function randomizedRounding(instance, linearRelaxation, MAX_ITER, MAX_PROCESSING
             }
 
         } else {
+            // not feasible solution
             if (showGraph) {
                 graphData[iter] = {
                     x: iter,
@@ -62,6 +63,7 @@ function randomizedRounding(instance, linearRelaxation, MAX_ITER, MAX_PROCESSING
 
     var endTime = new Date();
 
+    // compute the store sum
     if (bestSolution != undefined) {
         var bestSolutionStoreSum = new Array(instance.nStores);
         for (j = 0; j < instance.nStores; j++) {
